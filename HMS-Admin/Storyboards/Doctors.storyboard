@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dfL-IP-CT5">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Doctors-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="DoctorsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="DoctorsViewController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="05A-SF-uS2">
+                                <rect key="frame" x="0.0" y="155" width="393" height="56"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CzF-jf-mvE">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                                        <subviews>
+                                            <searchBar contentMode="redraw" placeholder="Search Doctors" translatesAutoresizingMaskIntoConstraints="NO" id="wVT-tX-4mS">
+                                                <rect key="frame" x="0.0" y="0.0" width="343.33333333333331" height="56"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="Y6W-OH-hqX" id="3aT-gc-iRK"/>
+                                                </connections>
+                                            </searchBar>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="leading" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M6P-5Z-VIk">
+                                                <rect key="frame" x="343.33333333333331" y="0.0" width="49.666666666666686" height="56"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" image="line.3.horizontal.decrease.circle" catalog="system"/>
+                                                <connections>
+                                                    <action selector="filterButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="Wnh-K0-ifA"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iU1-83-Hfb">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="0.0"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cB7-86-GXq">
+                                                <rect key="frame" x="0.0" y="0.0" width="196.66666666666666" height="0.0"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3bc-Me-T8B">
+                                                <rect key="frame" x="196.66666666666663" y="0.0" width="196.33333333333337" height="0.0"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="6eq-1C-NRq">
+                                <rect key="frame" x="0.0" y="211" width="393" height="641"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DoctorTableViewCell" id="ry0-mz-sB6" customClass="DoctorTableViewCell" customModule="HMS_Admin" customModuleProvider="target">
+                                        <rect key="frame" x="20" y="55.333332061767578" width="353" height="79.333335876464844"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ry0-mz-sB6" id="6pr-3R-nGa">
+                                            <rect key="frame" x="0.0" y="0.0" width="353" height="79.333335876464844"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="jNr-ay-IDb">
+                                                    <rect key="frame" x="20" y="10" width="313" height="64.333333333333329"/>
+                                                    <subviews>
+                                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="dlq-TA-57h">
+                                                            <rect key="frame" x="0.0" y="0.99999999999999645" width="51.333333333333336" height="62.666666666666657"/>
+                                                            <constraints>
+                                                                <constraint firstAttribute="width" secondItem="dlq-TA-57h" secondAttribute="height" multiplier="0.8" id="DaF-Bj-URa"/>
+                                                            </constraints>
+                                                        </imageView>
+                                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="RL3-qg-zYY">
+                                                            <rect key="frame" x="61.333333333333329" y="0.3333333333333357" width="251.66666666666669" height="64"/>
+                                                            <subviews>
+                                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Ran-Bs-66g">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="251.66666666666666" height="64"/>
+                                                                    <subviews>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dr. Jonny Sins" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="58X-dc-Vb9">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="251.66666666666666" height="20.333333333333332"/>
+                                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                                                            <nil key="textColor"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gynecologist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mdi-AB-Vze">
+                                                                            <rect key="frame" x="0.0" y="25.333333333333329" width="251.66666666666666" height="18"/>
+                                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
+                                                                            <nil key="textColor"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbC-SY-69q">
+                                                                            <rect key="frame" x="0.0" y="48.333333333333329" width="251.66666666666666" height="15.666666666666664"/>
+                                                                            <fontDescription key="fontDescription" style="UICTFontTextStyleFootnote"/>
+                                                                            <nil key="textColor"/>
+                                                                            <nil key="highlightedColor"/>
+                                                                        </label>
+                                                                    </subviews>
+                                                                </stackView>
+                                                            </subviews>
+                                                        </stackView>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstItem="dlq-TA-57h" firstAttribute="height" secondItem="RL3-qg-zYY" secondAttribute="height" id="gjL-qd-YhN"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="jNr-ay-IDb" secondAttribute="trailing" constant="20" id="Cae-hX-5FQ"/>
+                                                <constraint firstItem="jNr-ay-IDb" firstAttribute="leading" secondItem="6pr-3R-nGa" secondAttribute="leading" constant="20" id="iri-rd-OWI"/>
+                                                <constraint firstAttribute="bottom" secondItem="jNr-ay-IDb" secondAttribute="bottom" constant="5" id="jVJ-3I-pqB"/>
+                                                <constraint firstItem="jNr-ay-IDb" firstAttribute="top" secondItem="6pr-3R-nGa" secondAttribute="top" constant="10" id="me3-VY-em1"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="departmentLabel" destination="lbC-SY-69q" id="VPD-3d-xyA"/>
+                                            <outlet property="fullNameLabel" destination="58X-dc-Vb9" id="opY-nq-xXB"/>
+                                            <outlet property="specializationLabel" destination="Mdi-AB-Vze" id="opF-jG-SJ3"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="6eq-1C-NRq" secondAttribute="trailing" id="4AR-IS-dmt"/>
+                            <constraint firstAttribute="bottom" secondItem="6eq-1C-NRq" secondAttribute="bottom" id="G7M-nq-kfQ"/>
+                            <constraint firstItem="6eq-1C-NRq" firstAttribute="top" secondItem="05A-SF-uS2" secondAttribute="bottom" id="LRB-rq-9V4"/>
+                            <constraint firstItem="05A-SF-uS2" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Qm8-kg-vxa"/>
+                            <constraint firstItem="05A-SF-uS2" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="aAX-FO-9LS"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="05A-SF-uS2" secondAttribute="trailing" id="k7P-ok-pIk"/>
+                            <constraint firstItem="6eq-1C-NRq" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="t09-U7-Nxd"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Doctors" id="yWx-CN-L0g">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="add" id="FXb-SL-Vic">
+                            <connections>
+                                <segue destination="73K-d7-gNu" kind="presentation" identifier="segueShowAddDoctorViewController" id="EYN-8H-Wum"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="filterButton" destination="M6P-5Z-VIk" id="ucU-UM-OrT"/>
+                        <outlet property="lowerSearchStack" destination="iU1-83-Hfb" id="ajM-pu-lCt"/>
+                        <outlet property="searchBar" destination="wVT-tX-4mS" id="6XW-Kr-boX"/>
+                        <outlet property="tableView" destination="6eq-1C-NRq" id="Iim-f4-pip"/>
+                        <segue destination="9gi-4a-NtJ" kind="show" identifier="segueShowDoctorDetailsViewController" id="XDI-el-jz3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1851.1450381679388" y="-28.169014084507044"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="ae5-2G-HYv">
+            <objects>
+                <viewController id="Him-YP-WfO" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ajk-10-1lx">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="TZB-0O-zxD"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="gLq-IK-sU1">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="b59-DQ-3OK">
+                            <connections>
+                                <segue destination="IOR-l5-RdR" kind="unwind" identifier="unwindViaCancel" unwindAction="unwind:" id="q78-dU-UJC"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="Jhg-Mp-PMY">
+                            <connections>
+                                <segue destination="IOR-l5-RdR" kind="unwind" identifier="unwindViaDone" unwindAction="unwind:" id="eXW-2q-sEO"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mQC-Kf-Jhd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="IOR-l5-RdR" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="4188.5496183206105" y="-404.22535211267609"/>
+        </scene>
+        <!--Doctor Details View Controller-->
+        <scene sceneID="TRO-QB-0mZ">
+            <objects>
+                <viewController storyboardIdentifier="DoctorDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9gi-4a-NtJ" customClass="DoctorDetailsViewController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="fef-xm-FH7">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="FQr-ql-ffi"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="YM0-A7-67b"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vVm-Ge-ErE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3262" y="356"/>
+        </scene>
+        <!--Doctors-->
+        <scene sceneID="FnF-s4-wIG">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dfL-IP-CT5" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Doctors" image="stethoscope" catalog="system" id="QYp-vj-d4o"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="Ckj-gC-P4Q">
+                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="TlH-qW-aqF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tgl-kD-9NS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="924.4274809160305" y="-28.169014084507044"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Xj3-S7-aqd">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="73K-d7-gNu" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="az3-gZ-jC9">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Him-YP-WfO" kind="relationship" relationship="rootViewController" id="jR7-is-t3f"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Sqk-bu-b4Y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3261.8320610687019" y="-404.22535211267609"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="line.3.horizontal.decrease.circle" catalog="system" width="128" height="123"/>
+        <image name="person.crop.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="stethoscope" catalog="system" width="128" height="101"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

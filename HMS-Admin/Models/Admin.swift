@@ -9,6 +9,7 @@ import Foundation
 
 enum Role: String, Codable {
     case admin
+    case doctor
 }
 
 struct Admin: Codable, Equatable {
