@@ -21,7 +21,6 @@ class DoctorsViewController: UIViewController {
     @IBOutlet var lowerSearchStack: UIStackView!
 
     var doctors: [Staff] = []
-    private var searchTask:DispatchWorkItem?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,6 +48,8 @@ class DoctorsViewController: UIViewController {
 
     // MARK: Private
 
+    private var searchTask: DispatchWorkItem?
+
     private func refreshData() {
         Task {
             doctors = await DataController.shared.fetchDoctors()
@@ -61,21 +62,20 @@ class DoctorsViewController: UIViewController {
 }
 
 extension DoctorsViewController: UISearchBarDelegate {
-    //debouncing search.
+    // debouncing search.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+
         searchTask?.cancel()
-        
+
         searchTask = DispatchWorkItem {
             print(searchBar.text ?? "")
         }
-        
+
         if let task = searchTask {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: task)
         }
     }
 
-    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
     }
