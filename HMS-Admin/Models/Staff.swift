@@ -37,11 +37,6 @@ struct Staff: Codable, Equatable {
     let firstName: String
     let lastName: String? = nil
 
-    var fullName: String {
-        let lastName = self.lastName ?? ""
-        return "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
-    }
-
     let emailAddress: String
     let password: String
     let contactNumber: String
@@ -52,4 +47,10 @@ struct Staff: Codable, Equatable {
     let unavailabilityPeriods: [UnavailablePeriod] = []
     let licenseId: String
     let role: Role = .doctor
+
+    var fullName: String {
+        let lastName = lastName ?? ""
+        return "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
+    }
+
 }
