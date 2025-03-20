@@ -8,15 +8,12 @@
 import UIKit
 
 class SignInViewController: UIViewController {
-
-    var admin: Admin?
-
     @IBOutlet var emailTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "segueShowResetPasswordViewController", let resetPasswordViewController = segue.destination as? ResetPasswordViewController {
-            resetPasswordViewController.admin = admin
+            resetPasswordViewController.admin = sender as? Admin
         }
     }
 
@@ -29,9 +26,7 @@ class SignInViewController: UIViewController {
                 return
             }
 
-            self.admin = admin
-
-            performSegue(withIdentifier: "segueShowResetPasswordViewController", sender: nil)
+            performSegue(withIdentifier: "segueShowResetPasswordViewController", sender: admin)
         }
     }
 
