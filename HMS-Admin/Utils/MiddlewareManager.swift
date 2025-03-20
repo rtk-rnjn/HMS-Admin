@@ -34,6 +34,10 @@ actor MiddlewareManager {
         return result != nil
     }
 
+    func patch<T: Codable>(url: String, body: Data) async -> T? {
+        return await request(url: url, method: "PATCH", body: body)
+    }
+
     // MARK: Private
 
     private func request<T: Codable>(url: String = "", method: String, body: Data? = nil, queryParameters: [String: String]? = nil) async -> T? {
