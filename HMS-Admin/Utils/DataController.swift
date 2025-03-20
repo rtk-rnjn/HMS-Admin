@@ -27,7 +27,7 @@ class DataController {
         doctors[index] = doctor
     }
 
-    func fetchDoctors() async -> [Staff] {
+    func fetchDoctors(limit: Int = 0) async -> [Staff] {
         return doctors
     }
 }

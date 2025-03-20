@@ -7,6 +7,9 @@
 
 import UIKit
 
+private let filterImage: UIImage? = .init(systemName: "line.3.horizontal.decrease.circle")
+private let filterSelectedImage: UIImage? = .init(systemName: "line.3.horizontal.decrease.circle.fill")
+
 class DoctorsViewController: UIViewController {
 
     // MARK: Internal
@@ -37,14 +40,8 @@ class DoctorsViewController: UIViewController {
     @IBAction func filterButtonTapped(_ sender: UIButton) {
         lowerSearchStack.isHidden = !lowerSearchStack.isHidden
 
-        let filterImage = UIImage(systemName: "line.3.horizontal.decrease.circle")
-        let filterSelectedImage = UIImage(systemName: "line.3.horizontal.decrease.circle.fill")
-
-        if !lowerSearchStack.isHidden {
-            sender.setImage(filterSelectedImage, for: .normal)
-        } else {
-            sender.setImage(filterImage, for: .normal)
-        }
+        let image = lowerSearchStack.isHidden ? filterImage : filterSelectedImage
+        sender.setImage(image, for: .normal)
     }
 
     @IBAction func unwind(_ segue: UIStoryboardSegue) {}
