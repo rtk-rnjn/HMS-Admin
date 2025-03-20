@@ -8,13 +8,29 @@
 import UIKit
 
 class ResetPasswordViewController: UIViewController {
+    var admin: Admin?
 
-    // // MARK: - Navigation
-    //
-    // // In a storyboard-based application, you will often want to do a little preparation before navigation
-    // override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    //    // Get the new view controller using segue.destination.
-    //    // Pass the selected object to the new view controller.
-    // }
+    @IBOutlet var passwordTextField: UITextField!
+    @IBOutlet var confirmPasswordTextField: UITextField!
 
+    @IBAction func signInTapped(_ sender: UIButton) {
+        guard let password = passwordTextField.text, let confirmPassword = confirmPasswordTextField.text else {
+            return
+        }
+
+        guard password == confirmPassword else {
+            return
+        }
+
+        admin?.password = password
+        guard let admin else { return }
+
+        Task {
+            let updated = await DataController.shared.updateAdmin(admin)
+            if updated {
+                performSegue(withIdentifier: "segueShowInitialTabBarController", sender: nil)
+                UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+            }
+        }
+    }
 }

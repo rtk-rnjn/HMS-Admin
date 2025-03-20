@@ -20,8 +20,8 @@ struct Admin: Codable, Equatable {
         case role = "role"
     }
 
-    let id: String = UUID().uuidString
-    let emailAddress: String
-    let password: String
-    let role: Role = .admin
+    var id: String = UUID().uuidString
+    var emailAddress: String
+    var password: String
+    var role: Role = .admin
 }
