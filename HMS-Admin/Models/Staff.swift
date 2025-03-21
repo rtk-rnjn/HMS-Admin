@@ -31,22 +31,25 @@ struct Staff: Codable, Equatable {
         case unavailabilityPeriods = "unavailability_periods"
         case licenseId = "license_id"
         case role = "role"
+        case hospitalId = "hospital_id"
     }
 
-    let id: String = UUID().uuidString
-    let firstName: String
-    let lastName: String? = nil
+    var id: String = UUID().uuidString
+    var firstName: String
+    var lastName: String?
 
-    let emailAddress: String
-    let password: String
-    let contactNumber: String
-    let specializations: [String]
-    let department: String
-    let onLeave: Bool = false
+    var emailAddress: String
+    var password: String
+    var contactNumber: String
+    var specializations: [String]
+    var department: String
+    var onLeave: Bool = false
 
-    let unavailabilityPeriods: [UnavailablePeriod] = []
-    let licenseId: String
-    let role: Role = .doctor
+    var unavailabilityPeriods: [UnavailablePeriod] = []
+    var licenseId: String
+    var role: Role = .doctor
+
+    var hospitalId: String = ""
 
     var fullName: String {
         let lastName = lastName ?? ""

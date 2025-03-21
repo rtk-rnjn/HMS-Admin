@@ -15,10 +15,7 @@ class DoctorsViewController: UIViewController {
     // MARK: Internal
 
     @IBOutlet var searchBar: UISearchBar!
-    @IBOutlet var filterButton: UIButton!
     @IBOutlet var tableView: UITableView!
-
-    @IBOutlet var lowerSearchStack: UIStackView!
 
     var doctors: [Staff] = []
 
@@ -30,21 +27,20 @@ class DoctorsViewController: UIViewController {
         tableView.dataSource = self
 
         searchBar.backgroundImage = UIImage()
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         refreshData()
     }
 
-    @IBAction func filterButtonTapped(_ sender: UIButton) {
-        lowerSearchStack.isHidden = !lowerSearchStack.isHidden
-
-        let image = lowerSearchStack.isHidden ? filterImage : filterSelectedImage
-        sender.setImage(image, for: .normal)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "segueShowAddEditDoctorTableViewController", let navigationController = segue.destination as? UINavigationController, let addEditDoctorTableViewController = navigationController.topViewController as? AddEditDoctorTableViewController {
+            addEditDoctorTableViewController.doctor = sender as? Staff
+        }
     }
 
     @IBAction func unwind(_ segue: UIStoryboardSegue) {}
+
+    @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
+        performSegue(withIdentifier: "segueShowAddEditDoctorTableViewController", sender: nil)
+    }
 
     // MARK: Private
 
@@ -62,22 +58,33 @@ class DoctorsViewController: UIViewController {
 }
 
 extension DoctorsViewController: UISearchBarDelegate {
-    // debouncing search.
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 
         searchTask?.cancel()
 
+        if searchText.isEmpty {
+            refreshData()
+            return
+        }
+
         searchTask = DispatchWorkItem {
-            print(searchBar.text ?? "")
+            self.doctors = self.doctors.filter { $0.fullName.lowercased().contains(searchText.lowercased()) }
+            self.tableView.reloadData()
         }
 
         if let task = searchTask {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: task)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: task)
         }
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        refreshData()
     }
 }
 
@@ -119,10 +126,10 @@ extension DoctorsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let identifier = "\(indexPath.section)-\(indexPath.row)" as NSString
-
+        let doctor = doctors[indexPath.section]
         return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { _ in
             let editAction = UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { _ in
-                print("Edit")
+                self.performSegue(withIdentifier: "segueShowAddEditDoctorTableViewController", sender: doctor)
             }
 
             let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
