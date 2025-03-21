@@ -12,38 +12,17 @@
                 <tabBarController extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" id="Ver-Ap-DCT" customClass="InitialTabBarController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="4BN-GO-0Jp">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </tabBar>
                     <connections>
-                        <segue destination="zcN-IN-cEk" kind="relationship" relationship="viewControllers" id="HXl-Gm-jc8"/>
                         <segue destination="KlW-XY-Lfs" kind="relationship" relationship="viewControllers" id="C2j-g1-Ib5"/>
-                        <segue destination="YtJ-iE-ayZ" kind="relationship" relationship="viewControllers" id="SS9-1u-phX"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K6W-qf-SwX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="130.53435114503816" y="-28.169014084507044"/>
-        </scene>
-        <!--Dashboard-->
-        <scene sceneID="5RM-ki-LuW">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Dashboard" id="zcN-IN-cEk" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="D3N-vN-kQV"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="phA-YW-Yv3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-212" y="488"/>
-        </scene>
-        <!--Billing-->
-        <scene sceneID="Xhp-sj-1OU">
-            <objects>
-                <viewControllerPlaceholder storyboardName="Billing" id="YtJ-iE-ayZ" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" id="Vza-8k-Gsh"/>
-                </viewControllerPlaceholder>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xpm-eY-nQE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="478" y="487"/>
         </scene>
         <!--Doctors-->
         <scene sceneID="So9-YJ-JEf">

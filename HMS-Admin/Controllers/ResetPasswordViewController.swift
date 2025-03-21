@@ -12,6 +12,12 @@ class ResetPasswordViewController: UIViewController {
 
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var confirmPasswordTextField: UITextField!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        navigationItem.hidesBackButton = true
+    }
 
     @IBAction func signInTapped(_ sender: UIButton) {
         guard let password = passwordTextField.text, let confirmPassword = confirmPasswordTextField.text else {
@@ -21,6 +27,7 @@ class ResetPasswordViewController: UIViewController {
         guard password == confirmPassword else {
             return
         }
+        
 
         admin?.password = password
         guard let admin else { return }
