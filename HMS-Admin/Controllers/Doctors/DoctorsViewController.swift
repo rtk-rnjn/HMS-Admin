@@ -27,6 +27,10 @@ class DoctorsViewController: UIViewController {
         tableView.dataSource = self
 
         searchBar.backgroundImage = UIImage()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         refreshData()
     }
 
@@ -109,7 +113,7 @@ extension DoctorsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DoctorTableViewCell", for: indexPath) as? DoctorTableViewCell
 
-        guard let cell else { fatalError("tune oo rangeele kaisa jaadu kiya") }
+        guard let cell else { fatalError() }
 
         let doctor = doctors[indexPath.section]
         cell.updateElements(with: doctor)
@@ -132,11 +136,7 @@ extension DoctorsViewController: UITableViewDataSource, UITableViewDelegate {
                 self.performSegue(withIdentifier: "segueShowAddEditDoctorTableViewController", sender: doctor)
             }
 
-            let deleteAction = UIAction(title: "Delete", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                print("Delete")
-            }
-
-            return UIMenu(title: "", children: [editAction, deleteAction])
+            return UIMenu(title: "", children: [editAction])
         }
     }
 }

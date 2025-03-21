@@ -80,4 +80,8 @@ extension DataController {
         let response: UpdateResponse? = await MiddlewareManager.shared.put(url: "/admin/staff/\(doctor.id)", body: body)
         return response?.success ?? false
     }
+
+    func deleteDoctor(_ doctor: Staff) async -> Bool {
+        return await MiddlewareManager.shared.delete(url: "/admin/staff/\(doctor.id)")
+    }
 }
