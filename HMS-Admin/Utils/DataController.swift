@@ -19,6 +19,16 @@ struct UpdateResponse: Codable {
     let detail: String?
 }
 
+struct CreateResponse: Codable {
+    enum CodingKeys: String, CodingKey {
+        case success
+        case insertedId = "inserted_id"
+    }
+
+    let success: Bool
+    let insertedId: String?
+}
+
 class DataController {
     @MainActor static let shared: DataController = .init()
 
@@ -71,7 +81,7 @@ extension DataController {
 
     func createDoctor(_ doctor: Staff) async -> Bool {
         guard let body = doctor.toData() else { return false }
-        let response: UpdateResponse? = await MiddlewareManager.shared.post(url: "/admin/staff", body: body)
+        let response: CreateResponse? = await MiddlewareManager.shared.post(url: "/admin/staff", body: body)
         return response?.success ?? false
     }
 
