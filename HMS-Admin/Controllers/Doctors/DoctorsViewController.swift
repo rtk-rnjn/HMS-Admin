@@ -10,11 +10,10 @@ import UIKit
 private let filterImage: UIImage? = .init(systemName: "line.3.horizontal.decrease.circle")
 private let filterSelectedImage: UIImage? = .init(systemName: "line.3.horizontal.decrease.circle.fill")
 
-class DoctorsViewController: UIViewController {
+class DoctorsViewController: UIViewController, UISearchResultsUpdating {
 
     // MARK: Internal
 
-    @IBOutlet var searchBar: UISearchBar!
     @IBOutlet var tableView: UITableView!
 
     var doctors: [Staff] = []
@@ -22,11 +21,10 @@ class DoctorsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        searchBar.delegate = self
         tableView.delegate = self
         tableView.dataSource = self
 
-        searchBar.backgroundImage = UIImage()
+        prepareSearchController()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -40,6 +38,8 @@ class DoctorsViewController: UIViewController {
         }
     }
 
+    func updateSearchResults(for searchController: UISearchController) {}
+
     @IBAction func unwind(_ segue: UIStoryboardSegue) {}
 
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
@@ -49,6 +49,16 @@ class DoctorsViewController: UIViewController {
     // MARK: Private
 
     private var searchTask: DispatchWorkItem?
+    private var searchController: UISearchController = .init()
+
+    private func prepareSearchController() {
+        searchController.searchBar.delegate = self
+        searchController.searchResultsUpdater = self
+        searchController.searchBar.placeholder = "Search Doctors"
+
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
 
     private func refreshData() {
         Task {

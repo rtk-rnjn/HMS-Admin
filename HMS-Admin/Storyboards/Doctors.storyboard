@@ -16,51 +16,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="05A-SF-uS2">
-                                <rect key="frame" x="0.0" y="155" width="393" height="56"/>
-                                <subviews>
-                                    <searchBar contentMode="redraw" placeholder="Search Doctors" translatesAutoresizingMaskIntoConstraints="NO" id="wVT-tX-4mS">
-                                        <rect key="frame" x="0.0" y="0.0" width="393" height="56"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                        <connections>
-                                            <outlet property="delegate" destination="Y6W-OH-hqX" id="3aT-gc-iRK"/>
-                                        </connections>
-                                    </searchBar>
-                                </subviews>
-                            </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="6eq-1C-NRq">
-                                <rect key="frame" x="0.0" y="211" width="393" height="641"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="749"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DoctorTableViewCell" id="ry0-mz-sB6" customClass="DoctorTableViewCell" customModule="HMS_Admin" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="55.333332061767578" width="353" height="63.666667938232422"/>
+                                        <rect key="frame" x="20" y="38" width="353" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ry0-mz-sB6" id="6pr-3R-nGa">
-                                            <rect key="frame" x="0.0" y="0.0" width="353" height="63.666667938232422"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="353" height="66"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="jNr-ay-IDb">
-                                                    <rect key="frame" x="20" y="10" width="313" height="43.666666666666664"/>
+                                                    <rect key="frame" x="20" y="10" width="313" height="46"/>
                                                     <subviews>
                                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.crop.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="dlq-TA-57h">
-                                                            <rect key="frame" x="0.0" y="1" width="34.666666666666664" height="42"/>
+                                                            <rect key="frame" x="0.0" y="1" width="36.666666666666664" height="44.333333333333329"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" secondItem="dlq-TA-57h" secondAttribute="height" multiplier="0.8" id="DaF-Bj-URa"/>
                                                             </constraints>
                                                         </imageView>
                                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="RL3-qg-zYY">
-                                                            <rect key="frame" x="44.666666666666657" y="0.33333333333333215" width="268.33333333333337" height="43.333333333333343"/>
+                                                            <rect key="frame" x="46.666666666666657" y="0.33333333333333215" width="266.33333333333337" height="45.666666666666671"/>
                                                             <subviews>
-                                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Ran-Bs-66g">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="268.33333333333331" height="43.333333333333336"/>
+                                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Ran-Bs-66g">
+                                                                    <rect key="frame" x="0.0" y="0.0" width="266.33333333333331" height="45.666666666666664"/>
                                                                     <subviews>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Dr. Shukla" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="58X-dc-Vb9">
-                                                                            <rect key="frame" x="0.0" y="0.0" width="268.33333333333331" height="20.333333333333332"/>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dr. Shukla" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="58X-dc-Vb9">
+                                                                            <rect key="frame" x="0.0" y="0.0" width="266.33333333333331" height="20.333333333333332"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
                                                                         </label>
-                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Gynecologist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mdi-AB-Vze">
-                                                                            <rect key="frame" x="0.0" y="25.333333333333329" width="268.33333333333331" height="18"/>
+                                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gynecologist" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mdi-AB-Vze">
+                                                                            <rect key="frame" x="0.0" y="25.333333333333329" width="266.33333333333331" height="20.333333333333329"/>
                                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                                             <nil key="textColor"/>
                                                                             <nil key="highlightedColor"/>
@@ -93,13 +81,10 @@
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="6eq-1C-NRq" secondAttribute="trailing" id="4AR-IS-dmt"/>
-                            <constraint firstAttribute="bottom" secondItem="6eq-1C-NRq" secondAttribute="bottom" id="G7M-nq-kfQ"/>
-                            <constraint firstItem="6eq-1C-NRq" firstAttribute="top" secondItem="05A-SF-uS2" secondAttribute="bottom" id="LRB-rq-9V4"/>
-                            <constraint firstItem="05A-SF-uS2" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Qm8-kg-vxa"/>
-                            <constraint firstItem="05A-SF-uS2" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="aAX-FO-9LS"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="05A-SF-uS2" secondAttribute="trailing" id="k7P-ok-pIk"/>
-                            <constraint firstItem="6eq-1C-NRq" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="t09-U7-Nxd"/>
+                            <constraint firstAttribute="bottom" secondItem="6eq-1C-NRq" secondAttribute="bottom" id="CJw-H5-Vur"/>
+                            <constraint firstItem="6eq-1C-NRq" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="OG6-mX-Djm"/>
+                            <constraint firstItem="6eq-1C-NRq" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="VG5-Ug-D7z"/>
+                            <constraint firstItem="6eq-1C-NRq" firstAttribute="trailing" secondItem="vDu-zF-Fre" secondAttribute="trailing" id="xDF-2k-s3G"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Doctors" id="yWx-CN-L0g">
@@ -110,7 +95,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="searchBar" destination="wVT-tX-4mS" id="6XW-Kr-boX"/>
                         <outlet property="tableView" destination="6eq-1C-NRq" id="Iim-f4-pip"/>
                         <segue destination="9gi-4a-NtJ" kind="show" identifier="segueShowDoctorDetailsViewController" id="XDI-el-jz3"/>
                         <segue destination="ufB-gz-yqa" kind="presentation" identifier="segueShowAddEditDoctorTableViewController" id="hKi-C8-9ch"/>
