@@ -45,9 +45,18 @@ struct ChangePassword: Codable {
 
 class DataController {
 
+    // MARK: Lifecycle
+
+    private init() {
+        Task {
+            _ = await autoLogin()
+        }
+    }
+
     // MARK: Public
 
     public private(set) var admin: Admin?
+    public private(set) var hospital: Hospital?
 
     // MARK: Internal
 
@@ -69,6 +78,11 @@ class DataController {
         UserDefaults.standard.set(accessToken, forKey: "accessToken")
         UserDefaults.standard.set(emailAddress, forKey: "emailAddress")
         UserDefaults.standard.set(password, forKey: "password")
+
+        let hospital: Hospital? = await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)")
+        if let hospital {
+            self.hospital = hospital
+        }
 
         return true
     }
@@ -93,7 +107,12 @@ class DataController {
         }
 
         let response: ServerResponse? = await MiddlewareManager.shared.patch(url: "/admin/change-password", body: changePasswordData)
-        return response?.success ?? false
+        let success = response?.success ?? false
+
+        if success {
+            UserDefaults.standard.set(newPassword, forKey: "password")
+        }
+        return success
     }
 
     // MARK: Private
@@ -105,5 +124,13 @@ class DataController {
 extension DataController {
     func fetchDoctors() async -> [Staff]? {
         return await MiddlewareManager.shared.get(url: "/staff")
+    }
+
+    func addDoctor(_ doctor: Staff) async -> Staff? {
+        guard let doctorData = doctor.toData() else {
+            fatalError("Something FUCKEDD UP")
+        }
+
+        return await MiddlewareManager.shared.post(url: "/staff/create", body: doctorData)
     }
 }

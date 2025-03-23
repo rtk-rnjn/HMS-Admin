@@ -36,6 +36,10 @@ class DoctorsViewController: UIViewController, UISearchResultsUpdating {
         if segue.identifier == "segueShowAddEditDoctorTableViewController", let navigationController = segue.destination as? UINavigationController, let addEditDoctorTableViewController = navigationController.topViewController as? AddEditDoctorTableViewController {
             addEditDoctorTableViewController.doctor = sender as? Staff
         }
+
+        if segue.identifier == "segueShowDoctorDetailsTableViewController", let doctorDetailsTableViewController = segue.destination as? DoctorDetailsTableViewController, let doctor = sender as? Staff {
+            doctorDetailsTableViewController.doctor = doctor
+        }
     }
 
     func updateSearchResults(for searchController: UISearchController) {}
@@ -82,7 +86,11 @@ extension DoctorsViewController: UISearchBarDelegate {
         }
 
         searchTask = DispatchWorkItem {
-            self.doctors = self.doctors?.filter { $0.fullName.lowercased().contains(searchText.lowercased()) }
+            self.doctors = self.doctors?.filter {
+                $0.fullName.lowercased().contains(searchText.lowercased()) ||
+                $0.department.lowercased().contains(searchText.lowercased()) ||
+                $0.specializations.contains(where: { $0.lowercased().contains(searchText.lowercased()) })
+            }
             self.tableView.reloadData()
         }
 
@@ -137,7 +145,9 @@ extension DoctorsViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath) as? DoctorTableViewCell
         cell?.isSelected = false
 
-        performSegue(withIdentifier: "segueShowDoctorDetailsViewController", sender: nil)
+        let doctor = doctors?[indexPath.section]
+
+        performSegue(withIdentifier: "segueShowDoctorDetailsTableViewController", sender: doctor)
     }
 
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {

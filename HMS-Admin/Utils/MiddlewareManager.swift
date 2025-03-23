@@ -74,7 +74,7 @@ actor MiddlewareManager {
             return try decoder.decode(T.self, from: data)
 
         } catch {
-            fatalError("WHITEEE AMEERIICAAAA!!!!!!")
+            fatalError("WHITEEE AMEERIICAAAA!!!!!! \(error.localizedDescription)")
         }
     }
 }
