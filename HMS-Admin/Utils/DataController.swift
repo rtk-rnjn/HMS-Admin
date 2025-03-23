@@ -7,91 +7,103 @@
 
 import Foundation
 
-struct UpdateResponse: Codable {
+struct Token: Codable {
     enum CodingKeys: String, CodingKey {
-        case success
-        case modifiedCount = "modified_count"
-        case detail
+        case accessToken = "access_token"
+        case tokenType = "token_type"
+        case user = "user"
     }
 
-    let success: Bool
-    let modifiedCount: Int
-    let detail: String?
+    var accessToken: String
+    var tokenType: String = "bearer"
+    var user: Admin?
 }
 
-struct CreateResponse: Codable {
+struct UserLogin: Codable {
     enum CodingKeys: String, CodingKey {
-        case success
-        case insertedId = "inserted_id"
+        case emailAddress = "email_address"
+        case password
     }
 
-    let success: Bool
-    let insertedId: String?
+    var emailAddress: String
+    var password: String
+}
+
+struct ServerResponse: Codable {
+    var success: Bool
+}
+
+struct ChangePassword: Codable {
+    enum CodingKeys: String, CodingKey {
+        case oldPassword = "old_password"
+        case newPassword = "new_password"
+    }
+
+    var oldPassword: String
+    var newPassword: String
 }
 
 class DataController {
+
+    // MARK: Public
+
+    public private(set) var admin: Admin?
+
+    // MARK: Internal
+
     @MainActor static let shared: DataController = .init()
 
-    let queue: DispatchQueue = .init(label: "Queue")
-
-    var hospital: Hospital? {
-        didSet {
-            guard let hospital else { return }
-            Task {
-                await updateHospital(hospital)
-            }
+    func login(emailAddress: String, password: String) async -> Bool {
+        let userLogin = UserLogin(emailAddress: emailAddress, password: password)
+        guard let userLoginData = userLogin.toData() else {
+            fatalError("Something fucked up")
         }
+
+        let token: Token? = await MiddlewareManager.shared.post(url: "/admin/login", body: userLoginData)
+        guard let accessToken = token?.accessToken, let admin = token?.user else {
+            return false
+        }
+        self.accessToken = accessToken
+        self.admin = admin
+
+        UserDefaults.standard.set(accessToken, forKey: "accessToken")
+        UserDefaults.standard.set(emailAddress, forKey: "emailAddress")
+        UserDefaults.standard.set(password, forKey: "password")
+
+        return true
     }
 
-    func updateHospital(_ newHospital: Hospital) async -> Bool {
-        guard let body = newHospital.toData() else { return false }
-        let response: UpdateResponse? = await MiddlewareManager.shared.patch(url: "/admin/hospital", body: body)
+    func autoLogin() async -> Bool {
+        guard let email = UserDefaults.standard.string(forKey: "emailAddress"),
+              let password = UserDefaults.standard.string(forKey: "password") else {
+            return false
+        }
+
+        return await login(emailAddress: email, password: password)
+    }
+
+    func logout() {
+        UserDefaults.standard.removeObject(forKey: "accessToken")
+    }
+
+    func changePassword(oldPassword: String, newPassword: String) async -> Bool {
+        let changePassword = ChangePassword(oldPassword: oldPassword, newPassword: newPassword)
+        guard let changePasswordData = changePassword.toData() else {
+            fatalError("Something fucked up again...")
+        }
+
+        let response: ServerResponse? = await MiddlewareManager.shared.patch(url: "/admin/change-password", body: changePasswordData)
         return response?.success ?? false
     }
 
-    func fetchHospital() async -> Hospital? {
-        guard let adminId = UserDefaults.standard.string(forKey: "adminId") else { return nil }
+    // MARK: Private
 
-        let hospital: Hospital? = await MiddlewareManager.shared.get(url: "/admin/hospital/\(adminId)")
-        self.hospital = hospital
-        return hospital
+    private var accessToken: String = ""
 
-    }
-
-    func fetchAdmin(email: String, password: String) async -> Admin? {
-        let admin: Admin? = await MiddlewareManager.shared.get(url: "/user/fetch", queryParameters: ["email_address": email, "password": password])
-        if admin?.role == .admin {
-            UserDefaults.standard.set(admin?.id, forKey: "adminId")
-        }
-        return admin?.role == .admin ? admin : nil
-    }
-
-    func updateAdmin(_ newAdmin: Admin) async -> Bool {
-        guard let body = newAdmin.toData() else { return false }
-        let response: UpdateResponse? = await MiddlewareManager.shared.put(url: "/user/update/\(newAdmin.id)", body: body)
-        return response?.success ?? false
-    }
 }
 
 extension DataController {
-    func fetchDoctors() async -> [Staff] {
-        _ = await fetchHospital()
-        return await MiddlewareManager.shared.get(url: "/admin/staffs/\(hospital?.id ?? "")") ?? []
-    }
-
-    func createDoctor(_ doctor: Staff) async -> Bool {
-        guard let body = doctor.toData() else { return false }
-        let response: CreateResponse? = await MiddlewareManager.shared.post(url: "/admin/staff", body: body)
-        return response?.success ?? false
-    }
-
-    func updateDoctor(_ doctor: Staff) async -> Bool {
-        guard let body = doctor.toData() else { return false }
-        let response: UpdateResponse? = await MiddlewareManager.shared.put(url: "/admin/staff/\(doctor.id)", body: body)
-        return response?.success ?? false
-    }
-
-    func deleteDoctor(_ doctor: Staff) async -> Bool {
-        return await MiddlewareManager.shared.delete(url: "/admin/staff/\(doctor.id)")
+    func fetchDoctors() async -> [Staff]? {
+        return await MiddlewareManager.shared.get(url: "/staff")
     }
 }

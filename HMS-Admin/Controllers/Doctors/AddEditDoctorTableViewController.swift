@@ -33,30 +33,6 @@ class AddEditDoctorTableViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
 
-    @IBAction func doneButtonTapped(_ sender: UIBarButtonItem) {
-        guard let firstName = firstNameField.text, let lastName = lastNameField.text, let email = emailField.text, let licenseNumber = licenceNumberField.text else {
-            return
-        }
-        if doctor == nil {
-            let newDoctor = Staff(firstName: firstName, emailAddress: email, password: "\(firstName)\(firstName.count)", contactNumber: "", specializations: [], department: "", licenseId: licenseNumber)
-            Task {
-                let success = await DataController.shared.createDoctor(newDoctor)
-                if success {
-                    self.dismiss(animated: true, completion: nil)
-                }
-            }
-        } else {
-            doctor?.firstName = firstName
-            doctor?.lastName = lastName
-            doctor?.emailAddress = email
-            doctor?.licenseId = licenseNumber
-            Task {
-                let success = await DataController.shared.updateDoctor(doctor!)
-                if success {
-                    self.dismiss(animated: true, completion: nil)
-                }
-            }
-        }
-    }
+    @IBAction func doneButtonTapped(_ sender: UIBarButtonItem) {}
 
 }

@@ -217,41 +217,19 @@
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="45"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="ZR8-xP-St5">
-                                                    <rect key="frame" x="0.0" y="0.0" width="353" height="45"/>
-                                                    <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yJT-7N-dm5">
-                                                            <rect key="frame" x="0.0" y="0.0" width="117.66666666666667" height="45"/>
-                                                            <state key="normal" title="Button"/>
-                                                            <buttonConfiguration key="configuration" style="filled" title="Male">
-                                                                <backgroundConfiguration key="background" cornerRadius="0.0"/>
-                                                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleBody"/>
-                                                            </buttonConfiguration>
-                                                        </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="x59-4a-akv">
-                                                            <rect key="frame" x="117.66666666666666" y="0.0" width="117.66666666666666" height="45"/>
-                                                            <state key="normal" title="Button"/>
-                                                            <buttonConfiguration key="configuration" style="tinted" title="Female">
-                                                                <backgroundConfiguration key="background" cornerRadius="0.0"/>
-                                                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleBody"/>
-                                                            </buttonConfiguration>
-                                                        </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8tM-rP-k6O">
-                                                            <rect key="frame" x="235.33333333333334" y="0.0" width="117.66666666666666" height="45"/>
-                                                            <state key="normal" title="Button"/>
-                                                            <buttonConfiguration key="configuration" style="tinted" title="Other">
-                                                                <backgroundConfiguration key="background" cornerRadius="0.0"/>
-                                                                <fontDescription key="titleFontDescription" style="UICTFontTextStyleBody"/>
-                                                            </buttonConfiguration>
-                                                        </button>
-                                                    </subviews>
-                                                </stackView>
+                                                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="HWr-C6-KzC">
+                                                    <rect key="frame" x="0.0" y="0.0" width="353" height="46"/>
+                                                    <segments>
+                                                        <segment title="First"/>
+                                                        <segment title="Second"/>
+                                                    </segments>
+                                                </segmentedControl>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="ZR8-xP-St5" firstAttribute="leading" secondItem="dPc-WF-wvZ" secondAttribute="leading" id="Yy5-2C-BVH"/>
-                                                <constraint firstAttribute="trailing" secondItem="ZR8-xP-St5" secondAttribute="trailing" id="lrd-Az-iWf"/>
-                                                <constraint firstItem="ZR8-xP-St5" firstAttribute="top" secondItem="dPc-WF-wvZ" secondAttribute="top" id="vRI-ym-U9e"/>
-                                                <constraint firstAttribute="bottom" secondItem="ZR8-xP-St5" secondAttribute="bottom" id="wza-9L-rFB"/>
+                                                <constraint firstItem="HWr-C6-KzC" firstAttribute="top" secondItem="dPc-WF-wvZ" secondAttribute="top" id="Fcf-HL-MEn"/>
+                                                <constraint firstItem="HWr-C6-KzC" firstAttribute="leading" secondItem="dPc-WF-wvZ" secondAttribute="leading" id="Ugm-wz-ePF"/>
+                                                <constraint firstAttribute="bottom" secondItem="HWr-C6-KzC" secondAttribute="bottom" id="dIM-Ec-kFS"/>
+                                                <constraint firstAttribute="trailing" secondItem="HWr-C6-KzC" secondAttribute="trailing" id="oO0-6N-yAQ"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -429,7 +407,7 @@
             </objects>
             <point key="canvasLocation" x="4996" y="-325"/>
         </scene>
-        <!--Doctor Details View Controller-->
+        <!--Doctor Profile-->
         <scene sceneID="TRO-QB-0mZ">
             <objects>
                 <viewController storyboardIdentifier="DoctorDetailsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="9gi-4a-NtJ" customClass="DoctorDetailsViewController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
@@ -439,7 +417,7 @@
                         <viewLayoutGuide key="safeArea" id="FQr-ql-ffi"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="YM0-A7-67b"/>
+                    <navigationItem key="navigationItem" title="Doctor Profile" largeTitleDisplayMode="never" id="YM0-A7-67b"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vVm-Ge-ErE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

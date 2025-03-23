@@ -16,7 +16,7 @@ class DoctorsViewController: UIViewController, UISearchResultsUpdating {
 
     @IBOutlet var tableView: UITableView!
 
-    var doctors: [Staff] = []
+    var doctors: [Staff]? = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,7 +82,7 @@ extension DoctorsViewController: UISearchBarDelegate {
         }
 
         searchTask = DispatchWorkItem {
-            self.doctors = self.doctors.filter { $0.fullName.lowercased().contains(searchText.lowercased()) }
+            self.doctors = self.doctors?.filter { $0.fullName.lowercased().contains(searchText.lowercased()) }
             self.tableView.reloadData()
         }
 
@@ -109,7 +109,7 @@ extension DoctorsViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return doctors.count
+        return doctors?.count ?? 0
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -124,6 +124,8 @@ extension DoctorsViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: "DoctorTableViewCell", for: indexPath) as? DoctorTableViewCell
 
         guard let cell else { fatalError() }
+
+        guard let doctors else { fatalError() }
 
         let doctor = doctors[indexPath.section]
         cell.updateElements(with: doctor)
@@ -140,7 +142,7 @@ extension DoctorsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
         let identifier = "\(indexPath.section)-\(indexPath.row)" as NSString
-        let doctor = doctors[indexPath.section]
+        guard let doctor = doctors?[indexPath.section] else { fatalError() }
         return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { _ in
             let editAction = UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { _ in
                 self.performSegue(withIdentifier: "segueShowAddEditDoctorTableViewController", sender: doctor)
