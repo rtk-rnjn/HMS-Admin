@@ -38,6 +38,7 @@ struct Staff: Codable, Equatable {
         case onLeave = "on_leave"
         case consultationFee = "consultation_fee"
         case unavailabilityPeriods = "unavailability_periods"
+        case joiningDate = "joining_date"
         case licenseId = "license_id"
         case yearOfExperience = "year_of_experience"
         case role = "role"
@@ -60,6 +61,7 @@ struct Staff: Codable, Equatable {
     var consultationFee: Int = 0
 
     var unavailabilityPeriods: [UnavailablePeriod] = []
+    var joiningDate: Date = .init()
     var licenseId: String
     var yearOfExperience: Int = 0
     var role: Role = .doctor
