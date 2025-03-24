@@ -23,7 +23,8 @@ class AddEditDoctorTableViewController: UITableViewController {
     @IBOutlet var yearOfExperienceTextField: UITextField!
     @IBOutlet var specializationTextField: UITextField!
     @IBOutlet var departmentTextField: UITextField!
-
+    @IBOutlet var consultationFeeTextField: UITextField!
+    
     var selectedGender: String = "Male"
 
     override func viewDidLoad() {
@@ -64,10 +65,11 @@ class AddEditDoctorTableViewController: UITableViewController {
         let yearOfExperience = Int(yearOfExperienceTextField.text!)!
         let specialization = specializationTextField.text!.components(separatedBy: ", ")
         let department = departmentTextField.text!
+        let consultationFee = Int(consultationFeeTextField.text!)!
 
         let randomPassword = Utils.randomString(length: 8)
 
-        let staff = Staff(firstName: firstName, lastName: lastName, gender: gender, emailAddress: email, dateOfBirth: dateOfBirth, password: randomPassword, contactNumber: contactNumber, specializations: specialization, department: department, licenseId: medicalLicenseNumber, yearOfExperience: yearOfExperience)
+        let staff = Staff(firstName: firstName, lastName: lastName, gender: gender, emailAddress: email, dateOfBirth: dateOfBirth, password: randomPassword, contactNumber: contactNumber, specializations: specialization, department: department, consultationFee: consultationFee, licenseId: medicalLicenseNumber, yearOfExperience: yearOfExperience)
 
         Task {
             _ = await DataController.shared.addDoctor(staff)
@@ -89,6 +91,7 @@ class AddEditDoctorTableViewController: UITableViewController {
         yearOfExperienceTextField.text = "\(doctor?.yearOfExperience ?? 0)"
         specializationTextField.text = doctor?.specializations.joined(separator: ", ")
         departmentTextField.text = doctor?.department
+        consultationFeeTextField.text = "\(doctor?.consultationFee ?? 0)"
     }
 
     private func validateFields() -> Bool {
@@ -131,6 +134,11 @@ class AddEditDoctorTableViewController: UITableViewController {
 
         guard let department = departmentTextField.text, !department.isEmpty else {
             showAlert(message: "Department is required")
+            return false
+        }
+
+        guard let consultationFee = consultationFeeTextField.text, !consultationFee.isEmpty, let fee = Int(consultationFee), fee > 0 else {
+            showAlert(message: "Consultation fee is required or invalid")
             return false
         }
 

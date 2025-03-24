@@ -323,10 +323,56 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection id="tJZ-cy-vuv">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Bun-oR-qn7">
+                                        <rect key="frame" x="20" y="578.33333015441895" width="353" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Bun-oR-qn7" id="lfY-eg-van">
+                                            <rect key="frame" x="0.0" y="0.0" width="353" height="45"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Consultation Fee" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="G35-1a-9UU" userLabel="Year Of Experience">
+                                                    <rect key="frame" x="20" y="0.0" width="313" height="45"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numberPad"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="G35-1a-9UU" firstAttribute="leading" secondItem="lfY-eg-van" secondAttribute="leading" constant="20" id="6ft-uz-zLb"/>
+                                                <constraint firstItem="G35-1a-9UU" firstAttribute="top" secondItem="lfY-eg-van" secondAttribute="top" id="UEk-q5-TGT"/>
+                                                <constraint firstAttribute="trailing" secondItem="G35-1a-9UU" secondAttribute="trailing" constant="20" id="w93-6E-MtM"/>
+                                                <constraint firstAttribute="bottom" secondItem="G35-1a-9UU" secondAttribute="bottom" id="xJH-Y8-dvK"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                             <tableViewSection id="ben-FO-7mw">
                                 <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="eGY-d0-OWW">
+                                        <rect key="frame" x="20" y="636.33333015441895" width="353" height="45"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eGY-d0-OWW" id="vEh-HW-ggk">
+                                            <rect key="frame" x="0.0" y="0.0" width="353" height="45"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Department" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vbE-9X-Xpc" userLabel="Select Department">
+                                                    <rect key="frame" x="20" y="0.0" width="313" height="45"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" textContentType="name"/>
+                                                </textField>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="vbE-9X-Xpc" firstAttribute="leading" secondItem="vEh-HW-ggk" secondAttribute="leading" constant="20" id="6Ml-si-4Kw"/>
+                                                <constraint firstAttribute="bottom" secondItem="vbE-9X-Xpc" secondAttribute="bottom" id="Eyt-Wy-Tzy"/>
+                                                <constraint firstItem="vbE-9X-Xpc" firstAttribute="top" secondItem="vEh-HW-ggk" secondAttribute="top" id="Uhg-pA-aLq"/>
+                                                <constraint firstAttribute="trailing" secondItem="vbE-9X-Xpc" secondAttribute="trailing" constant="20" id="eSr-on-3uT"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="Q8S-73-WNT">
-                                        <rect key="frame" x="20" y="578.33333015441895" width="353" height="45"/>
+                                        <rect key="frame" x="20" y="681.33333015441895" width="353" height="45"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Q8S-73-WNT" id="0d1-a1-Hqi">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="45"/>
@@ -349,29 +395,7 @@
                                 </cells>
                             </tableViewSection>
                             <tableViewSection headerTitle="Department &amp; Schedule" id="MCA-9A-gOI">
-                                <cells>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="eGY-d0-OWW">
-                                        <rect key="frame" x="20" y="672.33333015441895" width="353" height="45"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="eGY-d0-OWW" id="vEh-HW-ggk">
-                                            <rect key="frame" x="0.0" y="0.0" width="353" height="45"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Select Department" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="vbE-9X-Xpc" userLabel="Select Department">
-                                                    <rect key="frame" x="20" y="0.0" width="313" height="45"/>
-                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" textContentType="name"/>
-                                                </textField>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstItem="vbE-9X-Xpc" firstAttribute="leading" secondItem="vEh-HW-ggk" secondAttribute="leading" constant="20" id="6Ml-si-4Kw"/>
-                                                <constraint firstAttribute="bottom" secondItem="vbE-9X-Xpc" secondAttribute="bottom" id="Eyt-Wy-Tzy"/>
-                                                <constraint firstItem="vbE-9X-Xpc" firstAttribute="top" secondItem="vEh-HW-ggk" secondAttribute="top" id="Uhg-pA-aLq"/>
-                                                <constraint firstAttribute="trailing" secondItem="vbE-9X-Xpc" secondAttribute="trailing" constant="20" id="eSr-on-3uT"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
+                                <cells/>
                             </tableViewSection>
                         </sections>
                         <connections>
@@ -392,6 +416,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="consultationFeeTextField" destination="G35-1a-9UU" id="S2t-X2-yy4"/>
                         <outlet property="contactNumberTextField" destination="coh-aJ-okr" id="UeK-HD-Yxs"/>
                         <outlet property="dateOfBirthDatePicker" destination="oSy-Pg-aeX" id="VtS-Dd-HgK"/>
                         <outlet property="departmentTextField" destination="vbE-9X-Xpc" id="6pp-4G-ygm"/>
