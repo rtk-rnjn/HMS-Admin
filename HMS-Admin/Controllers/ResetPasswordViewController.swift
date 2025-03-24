@@ -15,6 +15,8 @@ class ResetPasswordViewController: UIViewController {
 
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var confirmPasswordTextField: UITextField!
+    @IBOutlet weak var signInButton: UIButton!
+    
 
     let eyeButton1 = UIButton(type: .custom)
     let eyeButton2 = UIButton(type: .custom)
@@ -31,9 +33,36 @@ class ResetPasswordViewController: UIViewController {
         configureEyeButton(for: confirmPasswordTextField,button: eyeButton2)
         passwordTextField.addTarget(self, action: #selector(passwordEntered), for: .editingChanged)
         confirmPasswordTextField.addTarget(self, action: #selector(passwordEnteredForCnfrmPass), for: .editingChanged)
+        
+        
+        
+        passwordTextField.addTarget(self, action: #selector(textFieldsChanged), for: .editingChanged)
+            confirmPasswordTextField.addTarget(self, action: #selector(textFieldsChanged), for: .editingChanged)
+
+            signInButton.isEnabled = false
+            signInButton.alpha = 0.5 //
+        
+        
+        
         navigationItem.hidesBackButton = true
     }
 
+    @objc func textFieldsChanged() {
+        let password = passwordTextField.text ?? ""
+        let confirmPassword = confirmPasswordTextField.text ?? ""
+        
+        let isValid = password.count >= 8 && confirmPassword.count >= 8 && password == confirmPassword
+        
+        signInButton.isEnabled = isValid
+        signInButton.alpha = isValid ? 1.0 : 0.7 // Adjusted opacity for better visibility
+    }
+    
+    
+    
+    
+    
+    
+    
     @objc func passwordEntered(sender:UITextField){
         if passwordTextField.text?.isEmpty ?? true || passwordTextField.text == "" {
             eyeButton1.isEnabled = false
