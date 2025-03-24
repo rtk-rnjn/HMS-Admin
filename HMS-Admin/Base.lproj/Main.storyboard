@@ -91,6 +91,7 @@
                     <connections>
                         <outlet property="emailTextField" destination="HGU-6E-k4L" id="RAq-IZ-NR4"/>
                         <outlet property="passwordTextField" destination="PfP-jf-EXB" id="bbX-oY-8SF"/>
+                        <outlet property="signInButton" destination="mX2-gm-YF4" id="uyU-oa-cek"/>
                         <segue destination="pef-3o-PN0" kind="show" identifier="segueShowInitialTabBarController" id="nii-GI-W5J"/>
                         <segue destination="GGi-QF-tqf" kind="show" identifier="segueShowResetPasswordViewController" id="mjj-af-yJO"/>
                     </connections>
@@ -215,7 +216,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="OEq-7f-nXI"/>
+        <segue reference="nii-GI-W5J"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">

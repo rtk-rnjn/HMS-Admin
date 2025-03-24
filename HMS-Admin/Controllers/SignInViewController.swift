@@ -13,6 +13,9 @@ class SignInViewController: UIViewController {
 
     @IBOutlet var emailTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
+    @IBOutlet weak var signInButton: UIButton!
+    
+    
     
     let eyeButton = UIButton(type: .custom)
 
@@ -22,8 +25,26 @@ class SignInViewController: UIViewController {
         eyeButton.isEnabled = false
         configureEyeButton(for: passwordTextField)
         passwordTextField.addTarget(self, action: #selector(passwordEntered), for: .editingChanged)
+        
+        emailTextField.addTarget(self, action: #selector(textFieldsChanged), for: .editingChanged)
+                passwordTextField.addTarget(self, action: #selector(textFieldsChanged), for: .editingChanged)
+
+                // Initially disable sign-in button
+                signInButton.isEnabled = false
+                signInButton.alpha = 1.0
+        
+        
         navigationItem.hidesBackButton = true
     }
+    
+    @objc func textFieldsChanged() {
+            let isValidEmail = isValidEmail(emailTextField.text ?? "")
+            let isPasswordFilled = !(passwordTextField.text?.isEmpty ?? true)
+
+            signInButton.isEnabled = isValidEmail && isPasswordFilled
+//        signInButton.alpha = signInButton.isEnabled ? 1.0 : 0.5
+        }
+    
     
     
     @objc func passwordEntered(sender:UITextField){
@@ -80,6 +101,12 @@ class SignInViewController: UIViewController {
         sender.isSelected.toggle()
         passwordTextField.isSecureTextEntry.toggle()
     }
+    
+    private func isValidEmail(_ email: String) -> Bool {
+            let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+            let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+            return emailPredicate.evaluate(with: email)
+        }
     
     
 
