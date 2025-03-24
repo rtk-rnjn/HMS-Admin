@@ -65,7 +65,7 @@ class DataController {
     func login(emailAddress: String, password: String) async -> Bool {
         let userLogin = UserLogin(emailAddress: emailAddress, password: password)
         guard let userLoginData = userLogin.toData() else {
-            fatalError("Something fucked up")
+            fatalError("Could not convert userLogin to Data")
         }
 
         let token: Token? = await MiddlewareManager.shared.post(url: "/admin/login", body: userLoginData)
@@ -103,7 +103,7 @@ class DataController {
     func changePassword(oldPassword: String, newPassword: String) async -> Bool {
         let changePassword = ChangePassword(oldPassword: oldPassword, newPassword: newPassword)
         guard let changePasswordData = changePassword.toData() else {
-            fatalError("Something fucked up again...")
+            fatalError("Could not change password: Invalid data")
         }
 
         let response: ServerResponse? = await MiddlewareManager.shared.patch(url: "/admin/change-password", body: changePasswordData)
@@ -128,7 +128,7 @@ extension DataController {
 
     func addDoctor(_ doctor: Staff) async -> Staff? {
         guard let doctorData = doctor.toData() else {
-            fatalError("Something FUCKEDD UP")
+            fatalError("Could not add doctor: Invalid data")
         }
 
         return await MiddlewareManager.shared.post(url: "/staff/create", body: doctorData)
