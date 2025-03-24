@@ -24,7 +24,7 @@ class ResetPasswordViewController: UIViewController {
     }
 
     @IBAction func signInTapped(_ sender: UIButton) {
-        guard let admin else { fatalError("mere saamne wali khidki mein ek chand ka tukda rehta hai") }
+        guard let admin else { fatalError("Didnt Sign In") }
 
         guard let password = passwordTextField.text, let confirmPassword = confirmPasswordTextField.text else {
             showAlert(message: "Please enter password")
@@ -37,7 +37,7 @@ class ResetPasswordViewController: UIViewController {
         }
 
         if !password.isValidPassword() {
-            showAlert(message: "Password must be at least 8 characters long & alphanumeric")
+            showAlert(message: "Password must be at least 8 characters long & must contain one uppercase letter, one lowercase letter, and one digit")
         }
 
         if password == admin.password {
