@@ -555,7 +555,13 @@
                             <outlet property="delegate" destination="9dF-hg-BAC" id="WPx-2j-6jo"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Doctor Profile" largeTitleDisplayMode="never" id="rQQ-GZ-igL"/>
+                    <navigationItem key="navigationItem" title="Doctor Profile" largeTitleDisplayMode="never" id="rQQ-GZ-igL">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="trash" id="R1Q-G3-TjW">
+                            <connections>
+                                <action selector="trashButtonTapped:" destination="9dF-hg-BAC" id="MUw-N4-pgL"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="staffLabel" destination="2Og-TD-tbM" id="VPN-1E-rkh"/>
                         <outlet property="staffSpecializationLabel" destination="csX-7m-rUy" id="W0V-cl-PiD"/>

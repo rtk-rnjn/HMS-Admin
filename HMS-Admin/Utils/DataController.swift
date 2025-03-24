@@ -133,4 +133,12 @@ extension DataController {
 
         return await MiddlewareManager.shared.post(url: "/staff/create", body: doctorData)
     }
+
+    func deleteDoctor(_ doctor: Staff) async -> Bool {
+        guard let doctorData = doctor.toData() else {
+            fatalError("Something FUCKEDD UP")
+        }
+
+        return await MiddlewareManager.shared.delete(url: "/staff/\(doctor.id)", body: doctorData)
+    }
 }
