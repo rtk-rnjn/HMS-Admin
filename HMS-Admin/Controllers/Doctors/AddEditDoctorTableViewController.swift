@@ -30,7 +30,11 @@ class AddEditDoctorTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        dateOfBirthDatePicker.maximumDate = Date()
+        let calendar = Calendar.current
+        let currentDate = Date()
+        if let minDate = calendar.date(byAdding: .year, value: -25, to: currentDate) {
+            dateOfBirthDatePicker.maximumDate = minDate
+        }
 
         prepareStaffIfPossible()
     }
