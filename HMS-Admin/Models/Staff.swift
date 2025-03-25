@@ -74,3 +74,27 @@ struct Staff: Codable, Equatable {
     }
 
 }
+
+extension Staff {
+    static var preview: Staff {
+        Staff(
+            id: UUID().uuidString,
+            firstName: "Sarah",
+            lastName: "Wilson",
+            emailAddress: "doctor@hospital.com",
+            dateOfBirth: Date(timeIntervalSince1970: 479689200), // March 15, 1985
+            password: "password123",
+            contactNumber: "+1 (555) 000-0000",
+            specializations: ["Cardiology"],
+            department: "Cardiology Department",
+            onLeave: false,
+            consultationFee: 150,
+            unavailabilityPeriods: [],
+            joiningDate: Date(),
+            licenseId: "ML123456789",
+            yearOfExperience: 12,
+            role: .doctor,
+            hospitalId: "hospital123"
+        )
+    }
+}

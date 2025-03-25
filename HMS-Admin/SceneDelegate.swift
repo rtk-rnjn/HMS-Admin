@@ -6,21 +6,31 @@
 //
 
 import UIKit
+import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        guard let scene = (scene as? UIWindowScene) else { return }
+        guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let window = UIWindow(windowScene: scene)
+        let window = UIWindow(windowScene: windowScene)
         let userSignedUp = UserDefaults.standard.bool(forKey: "isUserLoggedIn")
-        let storyboard = userSignedUp ? UIStoryboard(name: "Initial", bundle: nil) : UIStoryboard(name: "Main", bundle: nil)
-
-        let initialViewController = storyboard.instantiateInitialViewController()
-
-        window.rootViewController = initialViewController
+        
+        if userSignedUp {
+            // User is logged in, show the DoctorListView directly with SwiftUI
+            let doctorListView = DoctorListView()
+            let hostingController = UIHostingController(rootView: doctorListView)
+            hostingController.view.backgroundColor = UIColor.systemGroupedBackground
+            window.rootViewController = hostingController
+        } else {
+            // User is not logged in, show our new LoginView
+            let loginView = LoginView()
+            let hostingController = UIHostingController(rootView: loginView)
+            window.rootViewController = hostingController
+        }
+        
         self.window = window
         window.makeKeyAndVisible()
     }

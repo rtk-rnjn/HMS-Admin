@@ -6,159 +6,61 @@
 //
 
 import UIKit
+import SwiftUI
 
-private let filterImage: UIImage? = .init(systemName: "line.3.horizontal.decrease.circle")
-private let filterSelectedImage: UIImage? = .init(systemName: "line.3.horizontal.decrease.circle.fill")
+// This is a simple wrapper class to maintain compatibility with existing code
+// Eventually, this can be removed as you transition fully to SwiftUI
+class DoctorsViewController: UIViewController {
 
-class DoctorsViewController: UIViewController, UISearchResultsUpdating {
-
-    // MARK: Internal
-
+    // MARK: - Properties
     @IBOutlet var tableView: UITableView!
-
     var doctors: [Staff]? = []
 
+    // MARK: - View Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        tableView.delegate = self
-        tableView.dataSource = self
-
-        prepareSearchController()
+        
+        // Set the view's background color
+        self.view.backgroundColor = UIColor.systemGroupedBackground
+        
+        // Create and configure SwiftUI view
+        let doctorListView = DoctorListView()
+        let hostingController = UIHostingController(rootView: doctorListView)
+        
+        // Configure the hosting controller
+        hostingController.view.backgroundColor = UIColor.systemGroupedBackground
+        
+        // Add as child view controller
+        addChild(hostingController)
+        view.addSubview(hostingController.view)
+        
+        // Configure constraints to cover the entire screen
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        
+        hostingController.didMove(toParent: self)
+        
+        // Hide navigation bar since SwiftUI is handling it
+        navigationController?.setNavigationBarHidden(true, animated: false)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        refreshData()
+        // Hide the navigation bar when this view appears
+        navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "segueShowAddEditDoctorTableViewController", let navigationController = segue.destination as? UINavigationController, let addEditDoctorTableViewController = navigationController.topViewController as? AddEditDoctorTableViewController {
-            addEditDoctorTableViewController.doctor = sender as? Staff
-        }
-
-        if segue.identifier == "segueShowDoctorDetailsTableViewController", let doctorDetailsTableViewController = segue.destination as? DoctorDetailsTableViewController, let doctor = sender as? Staff {
-            doctorDetailsTableViewController.doctor = doctor
-        }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // Only show the navigation bar when leaving this view if needed by the next screen
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
-
-    func updateSearchResults(for searchController: UISearchController) {}
-
+    
+    // Simple method to support existing segues if needed
     @IBAction func unwind(_ segue: UIStoryboardSegue) {}
-
-    @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
-        performSegue(withIdentifier: "segueShowAddEditDoctorTableViewController", sender: nil)
-    }
-
-    // MARK: Private
-
-    private var searchTask: DispatchWorkItem?
-    private var searchController: UISearchController = .init()
-
-    private func prepareSearchController() {
-        searchController.searchBar.delegate = self
-        searchController.searchResultsUpdater = self
-        searchController.searchBar.placeholder = "Search Doctors"
-
-        navigationItem.searchController = searchController
-        navigationItem.hidesSearchBarWhenScrolling = false
-    }
-
-    private func refreshData() {
-        Task {
-            doctors = await DataController.shared.fetchDoctors()
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
-    }
-
-}
-
-extension DoctorsViewController: UISearchBarDelegate {
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
-        searchTask?.cancel()
-
-        if searchText.isEmpty {
-            refreshData()
-            return
-        }
-
-        searchTask = DispatchWorkItem {
-            self.doctors = self.doctors?.filter {
-                $0.fullName.lowercased().contains(searchText.lowercased()) ||
-                $0.department.lowercased().contains(searchText.lowercased()) ||
-                $0.specializations.contains(where: { $0.lowercased().contains(searchText.lowercased()) })
-            }
-            self.tableView.reloadData()
-        }
-
-        if let task = searchTask {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: task)
-        }
-    }
-
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-    }
-
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        searchBar.text = ""
-        searchBar.resignFirstResponder()
-        refreshData()
-    }
-}
-
-extension DoctorsViewController: UITableViewDataSource, UITableViewDelegate {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return doctors?.count ?? 0
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 5
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 5
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "DoctorTableViewCell", for: indexPath) as? DoctorTableViewCell
-
-        guard let cell else { fatalError() }
-
-        guard let doctors else { fatalError() }
-
-        let doctor = doctors[indexPath.section]
-        cell.updateElements(with: doctor)
-
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as? DoctorTableViewCell
-        cell?.isSelected = false
-
-        let doctor = doctors?[indexPath.section]
-
-        performSegue(withIdentifier: "segueShowDoctorDetailsTableViewController", sender: doctor)
-    }
-
-    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let identifier = "\(indexPath.section)-\(indexPath.row)" as NSString
-        guard let doctor = doctors?[indexPath.section] else { fatalError() }
-        return UIContextMenuConfiguration(identifier: identifier, previewProvider: nil) { _ in
-            let editAction = UIAction(title: "Edit", image: UIImage(systemName: "pencil")) { _ in
-                self.performSegue(withIdentifier: "segueShowAddEditDoctorTableViewController", sender: doctor)
-            }
-
-            return UIMenu(title: "", children: [editAction])
-        }
-    }
 }
