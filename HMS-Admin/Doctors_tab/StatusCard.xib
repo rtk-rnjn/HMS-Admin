@@ -60,6 +60,11 @@
                     <constraint firstItem="Xom-ba-f9j" firstAttribute="leading" secondItem="hh9-cW-xs0" secondAttribute="leading" id="lpe-2D-1YI"/>
                 </constraints>
             </collectionViewCellContentView>
+            <connections>
+                <outlet property="doctorCountLabel" destination="VXW-pA-XFz" id="QIs-c0-q37"/>
+                <outlet property="doctorStatusImage" destination="ZgZ-GK-67q" id="4wK-qj-wP1"/>
+                <outlet property="doctorStatusLabel" destination="ZN8-Tl-Efu" id="AH4-72-dms"/>
+            </connections>
             <point key="canvasLocation" x="113" y="-38"/>
         </collectionViewCell>
     </objects>

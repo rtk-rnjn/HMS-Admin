@@ -101,17 +101,21 @@ extension DoctorsHomeViewController:UICollectionViewDelegate,UICollectionViewDat
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "searchBarCell", for: indexPath) as! SearchBarCollectionViewCell
 //            cell.layer.borderWidth = 1
+//            applyShadowStyling(to: cell)
             cell.layer.cornerRadius = 10
             return cell
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "statusCard", for: indexPath) as! StatusBarCollectionViewCell
 //            cell.layer.borderWidth = 1
+            
             cell.layer.cornerRadius = 10
+            applyShadowStyling(to: cell)
             return cell
         default:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "doctorCard", for: indexPath) as! DoctorProfileCollectionViewCell
 //            cell.layer.borderWidth = 1
             cell.layer.cornerRadius = 10
+            applyShadowStyling(to: cell)
             return cell
         }
     }
@@ -140,6 +144,32 @@ extension DoctorsHomeViewController:UICollectionViewDelegate,UICollectionViewDat
         default:return
         }
     }
+    
+    
+    
+    private func applyShadowStyling(to cell: UICollectionViewCell) {
+            // Create a shadow layer
+            cell.layer.shadowColor = UIColor.black.cgColor
+            cell.layer.shadowOpacity = 0.15
+            cell.layer.shadowRadius = 3
+            cell.layer.shadowOffset = CGSize(width: 0, height: 2)
+//            cell.layer.shadowColor = UIColor.black.cgColor
+//            cell.layer.shadowOffset = CGSize(width: 0, height: 2)
+//            cell.layer.shadowRadius = 4
+//            cell.layer.shadowOpacity = 1
+            cell.layer.masksToBounds = false
+    
+            // Make sure the content view keeps the corner radius
+            cell.contentView.layer.cornerRadius = cell.layer.cornerRadius
+            cell.contentView.layer.masksToBounds = true
+    
+            // Make sure the background is not transparent
+            cell.backgroundColor = .clear
+            cell.contentView.backgroundColor = .white
+    
+            // Improve shadow performance by setting its path
+            cell.layer.shadowPath = UIBezierPath(roundedRect: cell.bounds, cornerRadius: cell.layer.cornerRadius).cgPath
+        }
 }
 
 
