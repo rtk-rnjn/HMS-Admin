@@ -10,6 +10,9 @@ import UIKit
 class DoctorTableViewCell: UITableViewCell {
     @IBOutlet var fullNameLabel: UILabel!
     @IBOutlet var specializationLabel: UILabel!
+    
+    @IBOutlet var department: UILabel!
+    
 
     func updateElements(with doctor: Staff) {
         fullNameLabel.text = doctor.fullName
