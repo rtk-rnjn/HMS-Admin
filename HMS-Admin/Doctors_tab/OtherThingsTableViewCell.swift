@@ -8,7 +8,14 @@
 import UIKit
 
 class OtherThingsTableViewCell: UITableViewCell {
-
+    
+    @IBOutlet var imagView: UIImageView!
+    
+    
+    @IBOutlet var upperLabel: UILabel!
+    
+    @IBOutlet var lowerLabel: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
