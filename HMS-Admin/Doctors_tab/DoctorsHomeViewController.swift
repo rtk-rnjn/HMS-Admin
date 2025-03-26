@@ -132,6 +132,14 @@ extension DoctorsHomeViewController:UICollectionViewDelegate,UICollectionViewDat
             }
         }
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 2:
+            performSegue(withIdentifier: "segueShowDoctorDetailsTableViewController", sender: nil)
+        default:return
+        }
+    }
 }
 
 
