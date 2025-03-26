@@ -9,4 +9,14 @@ import UIKit
 
 class StatusBarCollectionViewCell: UICollectionViewCell {
     
+    
+    
+    @IBOutlet var doctorStatusImage: UIImageView!
+    
+    @IBOutlet var doctorCountLabel: UILabel!
+    
+    @IBOutlet var doctorStatusLabel: UILabel!
+    
+    
+    
 }
