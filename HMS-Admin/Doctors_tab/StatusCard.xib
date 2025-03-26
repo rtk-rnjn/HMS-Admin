@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="QPt-kg-K1z" customClass="StatusBarCollectionViewCell" customModule="HMS_Admin" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="160" height="100"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hh9-cW-xs0">
+                <rect key="frame" x="0.0" y="0.0" width="160" height="100"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Xom-ba-f9j">
+                        <rect key="frame" x="0.0" y="0.0" width="160" height="100"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="KqF-qm-mRe">
+                                <rect key="frame" x="0.0" y="0.0" width="160" height="100"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="Tnq-EQ-btX">
+                                        <rect key="frame" x="0.0" y="0.0" width="160" height="32"/>
+                                        <subviews>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stethoscope" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ZgZ-GK-67q">
+                                                <rect key="frame" x="0.0" y="0.33333333333333037" width="25.333333333333332" height="31.666666666666671"/>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kSr-1P-ezY">
+                                                <rect key="frame" x="26.333333333333329" y="0.0" width="133.66666666666669" height="32"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VXW-pA-XFz">
+                                        <rect key="frame" x="0.0" y="34" width="160" height="32"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Total Doctor" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZN8-Tl-Efu">
+                                        <rect key="frame" x="0.0" y="68" width="160" height="32"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="Xom-ba-f9j" secondAttribute="trailing" id="5YL-Ji-FeK"/>
+                    <constraint firstItem="Xom-ba-f9j" firstAttribute="top" secondItem="hh9-cW-xs0" secondAttribute="top" id="Bi0-hv-Bcq"/>
+                    <constraint firstAttribute="bottom" secondItem="Xom-ba-f9j" secondAttribute="bottom" id="Hbw-ex-I3I"/>
+                    <constraint firstItem="Xom-ba-f9j" firstAttribute="leading" secondItem="hh9-cW-xs0" secondAttribute="leading" id="lpe-2D-1YI"/>
+                </constraints>
+            </collectionViewCellContentView>
+            <point key="canvasLocation" x="113" y="-38"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="stethoscope" catalog="system" width="128" height="101"/>
+    </resources>
+</document>
