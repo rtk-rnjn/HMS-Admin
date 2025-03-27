@@ -60,7 +60,7 @@ extension DoctorProfileViewController: UITableViewDataSource, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section != 0 {
-            return 60
+            return 45
         }
         else{
             return 200
