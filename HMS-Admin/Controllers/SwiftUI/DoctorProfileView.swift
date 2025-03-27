@@ -142,7 +142,6 @@ struct InfoSectionCard<Content: View>: View {
             .padding(16)
             .background(Color(.systemBackground))
             .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
         }
     }
 }

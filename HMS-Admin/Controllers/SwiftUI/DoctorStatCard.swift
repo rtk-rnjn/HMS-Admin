@@ -34,6 +34,5 @@ struct DoctorStatCard: View {
         .frame(width: 120)
         .background(Color(.systemBackground))
         .cornerRadius(12)
-//        .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: 2)
     }
 }
