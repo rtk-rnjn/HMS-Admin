@@ -80,10 +80,8 @@ class SelectorTableViewController: UITableViewController {
         present(alertController, animated: true)
     }
 
-
     @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
         dismiss(animated: true, completion: nil)
     }
 
-    
 }

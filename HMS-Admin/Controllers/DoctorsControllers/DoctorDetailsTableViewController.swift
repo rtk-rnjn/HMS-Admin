@@ -9,6 +9,8 @@ import UIKit
 
 class DoctorDetailsTableViewController: UITableViewController {
 
+    // MARK: Internal
+
     var doctor: Staff?
 
     @IBOutlet var staffLabel: UILabel!
@@ -39,6 +41,8 @@ class DoctorDetailsTableViewController: UITableViewController {
         let alert = Utils.getAlert(title: "Alert", message: "Are you sure you want to delete this doctor?", actions: [cancelAction, deleteAction])
         present(alert, animated: true)
     }
+
+    // MARK: Private
 
     private func updateUI() {
         staffLabel.text = doctor?.fullName ?? "Doctor Not Found"

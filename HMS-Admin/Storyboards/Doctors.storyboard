@@ -17,10 +17,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="6eq-1C-NRq">
-                                <rect key="frame" x="0.0" y="103" width="393" height="749"/>
+                                <rect key="frame" x="0.0" y="59" width="393" height="793"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DoctorTableViewCell" id="ry0-mz-sB6" customClass="DoctorTableViewCell" customModule="HMS_Admin" customModuleProvider="target">
-                                        <rect key="frame" x="20" y="38" width="353" height="66"/>
+                                        <rect key="frame" x="20" y="55.333332061767578" width="353" height="66"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ry0-mz-sB6" id="6pr-3R-nGa">
                                             <rect key="frame" x="0.0" y="0.0" width="353" height="66"/>
@@ -488,7 +488,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="TlH-qW-aqF"/>
+                        <segue destination="SHA-il-Xob" kind="relationship" relationship="rootViewController" id="FAx-eC-BGX"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tgl-kD-9NS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -518,7 +518,7 @@
             <objects>
                 <tableViewController id="9dF-hg-BAC" customClass="DoctorDetailsTableViewController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="MVq-Iv-qnR">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <sections>
                             <tableViewSection id="hxg-ak-BCH">
@@ -595,6 +595,30 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R5E-ib-mkW" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3262" y="405"/>
+        </scene>
+        <!--Doctors-->
+        <scene sceneID="gv6-k2-Nm7">
+            <objects>
+                <hostingController id="SHA-il-Xob" customClass="DoctorsHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" title="Doctors" id="Sr0-09-JXl">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="add" id="ndb-tj-Na3">
+                            <connections>
+                                <segue destination="okY-IY-0qM" kind="presentation" id="bnW-iV-wnD"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </hostingController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BYM-Uk-oJq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="276" y="805"/>
+        </scene>
+        <!--Add Doctor Hosting Controller-->
+        <scene sceneID="Ghc-KT-PeY">
+            <objects>
+                <hostingController id="okY-IY-0qM" customClass="AddDoctorHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="E9F-nu-1yl" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1450" y="805"/>
         </scene>
     </scenes>
     <resources>

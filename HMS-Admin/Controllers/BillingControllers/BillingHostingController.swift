@@ -11,8 +11,4 @@ class BillingHostingController: UIHostingController<BillingView> {
     required init?(coder: NSCoder) {
         super.init(coder: coder, rootView: BillingView())
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
 }

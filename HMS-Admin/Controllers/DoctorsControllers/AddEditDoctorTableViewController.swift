@@ -24,7 +24,7 @@ class AddEditDoctorTableViewController: UITableViewController {
     @IBOutlet var specializationTextField: UITextField!
     @IBOutlet var departmentTextField: UITextField!
     @IBOutlet var consultationFeeTextField: UITextField!
-    
+
     var selectedGender: String = "Male"
 
     override func viewDidLoad() {

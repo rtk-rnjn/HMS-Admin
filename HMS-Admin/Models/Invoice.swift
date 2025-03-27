@@ -16,4 +16,3 @@ struct Invoice: Codable, Identifiable {
 
     var date: Date = .init()
 }
-

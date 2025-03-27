@@ -5,13 +5,18 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
     </dependencies>
     <scenes>
-        <!--Hosting Controller-->
+        <!--Profile-->
         <scene sceneID="XE0-ZK-q9v">
             <objects>
-                <hostingController id="dZK-gG-F2b" sceneMemberID="viewController"/>
+                <hostingController id="dZK-gG-F2b" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Profile" image="person.fill" catalog="system" id="FeP-AA-Tri"/>
+                </hostingController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T1I-r6-AmM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="227" y="-24"/>
+            <point key="canvasLocation" x="1153.4351145038167" y="-24.647887323943664"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="person.fill" catalog="system" width="128" height="120"/>
+    </resources>
 </document>

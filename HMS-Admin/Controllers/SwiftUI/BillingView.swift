@@ -31,7 +31,7 @@ struct BillingView: View {
 
 struct InvoiceCard: View {
     let invoice: Invoice
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -42,13 +42,13 @@ struct InvoiceCard: View {
                         .font(.caption)
                         .foregroundColor(.gray)
                 }
-                
+
                 Spacer()
-                
+
                 Text(String(format: "$%.2f", invoice.amount))
                     .font(.title3)
                     .fontWeight(.semibold)
-                
+
                 InvoiceStatusBadge(status: invoice.status)
             }
         }
@@ -60,7 +60,7 @@ struct InvoiceCard: View {
 
 struct InvoiceStatusBadge: View {
     let status: String
-    
+
     var backgroundColor: Color {
         switch status {
         case "Completed": return .green
@@ -69,7 +69,7 @@ struct InvoiceStatusBadge: View {
         default: return .gray
         }
     }
-    
+
     var body: some View {
         Text(status)
             .font(.caption)
