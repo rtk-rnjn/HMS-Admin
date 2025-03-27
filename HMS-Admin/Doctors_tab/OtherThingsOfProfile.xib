@@ -59,6 +59,11 @@
                     <constraint firstItem="Iap-Oi-YEM" firstAttribute="leading" secondItem="3S5-63-iIl" secondAttribute="leading" id="u0I-0q-jWC"/>
                 </constraints>
             </tableViewCellContentView>
+            <connections>
+                <outlet property="imagView" destination="J5J-5C-UEJ" id="uzh-Ge-VD1"/>
+                <outlet property="lowerLabel" destination="cf5-w1-7Qe" id="ScM-CA-PLv"/>
+                <outlet property="upperLabel" destination="t2S-z8-1nr" id="mlt-XM-ZaI"/>
+            </connections>
             <point key="canvasLocation" x="292" y="28"/>
         </tableViewCell>
     </objects>
