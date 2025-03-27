@@ -8,7 +8,7 @@
         <!--Profile-->
         <scene sceneID="XE0-ZK-q9v">
             <objects>
-                <hostingController id="dZK-gG-F2b" sceneMemberID="viewController">
+                <hostingController id="dZK-gG-F2b" customClass="ProfileHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.fill" catalog="system" id="FeP-AA-Tri"/>
                 </hostingController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T1I-r6-AmM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

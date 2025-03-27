@@ -3,27 +3,9 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Dashboard-->
-        <scene sceneID="s0d-6b-0kx">
-            <objects>
-                <viewController storyboardIdentifier="DashboardViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Y6W-OH-hqX" customClass="DashboardViewController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="Dashboard" id="hEk-O1-w2H"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1851.1450381679388" y="-28.169014084507044"/>
-        </scene>
         <!--Dashboard-->
         <scene sceneID="gbo-Wr-a1x">
             <objects>
@@ -36,18 +18,28 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="Y6W-OH-hqX" kind="relationship" relationship="rootViewController" id="6Dx-gk-XUf"/>
+                        <segue destination="e3x-4U-tkH" kind="relationship" relationship="rootViewController" id="uIE-Wl-g76"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KyY-VG-SxO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="924.4274809160305" y="-28.169014084507044"/>
         </scene>
+        <!--Dashboard-->
+        <scene sceneID="LzL-1O-jWr">
+            <objects>
+                <hostingController id="e3x-4U-tkH" customClass="DashboardHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" title="Dashboard" id="XSi-DK-n5V">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="bell.fill" catalog="system" style="done" id="cbb-M1-rnU"/>
+                    </navigationItem>
+                </hostingController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4Ec-5m-nXv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1949" y="-28"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="bell.fill" catalog="system" width="123" height="128"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
     </resources>
 </document>
