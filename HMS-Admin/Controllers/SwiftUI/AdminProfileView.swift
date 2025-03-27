@@ -39,7 +39,7 @@ struct AdminProfileView: View {
 
             Section {
                 Button(action: {
-                    dismiss()
+                    // TODO:
                 }) {
                     Label("Sign Out", systemImage: "rectangle.portrait.and.arrow.right")
                         .foregroundColor(.red)
