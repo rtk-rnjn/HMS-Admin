@@ -19,7 +19,6 @@ class StatusBarCollectionViewCell: UICollectionViewCell {
     
     
     func update(with indexPath: IndexPath){
-        doctorStatusLabel.layer.opacity = 0.6
         switch indexPath.row {
         case 1:
             doctorStatusLabel.text = "Active"
