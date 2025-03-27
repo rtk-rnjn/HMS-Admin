@@ -13,14 +13,14 @@ struct DashboardView: View {
     @State private var selectedTimeRange = "Today"
     @State private var showProfile = false
     let timeRanges = ["Today", "Week", "Month"]
-    
+
     // Sample data for the chart
     let patientData: [(String, Int)] = [
         ("Mon", 24), ("Tue", 30), ("Wed", 28),
         ("Thu", 32), ("Fri", 25), ("Sat", 20),
         ("Sun", 22)
     ]
-    
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -33,7 +33,7 @@ struct DashboardView: View {
                             color: .blue,
                             trend: "+5%"
                         )
-                        
+
                         QuickStatCard(
                             title: "Today's Patients",
                             value: "0",
@@ -41,7 +41,7 @@ struct DashboardView: View {
                             color: .green,
                             trend: "+12%"
                         )
-                        
+
                         QuickStatCard(
                             title: "Revenue",
                             value: "0K",
@@ -49,7 +49,7 @@ struct DashboardView: View {
                             color: .purple,
                             trend: "+8%"
                         )
-                        
+
                         QuickStatCard(
                             title: "Pending Bills",
                             value: "0",
@@ -72,14 +72,14 @@ struct DashboardView: View {
                         icon: "person.badge.plus",
                         color: .blue
                     )
-                    
+
                     QuickActionButton(
                         title: "Announcement",
                         subtitle: "New message",
                         icon: "megaphone.fill",
                         color: .purple
                     )
-                    
+
                     QuickActionButton(
                         title: "Reports",
                         subtitle: "View analytics",
@@ -88,23 +88,23 @@ struct DashboardView: View {
                     )
                 }
                 .padding(.horizontal)
-                
+
                 // Recent Activity
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
                         Text("Recent Activity")
                             .font(.title3)
                             .fontWeight(.bold)
-                        
+
                         Spacer()
-                        
+
                         Button("See All") {
                             // Handle see all
                         }
                         .foregroundColor(.blue)
                     }
-                    
-                    ForEach(1...4, id: \.self) { index in
+
+                    ForEach(1...4, id: \.self) { _ in
                         ActivityRow()
                     }
                 }
@@ -126,16 +126,16 @@ struct QuickStatCard: View {
     let icon: String
     let color: Color
     let trend: String
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: icon)
                     .font(.title2)
                     .foregroundColor(color)
-                
+
                 Spacer()
-                
+
                 Text(trend)
                     .font(.caption)
                     .foregroundColor(trend.hasPrefix("+") ? .green : .red)
@@ -147,11 +147,11 @@ struct QuickStatCard: View {
                     )
                     .cornerRadius(8)
             }
-            
+
             Text(value)
                 .font(.title)
                 .fontWeight(.bold)
-            
+
             Text(title)
                 .font(.subheadline)
                 .foregroundColor(.gray)
@@ -173,19 +173,19 @@ struct ActivityRow: View {
                     Image(systemName: "stethoscope")
                         .foregroundColor(.blue)
                 )
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text("Dr. Smith added a new patient")
                     .font(.subheadline)
                     .fontWeight(.medium)
-                
+
                 Text("2 hours ago")
                     .font(.caption)
                     .foregroundColor(.gray)
             }
-            
+
             Spacer()
-            
+
             Image(systemName: "chevron.right")
                 .foregroundColor(.gray)
         }
@@ -198,7 +198,7 @@ struct QuickActionButton: View {
     let subtitle: String
     let icon: String
     let color: Color
-    
+
     var body: some View {
         Button(action: {
             // Handle action
@@ -212,12 +212,12 @@ struct QuickActionButton: View {
                             .font(.title2)
                             .foregroundColor(color)
                     )
-                
+
                 VStack(spacing: 2) {
                     Text(title)
                         .font(.callout)
                         .fontWeight(.medium)
-                    
+
                     Text(subtitle)
                         .font(.caption)
                         .foregroundColor(.gray)

@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct AdminProfileView: View {
     var body: some View {
         List {
@@ -20,7 +19,7 @@ struct AdminProfileView: View {
                         .frame(width: 60, height: 60)
                         .foregroundColor(.blue)
                         .background(Circle().fill(Color.blue.opacity(0.1)))
-                    
+
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Admin")
                             .font(.headline)
@@ -31,7 +30,7 @@ struct AdminProfileView: View {
                 }
                 .padding(.vertical, 8)
             }
-            
+
             // Contact Information Section
             Section("Contact Information") {
                 InfoRow(icon: "envelope.fill", label: "Email", value: "admin@hms.local")
