@@ -17,33 +17,33 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="Xom-ba-f9j">
-                        <rect key="frame" x="0.0" y="0.0" width="160" height="100"/>
+                        <rect key="frame" x="5" y="0.0" width="155" height="100"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="KqF-qm-mRe">
-                                <rect key="frame" x="0.0" y="0.0" width="160" height="100"/>
+                                <rect key="frame" x="0.0" y="0.0" width="155" height="100"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="Tnq-EQ-btX">
-                                        <rect key="frame" x="0.0" y="0.0" width="160" height="32"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="155" height="32"/>
                                         <subviews>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="stethoscope" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="ZgZ-GK-67q">
-                                                <rect key="frame" x="0.0" y="0.33333333333333037" width="25.333333333333332" height="31.666666666666671"/>
+                                                <rect key="frame" x="0.0" y="0.33333333333333037" width="19.666666666666668" height="31.666666666666671"/>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kSr-1P-ezY">
-                                                <rect key="frame" x="26.333333333333329" y="0.0" width="133.66666666666669" height="32"/>
+                                                <rect key="frame" x="20.666666666666671" y="0.0" width="134.33333333333331" height="32"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
                                     </stackView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VXW-pA-XFz">
-                                        <rect key="frame" x="0.0" y="34" width="160" height="32"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VXW-pA-XFz">
+                                        <rect key="frame" x="0.0" y="34" width="155" height="32"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Total Doctor" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZN8-Tl-Efu">
-                                        <rect key="frame" x="0.0" y="68" width="160" height="32"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Doctor" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZN8-Tl-Efu">
+                                        <rect key="frame" x="0.0" y="68" width="155" height="32"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -57,7 +57,7 @@
                     <constraint firstAttribute="trailing" secondItem="Xom-ba-f9j" secondAttribute="trailing" id="5YL-Ji-FeK"/>
                     <constraint firstItem="Xom-ba-f9j" firstAttribute="top" secondItem="hh9-cW-xs0" secondAttribute="top" id="Bi0-hv-Bcq"/>
                     <constraint firstAttribute="bottom" secondItem="Xom-ba-f9j" secondAttribute="bottom" id="Hbw-ex-I3I"/>
-                    <constraint firstItem="Xom-ba-f9j" firstAttribute="leading" secondItem="hh9-cW-xs0" secondAttribute="leading" id="lpe-2D-1YI"/>
+                    <constraint firstItem="Xom-ba-f9j" firstAttribute="leading" secondItem="hh9-cW-xs0" secondAttribute="leading" constant="5" id="sFc-Q1-nil"/>
                 </constraints>
             </collectionViewCellContentView>
             <connections>

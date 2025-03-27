@@ -107,7 +107,7 @@ extension DoctorsHomeViewController:UICollectionViewDelegate,UICollectionViewDat
         case 1:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "statusCard", for: indexPath) as! StatusBarCollectionViewCell
 //            cell.layer.borderWidth = 1
-            
+            cell.update(with: indexPath)
             cell.layer.cornerRadius = 10
             applyShadowStyling(to: cell)
             return cell
