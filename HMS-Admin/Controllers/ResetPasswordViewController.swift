@@ -144,7 +144,7 @@ class ResetPasswordViewController: UIViewController {
 
             if updated {
                 DispatchQueue.main.async {
-                    self.performSegue(withIdentifier: "segueShowInitialTabBarController", sender: nil)
+                    self.performSegue(withIdentifier: "segueShowOnBoardingTableViewController", sender: nil)
                     UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
                 }
             }

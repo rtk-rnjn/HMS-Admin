@@ -62,14 +62,14 @@ class SelectorTableViewController: UITableViewController {
             textField.placeholder = "Option Name"
         }
 
-        let addAction = UIAlertAction(title: "Add", style: .default) { [weak self] _ in
-            guard let self, let text = alertController.textFields?.first?.text, !text.isEmpty else { return }
+        let addAction = UIAlertAction(title: "Add", style: .default) { _ in
+            guard let text = alertController.textFields?.first?.text, !text.isEmpty else { return }
 
-            options.append(text)
-            selectedMappedOptions[text] = false
+            self.options.append(text)
+            self.selectedMappedOptions[text] = false
 
-            let newIndexPath = IndexPath(row: options.count - 1, section: 0)
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
+            let newIndexPath = IndexPath(row: self.options.count - 1, section: 0)
+            self.tableView.insertRows(at: [newIndexPath], with: .automatic)
         }
 
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
@@ -79,4 +79,11 @@ class SelectorTableViewController: UITableViewController {
 
         present(alertController, animated: true)
     }
+
+
+    @IBAction func cancelButtonTapped(_ sender: UIBarButtonItem) {
+        dismiss(animated: true, completion: nil)
+    }
+
+    
 }
