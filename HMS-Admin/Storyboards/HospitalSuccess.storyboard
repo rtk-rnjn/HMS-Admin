@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y8g-Mx-HEp">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Hospital Success View Controller-->
+        <scene sceneID="BYd-vA-FNB">
+            <objects>
+                <viewController id="Y8g-Mx-HEp" customClass="HospitalSuccessViewController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="2S0-dT-dFJ">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="eZO-kA-bX9">
+                                <rect key="frame" x="20" y="194" width="353" height="464"/>
+                                <subviews>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V7n-mI-ZM6">
+                                        <rect key="frame" x="126.66666666666666" y="0.0" width="100" height="100"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="100" id="Kpz-Wa-tdy"/>
+                                            <constraint firstAttribute="height" constant="100" id="WSl-3c-UMm"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hospital Added Successfully!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bcf-f4-dZs">
+                                        <rect key="frame" x="38.666666666666657" y="120" width="276" height="24"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VqE-zG-fv3">
+                                        <rect key="frame" x="26.666666666666657" y="164" width="300" height="180"/>
+                                        <subviews>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="nB9-VG-6gZ">
+                                                <rect key="frame" x="15" y="15" width="270" height="150"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hospital Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j6e-Nk-vBZ">
+                                                        <rect key="frame" x="0.0" y="0.0" width="270" height="24"/>
+                                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GlL-1H-kWs">
+                                                        <rect key="frame" x="0.0" y="32" width="270" height="17"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pin Code: 123456" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8iw-5Y-7V7">
+                                                        <rect key="frame" x="0.0" y="57" width="270" height="17"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="License: ABC123456" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nFr-gm-s2P">
+                                                        <rect key="frame" x="0.0" y="82" width="270" height="17"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <color key="textColor" systemColor="secondaryLabelColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j1c-uc-BVt">
+                                                        <rect key="frame" x="0.0" y="107" width="270" height="43"/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    </view>
+                                                </subviews>
+                                            </stackView>
+                                        </subviews>
+                                        <color key="backgroundColor" systemColor="secondarySystemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="nB9-VG-6gZ" secondAttribute="trailing" constant="15" id="A6v-XB-ufy"/>
+                                            <constraint firstAttribute="width" constant="300" id="DL2-1A-1Cx"/>
+                                            <constraint firstItem="nB9-VG-6gZ" firstAttribute="top" secondItem="VqE-zG-fv3" secondAttribute="top" constant="15" id="S7L-7T-NP3"/>
+                                            <constraint firstAttribute="height" constant="180" id="sTI-Db-jrF"/>
+                                            <constraint firstItem="nB9-VG-6gZ" firstAttribute="leading" secondItem="VqE-zG-fv3" secondAttribute="leading" constant="15" id="tei-nf-Ixd"/>
+                                            <constraint firstAttribute="bottom" secondItem="nB9-VG-6gZ" secondAttribute="bottom" constant="15" id="zU7-FE-b1q"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="12"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="btn-stack-view">
+                                        <rect key="frame" x="26.666666666666657" y="364" width="300" height="50"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eJn-q7-qqo">
+                                                <rect key="frame" x="0.0" y="0.0" width="140" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="0vZ-I9-PAc"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Home"/>
+                                                <connections>
+                                                    <action selector="viewProfileButtonTapped:" destination="Y8g-Mx-HEp" eventType="touchUpInside" id="Q9O-Tl-Jng"/>
+                                                    <segue destination="tSG-Ej-mwA" kind="show" identifier="segueShowInitialTabBarController" id="JAp-HQ-l4o"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yq1-Yk-9W0">
+                                                <rect key="frame" x="160" y="0.0" width="140" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="ehq-Gd-OJy"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Add Doctor"/>
+                                                <connections>
+                                                    <action selector="addDoctorButtonTapped:" destination="Y8g-Mx-HEp" eventType="touchUpInside" id="K0U-Fs-fWS"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="300" id="btn-stack-width"/>
+                                        </constraints>
+                                    </stackView>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qdv-uY-NGd">
+                                        <rect key="frame" x="56.666666666666686" y="434" width="240" height="30"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="kMt-i5-9Mb"/>
+                                            <constraint firstAttribute="width" constant="240" id="sqH-FT-hhG"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Yrd-jf-bQh"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="eZO-kA-bX9" firstAttribute="centerY" secondItem="2S0-dT-dFJ" secondAttribute="centerY" id="RHt-NZ-pKX"/>
+                            <constraint firstItem="Yrd-jf-bQh" firstAttribute="trailing" secondItem="eZO-kA-bX9" secondAttribute="trailing" constant="20" id="Sm9-fC-Yqg"/>
+                            <constraint firstItem="eZO-kA-bX9" firstAttribute="leading" secondItem="Yrd-jf-bQh" secondAttribute="leading" constant="20" id="mI7-Ft-JQD"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="addDoctorButton" destination="Yq1-Yk-9W0" id="Q3T-nk-9lp"/>
+                        <outlet property="addressLabel" destination="GlL-1H-kWs" id="qv5-NI-pjJ"/>
+                        <outlet property="contactNumberLabel" destination="8iw-5Y-7V7" id="4c9-Kq-QE0"/>
+                        <outlet property="hospitalNameLabel" destination="j6e-Nk-vBZ" id="Uzk-S3-dUo"/>
+                        <outlet property="licenseNumberLabel" destination="nFr-gm-s2P" id="Lg5-Iz-Nrf"/>
+                        <outlet property="successImageView" destination="V7n-mI-ZM6" id="Tf0-wG-xUr"/>
+                        <outlet property="successTitleLabel" destination="bcf-f4-dZs" id="K8z-Ve-tLr"/>
+                        <outlet property="viewProfileButton" destination="eJn-q7-qqo" id="bU4-3N-uiH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uHN-PK-X9f" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="139" y="4"/>
+        </scene>
+        <!--Initial-->
+        <scene sceneID="xsg-vM-fLn">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Initial" id="tSG-Ej-mwA" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="f7y-2Z-VGQ"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yf7-1Q-fei" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="745" y="4"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="secondarySystemBackgroundColor">
+            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

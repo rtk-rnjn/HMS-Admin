@@ -99,7 +99,7 @@ class ResetPasswordViewController: UIViewController {
 
             if updated {
                 DispatchQueue.main.async {
-                    self.performSegue(withIdentifier: "segueShowOnBoardingTableViewController", sender: nil)
+                    self.performSegue(withIdentifier: "segueToHospitalOnboard", sender: nil)
                     UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
                 }
             }
