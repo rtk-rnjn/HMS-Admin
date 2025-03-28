@@ -39,7 +39,7 @@ enum Utils {
         content.interruptionLevel = .timeSensitive
         content.userInfo = userInfo ?? [:]
 
-        let timeInterval = Date().relativeInterval(from: date)
+        let timeInterval = max(1, Date().relativeInterval(from: date))
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: timeInterval, repeats: false)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
 

@@ -25,6 +25,7 @@ class AnnouncementTableViewController: UITableViewController {
             _ = await DataController.shared.createAnnouncement(announcement)
             DispatchQueue.main.async {
                 self.dismiss(animated: true)
+                Utils.createNotification(title: title, body: message)
             }
         }
     }
