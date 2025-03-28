@@ -10,21 +10,25 @@ import UIKit
 
 class DashboardHostingController: UIHostingController<DashboardView> {
 
+    // MARK: Lifecycle
+
     required init?(coder: NSCoder) {
         super.init(coder: coder, rootView: DashboardView())
-        self.rootView.delegate = self
+        rootView.delegate = self
     }
+
+    // MARK: Internal
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Set up tab bar item
-        self.tabBarItem = UITabBarItem(
+        tabBarItem = UITabBarItem(
             title: "Dashboard",
             image: UIImage(systemName: "house"),
             selectedImage: UIImage(systemName: "house.fill")
         )
-        
+
         // Configure navigation bar
         navigationItem.title = "Dashboard"
         navigationController?.navigationBar.prefersLargeTitles = true

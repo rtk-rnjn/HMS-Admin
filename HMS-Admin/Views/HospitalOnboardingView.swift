@@ -3,29 +3,9 @@ import MapKit
 import CoreLocation
 
 struct HospitalOnboardingView: View {
-    @Environment(\.dismiss) private var dismiss
-    @State private var shouldNavigateToDashboard = false
-    @State private var hospitalName = ""
-    @State private var contactNumber = ""
-    @State private var hospitalAddress = ""
-    @State private var licenseNumber = ""
-    @State private var licenseValidUntil = Date()
-    @State private var departments: [String] = []
-    @State private var showingAddDepartment = false
-    @State private var newDepartment = ""
-    @State private var showingMapPicker = false
-    @State private var selectedLocation: CLLocationCoordinate2D?
-    
-    // Location manager for getting user's current location
-    @StateObject private var locationManager = LocationManager()
-    
-    // Validation states
-    @State private var hospitalNameError = ""
-    @State private var contactNumberError = ""
-    @State private var hospitalAddressError = ""
-    @State private var licenseNumberError = ""
-    @State private var departmentsError = ""
-    
+
+    // MARK: Internal
+
     var body: some View {
         NavigationView {
             Form {
@@ -42,9 +22,9 @@ struct HospitalOnboardingView: View {
                                     .foregroundColor(.red)
                             }
                         }
-                       
+
                         .padding(.vertical, 4)
-                        
+
                         VStack(alignment: .leading, spacing: 2) {
                             TextField("Contact Number", text: $contactNumber)
                                 .keyboardType(.phonePad)
@@ -58,7 +38,7 @@ struct HospitalOnboardingView: View {
                         }
                         .listRowSeparator(.hidden)
                         .padding(.vertical, 4)
-                        
+
                         VStack(alignment: .leading, spacing: 4) {
                             if !hospitalAddress.isEmpty {
                                 Text(hospitalAddress)
@@ -68,7 +48,7 @@ struct HospitalOnboardingView: View {
                                 Text("Hospital Address")
                                     .foregroundColor(.gray)
                             }
-                            
+
                             Button(action: {
                                 showingMapPicker = true
                             }) {
@@ -79,7 +59,7 @@ struct HospitalOnboardingView: View {
                                 }
                                 .foregroundColor(.blue)
                             }
-                            
+
                             if !hospitalAddressError.isEmpty {
                                 Text(hospitalAddressError)
                                     .font(.caption2)
@@ -92,7 +72,7 @@ struct HospitalOnboardingView: View {
                 }
                 .listRowBackground(Color(.systemBackground))
                 .listSectionSeparator(.hidden)
-                
+
                 // License Details Section
                 Section(header: Text("License Details")) {
                     VStack(alignment: .leading, spacing: 4) {
@@ -103,14 +83,14 @@ struct HospitalOnboardingView: View {
                                 .foregroundColor(.red)
                         }
                     }
-                    
+
                     DatePicker("Valid Until",
                               selection: $licenseValidUntil,
                               in: Date()...,
                               displayedComponents: .date)
                         .datePickerStyle(.compact)
                 }
-                
+
                 // Departments Section
                 Section(header: Text("Departments")) {
                     ForEach(departments, id: \.self) { department in
@@ -125,7 +105,7 @@ struct HospitalOnboardingView: View {
                             }
                         }
                     }
-                    
+
                     Button(action: {
                         showingAddDepartment = true
                     }) {
@@ -134,14 +114,14 @@ struct HospitalOnboardingView: View {
                             Text("Add Department")
                         }
                     }
-                    
+
                     if !departmentsError.isEmpty {
                         Text(departmentsError)
                             .font(.caption)
                             .foregroundColor(.red)
                     }
                 }
-                
+
                 // Submit Button Section
                 Section {
                     Button(action: submitForm) {
@@ -211,10 +191,10 @@ struct HospitalOnboardingView: View {
                     // Get the window scene
                     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                        let window = windowScene.windows.first {
-                        
+
                         // Load the Initial storyboard
                         let storyboard = UIStoryboard(name: "Initial", bundle: nil)
-                        
+
                         // Create the tab bar controller from storyboard
                         if let tabBarController = storyboard.instantiateInitialViewController() {
                             // Set it as the root view controller
@@ -226,7 +206,32 @@ struct HospitalOnboardingView: View {
             }
         }
     }
-    
+
+    // MARK: Private
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var shouldNavigateToDashboard = false
+    @State private var hospitalName = ""
+    @State private var contactNumber = ""
+    @State private var hospitalAddress = ""
+    @State private var licenseNumber = ""
+    @State private var licenseValidUntil: Date = .init()
+    @State private var departments: [String] = []
+    @State private var showingAddDepartment = false
+    @State private var newDepartment = ""
+    @State private var showingMapPicker = false
+    @State private var selectedLocation: CLLocationCoordinate2D?
+
+    // Location manager for getting user's current location
+    @StateObject private var locationManager: LocationManager = .init()
+
+    // Validation states
+    @State private var hospitalNameError = ""
+    @State private var contactNumberError = ""
+    @State private var hospitalAddressError = ""
+    @State private var licenseNumberError = ""
+    @State private var departmentsError = ""
+
     private func submitForm() {
         // Reset errors
         hospitalNameError = ""
@@ -234,15 +239,15 @@ struct HospitalOnboardingView: View {
         hospitalAddressError = ""
         licenseNumberError = ""
         departmentsError = ""
-        
+
         var isValid = true
-        
+
         // Validate Hospital Name
         if hospitalName.isEmpty {
             hospitalNameError = "Hospital name is required"
             isValid = false
         }
-        
+
         // Validate Contact Number
         if contactNumber.isEmpty {
             contactNumberError = "Contact number is required"
@@ -251,25 +256,25 @@ struct HospitalOnboardingView: View {
             contactNumberError = "Please enter a valid phone number"
             isValid = false
         }
-        
+
         // Validate Hospital Address
         if hospitalAddress.isEmpty {
             hospitalAddressError = "Hospital address is required"
             isValid = false
         }
-        
+
         // Validate License Number
         if licenseNumber.isEmpty {
             licenseNumberError = "License number is required"
             isValid = false
         }
-        
+
         // Validate Departments
         if departments.isEmpty {
             departmentsError = "At least one department is required"
             isValid = false
         }
-        
+
         if isValid {
             // Create hospital data
             let hospitalData = HospitalData(
@@ -281,15 +286,15 @@ struct HospitalOnboardingView: View {
                 licenseValidUntil: licenseValidUntil,
                 departments: departments
             )
-            
+
             // TODO: Submit the form data to your backend
             print("Form submitted successfully")
-            
+
             // Navigate to dashboard
             shouldNavigateToDashboard = true
         }
     }
-    
+
     private func isValidPhoneNumber(_ number: String) -> Bool {
         let phoneRegex = "^[0-9+]{0,1}+[0-9]{5,16}$"
         let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
@@ -299,46 +304,47 @@ struct HospitalOnboardingView: View {
 
 // Location Manager to handle location permissions and updates
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
-    private let locationManager = CLLocationManager()
-    @Published var location: CLLocation?
-    
+
+    // MARK: Lifecycle
+
     override init() {
         super.init()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
     }
-    
+
+    // MARK: Internal
+
+    @Published var location: CLLocation?
+
     func requestLocation() {
         locationManager.requestLocation()
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         location = locations.first
     }
-    
+
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Location manager failed with error: \(error.localizedDescription)")
     }
+
+    // MARK: Private
+
+    private let locationManager: CLLocationManager = .init()
+
 }
 
 // Map Location Picker View
 struct MapLocationPicker: View {
+
+    // MARK: Internal
+
     @Binding var selectedLocation: CLLocationCoordinate2D?
     @Binding var address: String
     @Binding var isPresented: Bool
-    
-    @StateObject private var locationManager = LocationManager()
-    @State private var region = MKCoordinateRegion(
-        center: CLLocationCoordinate2D(latitude: 37.3361, longitude: -122.0380),
-        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-    )
-    @State private var searchText = ""
-    @State private var searchResults: [MKMapItem] = []
-    @State private var selectedMapItem: MKMapItem?
-    @State private var showingSearchResults = false
-    @State private var isLoadingAddress = false
-    
+
     var body: some View {
         ZStack(alignment: .top) {
             // Map View
@@ -351,7 +357,7 @@ struct MapLocationPicker: View {
                         Image(systemName: "mappin.circle.fill")
                             .font(.title)
                             .foregroundColor(.red)
-                        
+
                         Image(systemName: "arrowtriangle.down.fill")
                             .font(.caption)
                             .foregroundColor(.red)
@@ -360,11 +366,11 @@ struct MapLocationPicker: View {
                 }
             }
             .edgesIgnoringSafeArea(.all)
-            .onTapGesture { location in
+            .onTapGesture { _ in
                 let coordinate = region.center
                 reverseGeocode(coordinate)
             }
-            
+
             // Search UI
             VStack(spacing: 0) {
                 // Search Bar
@@ -372,7 +378,7 @@ struct MapLocationPicker: View {
                     SearchBar(text: $searchText, onSearchButtonClicked: performSearch)
                         .padding()
                         .background(Color(.systemBackground))
-                    
+
                     // Search Results
                     if showingSearchResults && !searchResults.isEmpty {
                         ScrollView {
@@ -382,7 +388,7 @@ struct MapLocationPicker: View {
                                         SearchResultRow(mapItem: item)
                                     }
                                     .buttonStyle(PlainButtonStyle())
-                                    
+
                                     if item.id != searchResults.last?.id {
                                         Divider()
                                             .padding(.leading)
@@ -395,7 +401,7 @@ struct MapLocationPicker: View {
                     }
                 }
                 .shadow(radius: 2)
-                
+
                 if isLoadingAddress {
                     ProgressView("Getting address...")
                         .padding()
@@ -404,24 +410,24 @@ struct MapLocationPicker: View {
                         .shadow(radius: 2)
                         .padding()
                 }
-                
+
                 if let selectedItem = selectedMapItem {
                     // Selected Location Card
                     VStack(alignment: .leading, spacing: 8) {
                         Text(selectedItem.name ?? "Selected Location")
                             .font(.headline)
-                        
+
                         Text(selectedItem.placemark.formattedAddress)
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        
+
                         HStack {
                             Spacer()
-                            
+
                             Button(action: {
-                                self.address = selectedItem.placemark.formattedAddress
-                                self.selectedLocation = selectedItem.placemark.coordinate
-                                self.isPresented = false
+                                address = selectedItem.placemark.formattedAddress
+                                selectedLocation = selectedItem.placemark.coordinate
+                                isPresented = false
                             }) {
                                 Text("Confirm Location")
                                     .fontWeight(.semibold)
@@ -431,7 +437,7 @@ struct MapLocationPicker: View {
                                     .background(Color.blue)
                                     .cornerRadius(8)
                             }
-                            
+
                             Spacer()
                         }
                     }
@@ -441,7 +447,7 @@ struct MapLocationPicker: View {
                     .shadow(radius: 2)
                     .padding()
                 }
-                
+
                 Spacer()
             }
         }
@@ -453,7 +459,7 @@ struct MapLocationPicker: View {
                     isPresented = false
                 }
             }
-            
+
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     locationManager.requestLocation()
@@ -477,20 +483,33 @@ struct MapLocationPicker: View {
             }
         }
     }
-    
+
+    // MARK: Private
+
+    @StateObject private var locationManager: LocationManager = .init()
+    @State private var region: MKCoordinateRegion = .init(
+        center: CLLocationCoordinate2D(latitude: 37.3361, longitude: -122.0380),
+        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+    )
+    @State private var searchText = ""
+    @State private var searchResults: [MKMapItem] = []
+    @State private var selectedMapItem: MKMapItem?
+    @State private var showingSearchResults = false
+    @State private var isLoadingAddress = false
+
     private func reverseGeocode(_ coordinate: CLLocationCoordinate2D) {
         isLoadingAddress = true
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        
+
         let geocoder = CLGeocoder()
         geocoder.reverseGeocodeLocation(location) { placemarks, error in
             isLoadingAddress = false
-            
-            if let error = error {
+
+            if let error {
                 print("Reverse geocoding error: \(error.localizedDescription)")
                 return
             }
-            
+
             if let placemark = placemarks?.first {
                 let mkPlacemark = MKPlacemark(placemark: placemark)
                 let mapItem = MKMapItem(placemark: mkPlacemark)
@@ -498,27 +517,27 @@ struct MapLocationPicker: View {
             }
         }
     }
-    
+
     private func performSearch() {
         let request = MKLocalSearch.Request()
         request.naturalLanguageQuery = searchText
         request.region = region
-        
+
         MKLocalSearch(request: request).start { response, error in
-            guard let response = response else {
+            guard let response else {
                 print("Search error: \(error?.localizedDescription ?? "Unknown error")")
                 return
             }
-            
+
             searchResults = response.mapItems
         }
     }
-    
+
     private func selectLocation(_ item: MKMapItem) {
         selectedMapItem = item
         showingSearchResults = false
         searchText = item.name ?? ""
-        
+
         withAnimation {
             region.center = item.placemark.coordinate
             region.span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
@@ -529,24 +548,24 @@ struct MapLocationPicker: View {
 // Search Result Row View
 struct SearchResultRow: View {
     let mapItem: MKMapItem
-    
+
     var body: some View {
         HStack(spacing: 12) {
             Image(systemName: "mappin.circle.fill")
                 .font(.title2)
                 .foregroundColor(.red)
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(mapItem.name ?? "")
                     .font(.body)
                     .foregroundColor(.primary)
-                
+
                 Text(mapItem.placemark.formattedAddress)
                     .font(.subheadline)
                     .foregroundColor(.gray)
                     .lineLimit(1)
             }
-            
+
             Spacer()
         }
         .padding(.vertical, 12)
@@ -557,8 +576,9 @@ struct SearchResultRow: View {
 // Search Bar View
 struct SearchBar: View {
     @Binding var text: String
+
     var onSearchButtonClicked: () -> Void
-    
+
     var body: some View {
         HStack {
             TextField("Search for location", text: $text)
@@ -566,7 +586,7 @@ struct SearchBar: View {
                 .onSubmit {
                     onSearchButtonClicked()
                 }
-            
+
             Button(action: onSearchButtonClicked) {
                 Image(systemName: "magnifyingglass")
             }
@@ -585,7 +605,7 @@ extension MKPlacemark {
             postalCode,
             country
         ].compactMap { $0 }
-        
+
         return components.joined(separator: ", ")
     }
 }
@@ -609,4 +629,4 @@ struct HospitalData {
 
 #Preview {
     HospitalOnboardingView()
-} 
+}

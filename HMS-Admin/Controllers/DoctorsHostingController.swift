@@ -33,6 +33,7 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
             }
         }
     }
+
     // MARK: Private
 
     private var searchController: UISearchController = .init()

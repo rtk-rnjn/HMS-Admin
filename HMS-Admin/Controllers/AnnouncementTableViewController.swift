@@ -9,11 +9,9 @@ import UIKit
 
 class AnnouncementTableViewController: UITableViewController {
 
-
     @IBOutlet var titleTextField: UITextField!
     @IBOutlet var messageTextField: UITextField!
     @IBOutlet var recieverSegmentedControl: UISegmentedControl!
-
 
     @IBAction func doneButtonTapped(_ sender: UIBarButtonItem) {
         let title = titleTextField.text ?? ""
