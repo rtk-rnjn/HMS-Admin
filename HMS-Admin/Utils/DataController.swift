@@ -142,3 +142,35 @@ extension DataController {
         return await MiddlewareManager.shared.delete(url: "/staff/\(doctor.id)", body: doctorData)
     }
 }
+
+extension DataController {
+    func createAnnouncement(_ announcement: Announcement) async -> Bool {
+        guard let announcementData = announcement.toData() else {
+            fatalError("Could not create announcement: Invalid data")
+        }
+
+        if admin == nil {
+            guard await autoLogin() else { fatalError() }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        let serverResponse: ServerResponse? = await MiddlewareManager.shared.post(url: "/hospital/\(admin.id)/create-announcement", body: announcementData)
+
+        return serverResponse?.success ?? false
+    }
+
+    func fetchAnnouncements() async -> [Announcement]? {
+        if admin == nil {
+            guard await autoLogin() else { fatalError() }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        return await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/announcements")
+    }
+}

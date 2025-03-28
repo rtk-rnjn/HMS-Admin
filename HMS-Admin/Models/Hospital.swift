@@ -32,11 +32,20 @@ struct Hospital: Codable, Equatable {
 struct Announcement: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case title
-        case message
+        case body
         case createdAt = "created_at"
     }
 
     var title: String
-    var message: String
-    var createdAt: Date
+    var body: String
+    var createdAt: Date = .init()
+    var broadcastTo: [String] = []
+    var category: AnnouncementCategory = .general
+}
+
+enum AnnouncementCategory: String, Codable {
+    case general = "General"
+    case emergency = "Emergency"
+    case appointment = "Appointment"
+    case holiday = "Holiday"
 }

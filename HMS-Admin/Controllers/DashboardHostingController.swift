@@ -13,4 +13,10 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         super.init(coder: coder, rootView: DashboardView())
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.rootView.delegate = self
+    }
+
 }

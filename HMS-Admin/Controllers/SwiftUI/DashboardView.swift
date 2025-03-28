@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct DashboardView: View {
+    weak var delegate: DashboardHostingController?
+
     @State private var searchText = ""
     @State private var showNotifications = false
     @State private var selectedTimeRange = "Today"
@@ -77,7 +79,10 @@ struct DashboardView: View {
                         title: "Announcement",
                         subtitle: "New message",
                         icon: "megaphone.fill",
-                        color: .purple
+                        color: .purple,
+                        action: {
+                            delegate?.performSegue(withIdentifier: "segueShowAnnouncementTableViewController", sender: nil)
+                        }
                     )
 
                     QuickActionButton(
@@ -198,10 +203,11 @@ struct QuickActionButton: View {
     let subtitle: String
     let icon: String
     let color: Color
+    var action: (() -> Void)?
 
     var body: some View {
         Button(action: {
-            // Handle action
+            action?()
         }) {
             VStack(spacing: 8) {
                 Circle()
