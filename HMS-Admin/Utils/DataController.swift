@@ -81,6 +81,7 @@ class DataController {
 
         let hospital: Hospital? = await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)")
         if let hospital {
+            UserDefaults.standard.set(true, forKey: "isHospitalOnboarded")
             self.hospital = hospital
         }
 
@@ -98,6 +99,8 @@ class DataController {
 
     func logout() {
         UserDefaults.standard.removeObject(forKey: "accessToken")
+        UserDefaults.standard.removeObject(forKey: "isHospitalOnboarded")
+        UserDefaults.standard.removeObject(forKey: "isUserLoggedIn")
     }
 
     func changePassword(oldPassword: String, newPassword: String) async -> Bool {
@@ -172,5 +175,15 @@ extension DataController {
         }
 
         return await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/announcements")
+    }
+
+    func createHospital(_ hospital: Hospital) async -> Bool {
+        guard let hospitalData = hospital.toData() else {
+            fatalError("")
+        }
+
+        let serverResponse: ServerResponse? = await MiddlewareManager.shared.post(url: "/hospital", body: hospitalData)
+
+        return serverResponse?.success ?? false
     }
 }

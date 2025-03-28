@@ -6,6 +6,8 @@ struct HospitalOnboardingView: View {
 
     // MARK: Internal
 
+    weak var delegate: HospitalDetailHostingController?
+
     var body: some View {
         NavigationView {
             Form {
@@ -182,28 +184,6 @@ struct HospitalOnboardingView: View {
             }
             .scrollContentBackground(.hidden)
             .background(Color(.systemGroupedBackground))
-            .fullScreenCover(isPresented: $shouldNavigateToDashboard) {
-                Color.clear
-                    .ignoresSafeArea()
-            }
-            .onChange(of: shouldNavigateToDashboard) { newValue in
-                if newValue {
-                    // Get the window scene
-                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-                       let window = windowScene.windows.first {
-
-                        // Load the Initial storyboard
-                        let storyboard = UIStoryboard(name: "Initial", bundle: nil)
-
-                        // Create the tab bar controller from storyboard
-                        if let tabBarController = storyboard.instantiateInitialViewController() {
-                            // Set it as the root view controller
-                            window.rootViewController = tabBarController
-                            window.makeKeyAndVisible()
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -276,22 +256,20 @@ struct HospitalOnboardingView: View {
         }
 
         if isValid {
-            // Create hospital data
-            let hospitalData = HospitalData(
-                name: hospitalName,
-                contactNumber: contactNumber,
-                address: hospitalAddress,
-                location: selectedLocation,
-                licenseNumber: licenseNumber,
-                licenseValidUntil: licenseValidUntil,
-                departments: departments
-            )
 
-            // TODO: Submit the form data to your backend
-            print("Form submitted successfully")
+            guard let admin = DataController.shared.admin else { fatalError() }
+            let hospital = Hospital(name: hospitalName, address: hospitalAddress, contact: contactNumber, departments: departments, latitude: selectedLocation?.latitude, longitude: selectedLocation?.longitude, adminId: admin.id, hospitalLicenceNumber: licenseNumber)
 
-            // Navigate to dashboard
-            shouldNavigateToDashboard = true
+            Task {
+                let created = await DataController.shared.createHospital(hospital)
+                if created {
+                    DispatchQueue.main.async {
+                        UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+                        UserDefaults.standard.set(true, forKey: "isHospitalOnboarded")
+                        delegate?.performSegue(withIdentifier: "segueShowInitialTabBarController", sender: nil)
+                    }
+                }
+            }
         }
     }
 
@@ -614,19 +592,4 @@ extension MKMapItem: Identifiable {
     public var id: String {
         return "\(placemark.coordinate.latitude),\(placemark.coordinate.longitude)"
     }
-}
-
-// Hospital Data Model
-struct HospitalData {
-    let name: String
-    let contactNumber: String
-    let address: String
-    let location: CLLocationCoordinate2D?
-    let licenseNumber: String
-    let licenseValidUntil: Date
-    let departments: [String]
-}
-
-#Preview {
-    HospitalOnboardingView()
 }

@@ -1,7 +1,7 @@
 import UIKit
 import SwiftUI
 
-class HospitalDetailHostingViewController: UIHostingController<HospitalOnboardingView> {
+class HospitalDetailHostingController: UIHostingController<HospitalOnboardingView> {
 
     // MARK: Lifecycle
 
@@ -14,13 +14,11 @@ class HospitalDetailHostingViewController: UIHostingController<HospitalOnboardin
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Hide the navigation bar
-        navigationController?.setNavigationBarHidden(true, animated: false)
+        rootView.delegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Ensure navigation bar stays hidden when view appears
         navigationController?.setNavigationBarHidden(true, animated: false)
     }
 }

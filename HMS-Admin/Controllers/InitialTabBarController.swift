@@ -19,6 +19,8 @@ class InitialTabBarController: UITabBarController {
         Task {
             await requestAccessForNotification()
         }
+
+//        WebSocketManager.shared.connectWebSocket()
     }
 
     func requestAccessForNotification() async {

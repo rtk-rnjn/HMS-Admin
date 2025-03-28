@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct AdminProfileView: View {
+    weak var delegate: ProfileHostingController?
+
     var body: some View {
         List {
             // Profile Header Section
@@ -39,7 +41,8 @@ struct AdminProfileView: View {
 
             Section {
                 Button(action: {
-                    // TODO:
+                    DataController.shared.logout()
+                    delegate?.performSegue(withIdentifier: "segueShowSignInViewController", sender: nil)
                 }) {
                     Label("Sign Out", systemImage: "rectangle.portrait.and.arrow.right")
                         .foregroundColor(.red)

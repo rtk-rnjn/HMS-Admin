@@ -68,6 +68,9 @@ struct Staff: Codable, Equatable {
 
     var hospitalId: String = ""
 
+    var shiftStartTime: Int = 9
+    var shiftEndTime: Int = 17
+
     var fullName: String {
         let lastName = lastName ?? ""
         return "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)

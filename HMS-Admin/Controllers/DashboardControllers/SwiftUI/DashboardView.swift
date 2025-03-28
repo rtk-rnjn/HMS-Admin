@@ -72,7 +72,10 @@ struct DashboardView: View {
                         title: "Add Doctor",
                         subtitle: "New registration",
                         icon: "person.badge.plus",
-                        color: .blue
+                        color: .blue,
+                        action: {
+                            delegate?.performSegue(withIdentifier: "segueShowAddDoctorHostingController", sender: nil)
+                        }
                     )
 
                     QuickActionButton(
@@ -81,7 +84,7 @@ struct DashboardView: View {
                         icon: "megaphone.fill",
                         color: .purple,
                         action: {
-                            delegate?.performSegue(withIdentifier: "segueShowAnnouncementTableViewController", sender: nil)
+                            delegate?.performSegue(withIdentifier: "segueShowCreateAnnouncementHostingController", sender: nil)
                         }
                     )
 

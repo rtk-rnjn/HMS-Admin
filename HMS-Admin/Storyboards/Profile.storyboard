@@ -10,10 +10,21 @@
             <objects>
                 <hostingController id="dZK-gG-F2b" customClass="ProfileHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" image="person.fill" catalog="system" id="FeP-AA-Tri"/>
+                    <connections>
+                        <segue destination="Qnd-yD-zq4" kind="presentation" identifier="segueShowSignInViewController" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="1b6-Pi-waL"/>
+                    </connections>
                 </hostingController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T1I-r6-AmM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1153.4351145038167" y="-24.647887323943664"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="XuT-d0-Ogd">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main" id="Qnd-yD-zq4" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="sX7-mn-e89" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1848" y="-25"/>
         </scene>
     </scenes>
     <resources>
