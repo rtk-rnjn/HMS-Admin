@@ -686,32 +686,32 @@ struct AddDoctorView: View {
 
             // Create new doctor
             let newDoctor = Staff(
-                id: UUID().uuidString,
-            firstName: firstName,
+                firstName: firstName,
                 lastName: lastName,
-            emailAddress: email,
-            dateOfBirth: dateOfBirth,
-                password: password, // Random password that will be sent to doctor
-            contactNumber: contactNumber,
+                emailAddress: email,
+                dateOfBirth: dateOfBirth,
+                password: password,
+                contactNumber: contactNumber,
                 specializations: specializations,
-            department: department,
+                department: department,
                 onLeave: false,
                 consultationFee: Int(fee),
                 unavailabilityPeriods: [],
-                joiningDate: Date(),
-            licenseId: medicalLicenseNumber,
+                licenseId: medicalLicenseNumber,
                 yearOfExperience: yearsOfExperience,
                 role: .doctor,
-                hospitalId: "hospital123" // Default hospital ID
+                hospitalId: DataController.shared.hospital?.id ?? ""
             )
 
-//            doctorStore.addDoctor(newDoctor)
+            Task {
+                guard let created = await DataController.shared.addDoctor(newDoctor) else {
+                    return
+                }
 
-            // Send welcome email with login credentials (background functionality)
-            sendWelcomeEmail(to: email, name: "\(firstName) \(lastName)", password: password)
+                printEmail(to: email, name: "\(firstName) \(lastName)", password: password)
+                dismiss()
 
-            // Immediately dismiss without showing alert
-            dismiss()
+            }
         }
     }
 
@@ -739,10 +739,7 @@ struct AddDoctorView: View {
         return String(password.shuffled())
     }
 
-    // Sends welcome email with login credentials
-    private func sendWelcomeEmail(to email: String, name: String, password: String) {
-        // In a real app, you would integrate with your email service
-        // This is just a placeholder for demonstration
+    private func printEmail(to email: String, name: String, password: String) {
         print("EMAIL SENT TO: \(email)")
         print("SUBJECT: Welcome to HMS - Your Doctor Account")
         print("BODY:")
@@ -758,30 +755,6 @@ struct AddDoctorView: View {
         print("")
         print("Best regards,")
         print("The HMS Team")
-
-        // In a production app, you would use an email service like SendGrid, Mailgun, etc.
-        // Example using URLSession to call your API:
-        // let emailData = [
-        //    "recipient": email,
-        //    "name": name,
-        //    "password": password,
-        //    "template": "doctor_welcome"
-        // ]
-        //
-        // guard let url = URL(string: "https://your-api.com/send-email") else { return }
-        // var request = URLRequest(url: url)
-        // request.httpMethod = "POST"
-        // request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        //
-        // do {
-        //    request.httpBody = try JSONSerialization.data(withJSONObject: emailData)
-        //
-        //    URLSession.shared.dataTask(with: request) { data, response, error in
-        //        // Handle response
-        //    }.resume()
-        // } catch {
-        //    print("Failed to send email: \(error)")
-        // }
     }
 }
 

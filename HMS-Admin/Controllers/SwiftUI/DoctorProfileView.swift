@@ -16,16 +16,13 @@ struct DoctorProfileView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
-                // Profile Image and Name Section with adaptive sizing
                 VStack(spacing: 16) {
-                    // Circular profile picture with shadow
                     Image(systemName: "person.circle.fill")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: sizeClass == .regular ? 140 : 120, height: sizeClass == .regular ? 140 : 120)
                         .foregroundColor(Color(.systemGray4))
                         .clipShape(Circle())
-                        .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
 
                     // Name with "Dr." prefix
                     Text("Dr. \(doctor.fullName)")
@@ -112,7 +109,12 @@ struct DoctorProfileView: View {
     }
 
     private func deleteDoctor() {
-        presentationMode.wrappedValue.dismiss()
+        Task {
+            let deleted = await DataController.shared.deleteDoctor(doctor)
+            if deleted {
+                presentationMode.wrappedValue.dismiss()
+            }
+        }
     }
 }
 

@@ -24,6 +24,15 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
         prepareSearchController()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        Task {
+            if let staffs = await DataController.shared.fetchDoctors() {
+                rootView.filteredDoctors = staffs
+            }
+        }
+    }
     // MARK: Private
 
     private var searchController: UISearchController = .init()

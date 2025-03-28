@@ -13,9 +13,7 @@ struct DoctorListView: View {
 
     var delegate: DoctorsHostingController?
 
-    var filteredDoctors: [Staff] {
-        return []
-    }
+    var filteredDoctors: [Staff] = []
 
     var body: some View {
 
@@ -65,7 +63,6 @@ struct DoctorListView: View {
 
     @State private var searchText = ""
     @State private var showingAddDoctorView = false
-
 }
 
 struct DoctorCard: View {
@@ -85,7 +82,6 @@ struct DoctorCard: View {
                         Circle()
                             .stroke(Color.white, lineWidth: 2)
                     )
-                    .shadow(color: Color.black.opacity(0.1), radius: 2, x: 0, y: 1)
 
                 VStack(alignment: .leading, spacing: 4) {
                     // Name
@@ -113,7 +109,6 @@ struct DoctorCard: View {
             .padding()
             .background(Color.white)
             .cornerRadius(16)
-            .shadow(color: Color.black.opacity(0.05), radius: 3, x: 0, y: 1)
         }
     }
 }
