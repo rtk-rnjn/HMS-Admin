@@ -26,5 +26,9 @@
 			</array>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to help you select your hospital's address on the map.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>We need your location to help you select your hospital's address on the map.</string>
 </dict>
 </plist>
