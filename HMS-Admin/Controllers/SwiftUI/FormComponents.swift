@@ -104,7 +104,6 @@ struct DropdownSelector: View {
                 .frame(height: min(CGFloat(options.count) * 44, 200))
                 .background(Color.white)
                 .cornerRadius(8)
-                .shadow(radius: 2)
                 .zIndex(1)
             }
         }
@@ -234,7 +233,6 @@ struct MultiSelectionDropdown: View {
                 }
                 .background(Color.white)
                 .cornerRadius(8)
-                .shadow(radius: 2)
                 .zIndex(1)
             }
         }

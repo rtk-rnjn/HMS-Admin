@@ -59,7 +59,7 @@ struct DoctorProfileView: View {
                     InfoSectionCard(title: "Professional Information") {
                         InfoRow(icon: "creditcard.fill", label: "Medical License Number", value: doctor.licenseId)
                         Divider().padding(.leading, 40)
-                        InfoRow(icon: "cross.case.fill", label: "Specialization", value: doctor.specializations.joined(separator: ", "))
+                        InfoRow(icon: "cross.case.fill", label: "Specialization", value: doctor.specialization)
                         if doctor.yearOfExperience > 0 {
                             Divider().padding(.leading, 40)
                             InfoRow(icon: "clock.fill", label: "Years of Experience", value: "\(doctor.yearOfExperience) Years")

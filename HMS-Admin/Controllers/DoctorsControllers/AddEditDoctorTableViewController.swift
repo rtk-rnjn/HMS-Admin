@@ -67,13 +67,13 @@ class AddEditDoctorTableViewController: UITableViewController {
 
         let medicalLicenseNumber = medicalLicenseNumberTextField.text!
         let yearOfExperience = Int(yearOfExperienceTextField.text!)!
-        let specialization = specializationTextField.text!.components(separatedBy: ", ")
+        let specialization = specializationTextField.text!
         let department = departmentTextField.text!
         let consultationFee = Int(consultationFeeTextField.text!)!
 
         let randomPassword = Utils.randomString(length: 8)
 
-        let staff = Staff(firstName: firstName, lastName: lastName, gender: gender, emailAddress: email, dateOfBirth: dateOfBirth, password: randomPassword, contactNumber: contactNumber, specializations: specialization, department: department, consultationFee: consultationFee, licenseId: medicalLicenseNumber, yearOfExperience: yearOfExperience)
+        let staff = Staff(firstName: firstName, lastName: lastName, gender: gender, emailAddress: email, dateOfBirth: dateOfBirth, password: randomPassword, contactNumber: contactNumber, specialization: specialization, department: department, consultationFee: consultationFee, licenseId: medicalLicenseNumber, yearOfExperience: yearOfExperience)
 
         Task {
             _ = await DataController.shared.addDoctor(staff)
@@ -93,7 +93,7 @@ class AddEditDoctorTableViewController: UITableViewController {
         emailTextField.text = doctor?.emailAddress
         medicalLicenseNumberTextField.text = doctor?.licenseId
         yearOfExperienceTextField.text = "\(doctor?.yearOfExperience ?? 0)"
-        specializationTextField.text = doctor?.specializations.joined(separator: ", ")
+        specializationTextField.text = doctor?.specialization
         departmentTextField.text = doctor?.department
         consultationFeeTextField.text = "\(doctor?.consultationFee ?? 0)"
     }

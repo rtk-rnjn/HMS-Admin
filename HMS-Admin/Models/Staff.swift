@@ -33,7 +33,7 @@ struct Staff: Codable, Equatable {
         case password = "password"
         case contactNumber = "contact_number"
         case dateOfBirth = "date_of_birth"
-        case specializations = "specializations"
+        case specialization = "specialization"
         case department = "department"
         case onLeave = "on_leave"
         case consultationFee = "consultation_fee"
@@ -55,7 +55,7 @@ struct Staff: Codable, Equatable {
     var dateOfBirth: Date
     var password: String
     var contactNumber: String
-    var specializations: [String] = []
+    var specialization: String
     var department: String
     var onLeave: Bool = false
     var consultationFee: Int = 0

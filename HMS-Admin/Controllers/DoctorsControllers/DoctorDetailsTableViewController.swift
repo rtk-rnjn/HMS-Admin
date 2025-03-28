@@ -46,6 +46,6 @@ class DoctorDetailsTableViewController: UITableViewController {
 
     private func updateUI() {
         staffLabel.text = doctor?.fullName ?? "Doctor Not Found"
-        staffSpecializationLabel.text = doctor?.specializations.joined(separator: ", ") ?? "Specialization Not Found"
+        staffSpecializationLabel.text = doctor?.specialization ?? "Specialization Not Found"
     }
 }

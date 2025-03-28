@@ -94,7 +94,7 @@ struct DoctorCard: View {
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.secondary)
 
-                    Text(doctor.specializations.joined(separator: ", "))
+                    Text(doctor.specialization)
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.secondary)
                 }

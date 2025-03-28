@@ -89,7 +89,7 @@ extension DoctorsViewController: UISearchBarDelegate {
             self.doctors = self.doctors?.filter {
                 $0.fullName.lowercased().contains(searchText.lowercased()) ||
                 $0.department.lowercased().contains(searchText.lowercased()) ||
-                $0.specializations.contains(where: { $0.lowercased().contains(searchText.lowercased()) })
+                $0.specialization.lowercased().contains(searchText.lowercased())
             }
             self.tableView.reloadData()
         }

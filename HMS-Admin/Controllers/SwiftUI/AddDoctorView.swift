@@ -25,17 +25,15 @@ struct AddDoctorView: View {
             _yearsOfExperience = State(initialValue: doctor.yearOfExperience)
             _consultationFee = State(initialValue: String(doctor.consultationFee))
             _department = State(initialValue: doctor.department)
-            _specialization = State(initialValue: doctor.specializations.joined(separator: ", "))
+            _specialization = State(initialValue: doctor.specialization)
         }
     }
 
     // MARK: Internal
 
     var delegate: AddDoctorHostingController?
-//    @EnvironmentObject var doctorStore: DoctorStore
 
     let doctor: Staff?
-    // Dropdown data
     let departments = [
         "Cardiology",
         "Neurology",
@@ -656,9 +654,7 @@ struct AddDoctorView: View {
 
     private func saveDoctor() {
         // Parse specializations correctly - they're already comma-separated from the multi-selection
-        let specializations = specialization.split(separator: ",")
-            .map { String($0.trimmingCharacters(in: .whitespaces)) }
-            .filter { !$0.isEmpty }
+        let specializations = specialization.trimmingCharacters(in: .whitespacesAndNewlines)
 
         let fee = Double(consultationFee) ?? 0.0
 
@@ -675,7 +671,7 @@ struct AddDoctorView: View {
             updatedDoctor.yearOfExperience = yearsOfExperience
             updatedDoctor.consultationFee = Int(fee)
             updatedDoctor.department = department
-            updatedDoctor.specializations = specializations
+            updatedDoctor.specialization = specializations
 
 //            doctorStore.updateDoctor(updatedDoctor)
             // Dismiss the view after update
@@ -692,7 +688,7 @@ struct AddDoctorView: View {
                 dateOfBirth: dateOfBirth,
                 password: password,
                 contactNumber: contactNumber,
-                specializations: specializations,
+                specialization: specializations,
                 department: department,
                 onLeave: false,
                 consultationFee: Int(fee),

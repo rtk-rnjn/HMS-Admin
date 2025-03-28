@@ -13,6 +13,6 @@ class DoctorTableViewCell: UITableViewCell {
 
     func updateElements(with doctor: Staff) {
         fullNameLabel.text = doctor.fullName
-        specializationLabel.text = doctor.specializations.joined(separator: ", ")
+        specializationLabel.text = doctor.specialization
     }
 }

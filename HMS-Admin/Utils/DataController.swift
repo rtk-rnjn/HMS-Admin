@@ -150,7 +150,7 @@ extension DataController {
         }
 
         if admin == nil {
-            guard await autoLogin() else { fatalError() }
+            guard await autoLogin() else { fatalError("Auth failed") }
         }
 
         guard let admin else {
