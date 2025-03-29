@@ -61,7 +61,7 @@
                 <hostingController id="elT-sK-JI5" customClass="CreateAnnouncementHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Slm-xQ-bsO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2808" y="-28"/>
+            <point key="canvasLocation" x="3353" y="-28"/>
         </scene>
         <!--Announcement Hosting Controller-->
         <scene sceneID="wqq-MK-13o">

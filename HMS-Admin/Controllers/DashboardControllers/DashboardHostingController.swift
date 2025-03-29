@@ -32,6 +32,50 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         // Configure navigation bar
         navigationItem.title = "Dashboard"
         navigationController?.navigationBar.prefersLargeTitles = true
+        
+        updateUI()
+    }
+    
+    private func updateUI() {
+        Task {
+            let doctorCount = await fetchActiveDoctorCount()
+            DispatchQueue.main.async {
+                self.rootView.activeDoctorCount = doctorCount
+            }
+        }
+        
+        Task {
+            let patientCount = await fetchPatientCount()
+            DispatchQueue.main.async {
+                self.rootView.patientCount = patientCount
+            }
+        }
     }
 
+    private func fetchActiveDoctorCount() async -> Int {
+        guard let staffs = await DataController.shared.fetchDoctors() else {
+            return 0
+        }
+        
+        return staffs.count
+    }
+    
+    private func fetchPatientCount() async -> Int {
+        guard let staffs = await DataController.shared.fetchDoctors() else {
+            return 0
+        }
+        
+        var patients: [String: Int] = [:]
+
+        for staff in staffs {
+            let appointments: [Appointment]? = await DataController.shared.fetchAppointments(byDoctorWithId: staff.id)
+            guard let appointments else { return 0 }
+            
+            for appointment in appointments {
+                patients[appointment.patientId] = 0
+            }
+        }
+        
+        return patients.count
+    }
 }

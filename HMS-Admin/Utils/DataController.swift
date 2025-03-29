@@ -126,7 +126,8 @@ class DataController {
 
 extension DataController {
     func fetchDoctors() async -> [Staff]? {
-        return await MiddlewareManager.shared.get(url: "/staff")
+        let staffs: [Staff]? = await MiddlewareManager.shared.get(url: "/staff")
+        return staffs
     }
 
     func addDoctor(_ doctor: Staff) async -> Staff? {
@@ -185,5 +186,18 @@ extension DataController {
         let serverResponse: ServerResponse? = await MiddlewareManager.shared.post(url: "/hospital", body: hospitalData)
 
         return serverResponse?.success ?? false
+    }
+}
+
+extension DataController {
+    func fetchAppointments(byDoctorWithId doctorId: String) async -> [Appointment] {
+        let appointments: [Appointment]? = await MiddlewareManager.shared.get(url: "/appointments/\(doctorId)")
+        
+        guard let appointments else { return [] }
+        
+        
+        return appointments
+        
+        
     }
 }

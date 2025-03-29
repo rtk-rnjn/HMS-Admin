@@ -14,6 +14,10 @@ struct DashboardView: View {
     @State private var showNotifications = false
     @State private var selectedTimeRange = "Today"
     @State private var showProfile = false
+    
+    var activeDoctorCount: Int = 0
+    var patientCount: Int = 0
+
     let timeRanges = ["Today", "Week", "Month"]
 
     // Sample data for the chart
@@ -30,7 +34,7 @@ struct DashboardView: View {
                     HStack(spacing: 16) {
                         QuickStatCard(
                             title: "Active Doctors",
-                            value: "0",
+                            value: "\(activeDoctorCount)",
                             icon: "stethoscope",
                             color: .blue,
                             trend: "+5%"
@@ -38,26 +42,10 @@ struct DashboardView: View {
 
                         QuickStatCard(
                             title: "Today's Patients",
-                            value: "0",
+                            value: "\(patientCount)",
                             icon: "person.2.fill",
                             color: .green,
                             trend: "+12%"
-                        )
-
-                        QuickStatCard(
-                            title: "Revenue",
-                            value: "0K",
-                            icon: "dollarsign.circle.fill",
-                            color: .purple,
-                            trend: "+8%"
-                        )
-
-                        QuickStatCard(
-                            title: "Pending Bills",
-                            value: "0",
-                            icon: "doc.text.fill",
-                            color: .orange,
-                            trend: "-3%"
                         )
                     }
                     .padding(.horizontal)

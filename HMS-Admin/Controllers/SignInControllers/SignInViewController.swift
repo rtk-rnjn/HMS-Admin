@@ -64,6 +64,7 @@ class SignInViewController: UIViewController {
                     let hospitalOnboarded = UserDefaults.standard.bool(forKey: "isHospitalOnboarded")
                     if hospitalOnboarded {
                         self.performSegue(withIdentifier: "segueShowInitialTabBarController", sender: nil)
+                        UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
                     } else {
                         self.performSegue(withIdentifier: "segueShowResetPasswordViewController", sender: nil)
                     }
