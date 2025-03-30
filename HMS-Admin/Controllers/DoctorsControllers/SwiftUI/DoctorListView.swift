@@ -13,7 +13,7 @@ struct DoctorListView: View {
 
     var delegate: DoctorsHostingController?
 
-    var filteredDoctors: [Staff] = []
+    var totalDoctors: [Staff] = []
 
     var body: some View {
 
@@ -26,28 +26,28 @@ struct DoctorListView: View {
                     HStack(spacing: 12) {
                         DoctorStatCard(
                             title: "Total Doctors",
-                            value: "0",
+                            value: "\(totalDoctors.count)",
                             icon: "stethoscope",
                             color: .blue
                         )
 
                         DoctorStatCard(
                             title: "Active",
-                            value: "0",
+                            value: "\(activeDoctors.count)",
                             icon: "checkmark.circle",
                             color: .green
                         )
 
                         DoctorStatCard(
                             title: "On Leave",
-                            value: "0",
+                            value: "\(onLeaveDoctors.count)",
                             icon: "moon.fill",
                             color: .orange
                         )
                     }
                     .padding(.horizontal)
                     VStack(spacing: 16) {
-                        ForEach(filteredDoctors, id: \.id) { doctor in
+                        ForEach(totalDoctors, id: \.id) { doctor in
                             DoctorCard(doctor: doctor)
                         }
 
@@ -63,6 +63,15 @@ struct DoctorListView: View {
 
     @State private var searchText = ""
     @State private var showingAddDoctorView = false
+
+    private var activeDoctors: [Staff] {
+        return totalDoctors.filter { !$0.onLeave }
+    }
+
+    private var onLeaveDoctors: [Staff] {
+        return totalDoctors.filter { $0.onLeave }
+    }
+
 }
 
 struct DoctorCard: View {

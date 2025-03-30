@@ -29,7 +29,7 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
 
         Task {
             if let staffs = await DataController.shared.fetchDoctors() {
-                rootView.filteredDoctors = staffs
+                rootView.totalDoctors = staffs
             }
         }
     }

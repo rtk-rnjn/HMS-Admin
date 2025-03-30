@@ -46,6 +46,9 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="353" height="50.333333333333336"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" textContentType="email"/>
+                                                        <connections>
+                                                            <action selector="emailFieldChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="tf0-dH-c9K"/>
+                                                        </connections>
                                                     </textField>
                                                 </subviews>
                                             </stackView>
@@ -56,12 +59,15 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="353" height="50.333333333333336"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="password"/>
+                                                        <connections>
+                                                            <action selector="passwordFieldChanged:" destination="BYZ-38-t0r" eventType="editingChanged" id="6N8-26-PfT"/>
+                                                        </connections>
                                                     </textField>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mX2-gm-YF4">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mX2-gm-YF4">
                                         <rect key="frame" x="0.0" y="234.33333333333334" width="353" height="50.333333333333343"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Sign In" buttonSize="large">
@@ -155,6 +161,9 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="353" height="50.333333333333336"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="new-password"/>
+                                                        <connections>
+                                                            <action selector="textFieldChanged:" destination="GGi-QF-tqf" eventType="editingChanged" id="TM3-h2-6mx"/>
+                                                        </connections>
                                                     </textField>
                                                 </subviews>
                                             </stackView>
@@ -165,12 +174,15 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="353" height="50.333333333333336"/>
                                                         <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                         <textInputTraits key="textInputTraits" secureTextEntry="YES" textContentType="new-password"/>
+                                                        <connections>
+                                                            <action selector="textFieldChanged:" destination="GGi-QF-tqf" eventType="editingChanged" id="e0B-DS-fI2"/>
+                                                        </connections>
                                                     </textField>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dKO-AV-r5r">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dKO-AV-r5r">
                                         <rect key="frame" x="0.0" y="221" width="353" height="50.333333333333314"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Sign In" buttonSize="large">
@@ -229,7 +241,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="nii-GI-W5J"/>
+        <segue reference="yyO-y3-Fmb"/>
     </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">

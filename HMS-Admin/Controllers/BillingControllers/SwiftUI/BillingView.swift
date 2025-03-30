@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct BillingView: View {
-    var invoices: [Invoice] = [
-        .init(patientName: "John Doe", amount: 2000.00, status: "Pending")
-    ]
+    var invoices: [Invoice] = []
 
     var body: some View {
         ScrollView {

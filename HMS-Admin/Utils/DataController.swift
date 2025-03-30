@@ -187,3 +187,14 @@ extension DataController {
         return serverResponse?.success ?? false
     }
 }
+
+extension DataController {
+    func fetchAppointments(byDoctorWithId doctorId: String) async -> [Appointment] {
+        let appointments: [Appointment]? = await MiddlewareManager.shared.get(url: "/appointments/\(doctorId)")
+
+        guard let appointments else { return [] }
+
+        return appointments
+
+    }
+}
