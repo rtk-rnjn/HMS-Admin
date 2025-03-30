@@ -14,12 +14,6 @@ struct DoctorListView: View {
     var delegate: DoctorsHostingController?
 
     var totalDoctors: [Staff] = []
-    private var activeDoctors: [Staff] {
-        return totalDoctors.filter { !$0.onLeave }
-    }
-    private var onLeaveDoctors: [Staff] {
-        return totalDoctors.filter { $0.onLeave }
-    }
 
     var body: some View {
 
@@ -69,6 +63,15 @@ struct DoctorListView: View {
 
     @State private var searchText = ""
     @State private var showingAddDoctorView = false
+
+    private var activeDoctors: [Staff] {
+        return totalDoctors.filter { !$0.onLeave }
+    }
+
+    private var onLeaveDoctors: [Staff] {
+        return totalDoctors.filter { $0.onLeave }
+    }
+
 }
 
 struct DoctorCard: View {

@@ -16,16 +16,16 @@ class SignInViewController: UIViewController {
     @IBOutlet var signInButton: UIButton!
 
     let eyeButton: UIButton = .init(type: .custom)
-    
+
     var isValidInputs: Bool {
         guard let email = emailTextField.text, !email.isEmpty else {
             return false
         }
-        
+
         guard let password = passwordTextField.text, !password.isEmpty else {
             return false
         }
-        
+
         return email.isValidEmail() && password.count >= 8
     }
 
@@ -38,13 +38,11 @@ class SignInViewController: UIViewController {
 
         navigationItem.hidesBackButton = true
     }
-    
-    
+
     @IBAction func emailFieldChanged(_ sender: UITextField) {
         signInButton.isEnabled = isValidInputs
     }
-    
-    
+
     @IBAction func passwordFieldChanged(_ sender: UITextField) {
         passwordEntered(sender: sender)
         signInButton.isEnabled = isValidInputs

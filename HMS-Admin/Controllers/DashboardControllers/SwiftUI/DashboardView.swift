@@ -14,7 +14,7 @@ struct DashboardView: View {
     @State private var showNotifications = false
     @State private var selectedTimeRange = "Today"
     @State private var showProfile = false
-    
+
     var activeDoctorCount: Int = 0
     var patientCount: Int = 0
 

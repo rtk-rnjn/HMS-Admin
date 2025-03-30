@@ -5,7 +5,6 @@
 //  Created by Dhruvi on 30/03/25.
 //
 
-
 import Foundation
 
 enum AppointmentStatus: String, Codable {
@@ -13,21 +12,6 @@ enum AppointmentStatus: String, Codable {
 }
 
 struct Appointment: Codable, Identifiable, Hashable {
-    var id: String = UUID().uuidString
-
-    var patientId: String
-    var doctorId: String
-
-    var startDate: Date
-    var endDate: Date
-    var status: AppointmentStatus = .confirmed
-    
-    var prescription: String?
-    var notes: String?
-    
-    var reference: String? = nil
-    var createdAt: Date = .init()
-    
     enum CodingKeys: String, CodingKey {
         case id = "_id"
         case patientId = "patient_id"
@@ -39,4 +23,20 @@ struct Appointment: Codable, Identifiable, Hashable {
         case notes
         case reference
     }
+
+    var id: String = UUID().uuidString
+
+    var patientId: String
+    var doctorId: String
+
+    var startDate: Date
+    var endDate: Date
+    var status: AppointmentStatus = .confirmed
+
+    var prescription: String?
+    var notes: String?
+
+    var reference: String?
+    var createdAt: Date = .init()
+
 }

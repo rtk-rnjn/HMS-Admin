@@ -19,7 +19,7 @@ class ResetPasswordViewController: UIViewController {
 
     let newPasswordEyeButton: UIButton = .init(type: .custom)
     let confirmPasswordEyeButton: UIButton = .init(type: .custom)
-    
+
     var isValidInputs: Bool {
         guard let password = passwordTextField.text, !password.isEmpty else {
             return false
@@ -27,9 +27,10 @@ class ResetPasswordViewController: UIViewController {
         guard let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty else {
             return false
         }
-        
+
         return password == confirmPassword
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         admin = DataController.shared.admin
@@ -37,23 +38,22 @@ class ResetPasswordViewController: UIViewController {
         confirmPasswordEyeButton.tintColor = .gray
         newPasswordEyeButton.isEnabled = false
         confirmPasswordEyeButton.isEnabled = false
-        
+
         newPasswordEyeButton.tag = 10
-    
+
         passwordTextField.configureEyeButton(with: newPasswordEyeButton)
         confirmPasswordTextField.configureEyeButton(with: confirmPasswordEyeButton)
 
         navigationItem.hidesBackButton = true
     }
 
-    
     @IBAction func textFieldChanged(_ sender: UITextField) {
         signInButton.isEnabled = isValidInputs
     }
 
     @IBAction func signInTapped(_ sender: UIButton) {
         guard let admin else { fatalError("Didnt Sign In") }
-        
+
         guard let password = passwordTextField.text else { return }
 
         if !password.isValidPassword() {

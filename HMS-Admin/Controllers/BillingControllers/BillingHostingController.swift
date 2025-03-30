@@ -8,13 +8,18 @@
 import SwiftUI
 
 class BillingHostingController: UIHostingController<BillingView> {
+
+    // MARK: Lifecycle
+
     required init?(coder: NSCoder) {
         super.init(coder: coder, rootView: BillingView())
     }
-    
+
+    // MARK: Internal
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         Task {
             // TODO: Fetch Invoice
             self.rootView.invoices = []
