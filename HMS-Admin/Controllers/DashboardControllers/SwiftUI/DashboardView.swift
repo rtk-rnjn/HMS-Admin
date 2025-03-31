@@ -156,6 +156,7 @@ struct QuickStatCard: View {
         .frame(width: 180)
         .background(Color(.systemBackground))
         .cornerRadius(12)
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.2), lineWidth: 1))
     }
 }
 
