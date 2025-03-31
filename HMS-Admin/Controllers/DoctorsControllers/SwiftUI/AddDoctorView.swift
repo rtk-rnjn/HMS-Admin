@@ -81,6 +81,8 @@ struct AddDoctorView: View {
         "Rheumatologist"
     ]
 
+    let genderOptions = ["Male", "Female", "Other"]
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -382,7 +384,7 @@ struct AddDoctorView: View {
                                     Text("Working Hours")
                                         .font(.subheadline)
                                         .foregroundColor(.gray)
-                                    
+
                                     HStack {
                                         VStack(alignment: .leading) {
                                             Text("Start Time")
@@ -391,9 +393,9 @@ struct AddDoctorView: View {
                                             DatePicker("", selection: $startTime, displayedComponents: .hourAndMinute)
                                                 .labelsHidden()
                                         }
-                                        
+
                                         Spacer()
-                                        
+
                                         VStack(alignment: .leading) {
                                             Text("End Time")
                                                 .font(.subheadline)
@@ -548,8 +550,6 @@ struct AddDoctorView: View {
     // Availability states
     @State private var startTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? Date()
     @State private var endTime = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
-
-    let genderOptions = ["Male", "Female", "Other"]
 
     private func validateForm() -> Bool {
         // Reset all error messages
