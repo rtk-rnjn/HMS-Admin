@@ -40,6 +40,10 @@ class ResetPasswordViewController: UIViewController {
         confirmPasswordEyeButton.isEnabled = false
 
         newPasswordEyeButton.tag = 10
+        confirmPasswordEyeButton.tag = 20
+
+        newPasswordEyeButton.addTarget(self, action: #selector(togglePasswordVisibility(_:)), for: .touchUpInside)
+        confirmPasswordEyeButton.addTarget(self, action: #selector(togglePasswordVisibility(_:)), for: .touchUpInside)
 
         passwordTextField.configureEyeButton(with: newPasswordEyeButton)
         confirmPasswordTextField.configureEyeButton(with: confirmPasswordEyeButton)
@@ -49,6 +53,13 @@ class ResetPasswordViewController: UIViewController {
 
     @IBAction func textFieldChanged(_ sender: UITextField) {
         signInButton.isEnabled = isValidInputs
+        
+        // Enable/disable eye buttons based on text field content
+        if sender == passwordTextField {
+            newPasswordEyeButton.isEnabled = !(sender.text?.isEmpty ?? true)
+        } else if sender == confirmPasswordTextField {
+            confirmPasswordEyeButton.isEnabled = !(sender.text?.isEmpty ?? true)
+        }
     }
 
     @IBAction func signInTapped(_ sender: UIButton) {
