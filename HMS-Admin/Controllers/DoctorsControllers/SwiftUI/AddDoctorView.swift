@@ -176,7 +176,7 @@ struct AddDoctorView: View {
                                             RoundedRectangle(cornerRadius: 8)
                                                 .stroke(dateOfBirthError.isEmpty ? Color.clear : Color.red, lineWidth: 1)
                                         )
-                                        .onChange(of: dateOfBirth) { _ in
+                                        .onChange(of: dateOfBirth) { oldState, newState in
                                             dateOfBirthError = ""
                                         }
 
@@ -509,15 +509,16 @@ struct AddDoctorView: View {
         .onAppear {
             checkFormValidity()
         }
-        .onChange(of: firstName) { _ in checkFormValidity() }
-        .onChange(of: lastName) { _ in checkFormValidity() }
-        .onChange(of: contactNumber) { _ in checkFormValidity() }
-        .onChange(of: email) { _ in checkFormValidity() }
-        .onChange(of: medicalLicenseNumber) { _ in checkFormValidity() }
-        .onChange(of: consultationFee) { _ in checkFormValidity() }
-        .onChange(of: department) { _ in checkFormValidity() }
-        .onChange(of: specialization) { _ in checkFormValidity() }
-        .onChange(of: yearsOfExperience) { _ in checkFormValidity() }
+
+        .onChange(of: firstName) { oldState, newState in checkFormValidity() }
+        .onChange(of: lastName) { oldState, newState in checkFormValidity() }
+        .onChange(of: contactNumber) { oldState, newState in checkFormValidity() }
+        .onChange(of: email) { oldState, newState in checkFormValidity() }
+        .onChange(of: medicalLicenseNumber) { oldState, newState in checkFormValidity() }
+        .onChange(of: consultationFee) { oldState, newState in checkFormValidity() }
+        .onChange(of: department) { oldState, newState in checkFormValidity() }
+        .onChange(of: specialization) { oldState, newState in checkFormValidity() }
+        .onChange(of: yearsOfExperience) { oldState, newState in checkFormValidity() }
     }
 
     // MARK: Private
@@ -749,7 +750,7 @@ struct AddDoctorView: View {
 
         Task {
             do {
-                try await DataController.shared.addDoctor(newDoctor)
+                _ = try await DataController.shared.addDoctor(newDoctor)
 
                 // Ensure UI updates happen on the main thread
                 await MainActor.run {
