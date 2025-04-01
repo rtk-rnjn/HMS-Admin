@@ -74,5 +74,16 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
 }
 
 extension DoctorsHostingController: UISearchBarDelegate, UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {}
+    func updateSearchResults(for searchController: UISearchController) {
+        // Get the search text from the search controller
+        let searchText = searchController.searchBar.text ?? ""
+        
+        // Update the SwiftUI view's search query
+        rootView.searchQuery = searchText
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        // Clear the search query when cancel is clicked
+        rootView.searchQuery = ""
+    }
 }
