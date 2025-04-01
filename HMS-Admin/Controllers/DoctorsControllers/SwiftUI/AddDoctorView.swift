@@ -86,6 +86,11 @@ struct AddDoctorView: View {
 
     let genderOptions = ["Male", "Female", "Other"]
 
+    @State private var isLoading = false
+    @State private var showError = false
+    @State private var errorMessage = ""
+    @State private var isFormValid = false
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -195,15 +200,16 @@ struct AddDoctorView: View {
                                         .foregroundColor(.gray)
 
                                     HStack(spacing: 0) {
-                                        ForEach([Gender.male, Gender.female, Gender.other], id: \.self) { gender in
-                                            GenderButton(
-                                                title: gender.rawValue,
-                                                isSelected: selectedGender == gender
-                                            ) {
-                                                withAnimation {
-                                                    selectedGender = gender
-                                                }
-                                            }
+                                        GenderButton(title: "Male", isSelected: selectedGender == .male) {
+                                            selectedGender = .male
+                                        }
+
+                                        GenderButton(title: "Female", isSelected: selectedGender == .female) {
+                                            selectedGender = .female
+                                        }
+
+                                        GenderButton(title: "Other", isSelected: selectedGender == .other) {
+                                            selectedGender = .other
                                         }
                                     }
                                     .background(Color.white)
@@ -424,6 +430,23 @@ struct AddDoctorView: View {
                     }
                     .padding()
                 }
+                .disabled(isLoading)
+                .opacity(isLoading ? 0.6 : 1)
+
+                if isLoading {
+                    ZStack {
+                        Color(.systemBackground)
+                            .opacity(0.8)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                        VStack(spacing: 16) {
+                            ProgressView()
+                                .scaleEffect(1.5)
+                            Text("Saving doctor information...")
+                                .font(.headline)
+                        }
+                    }
+                }
             }
             .sheet(isPresented: $showingSpecializationDropdown) {
                 NavigationView {
@@ -472,33 +495,20 @@ struct AddDoctorView: View {
             }
             .navigationTitle(doctor == nil ? "Add Doctor" : "Edit Doctor")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    .foregroundColor(.blue)
+            .navigationBarItems(
+                leading: Button("Cancel") {
+                    dismiss()
                 }
-
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        if validateForm() {
-                            saveDoctor()
-                        } else {
-                            showingValidationAlert = true
-                        }
-                    }
-                    .foregroundColor(isFormValid ? .blue : Color.blue.opacity(0.5))
-                    .fontWeight(.semibold)
-                    .disabled(!isFormValid)
+                .disabled(isLoading),
+                trailing: Button("Save") {
+                    saveDoctor()
                 }
-            }
-            .alert(isPresented: $showingValidationAlert) {
-                Alert(
-                    title: Text("Validation Error"),
-                    message: Text(validationMessage),
-                    dismissButton: .default(Text("OK"))
-                )
+                .disabled(isLoading)
+            )
+            .alert("Error", isPresented: $showError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage)
             }
         }
         .onAppear {
@@ -552,11 +562,6 @@ struct AddDoctorView: View {
     // Dropdown state
     @State private var showingSpecializationDropdown = false
     @State private var selectedSpecializations: Set<String> = []
-
-    // Form validation
-    @State private var showingValidationAlert = false
-    @State private var validationMessage = ""
-    @State private var isFormValid = false
 
     // Availability states
     @State private var startTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? Date()
@@ -693,7 +698,7 @@ struct AddDoctorView: View {
 
         if !isValid {
             // Set the main validation message
-            validationMessage = "Please correct the highlighted errors"
+            errorMessage = "Please correct the highlighted errors"
         }
 
         return isValid
@@ -721,9 +726,11 @@ struct AddDoctorView: View {
 
     private func saveDoctor() {
         // Validate all fields
-        if !validateForm() {
+        if !validateForm() || !isFormValid {
             return
         }
+
+        isLoading = true
 
         let newDoctor = Staff(
             firstName: firstName,
@@ -741,11 +748,25 @@ struct AddDoctorView: View {
         )
 
         Task {
-                _ = await DataController.shared.addDoctor(newDoctor)
-                // Dismiss the view first
-                dismiss()
-                // Post a notification to refresh the doctors list
-                NotificationCenter.default.post(name: NSNotification.Name("RefreshDoctorsList"), object: nil)
+            do {
+                try await DataController.shared.addDoctor(newDoctor)
+                
+                // Ensure UI updates happen on the main thread
+                await MainActor.run {
+                    isLoading = false
+                    // Post notification to refresh doctors list
+                    NotificationCenter.default.post(name: NSNotification.Name("RefreshDoctorsList"), object: nil)
+                    // Dismiss the view
+                    dismiss()
+                }
+            } catch {
+                // Handle error on the main thread
+                await MainActor.run {
+                    isLoading = false
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
+            }
         }
     }
 
@@ -804,15 +825,9 @@ struct GenderButton: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .foregroundColor(isSelected ? .white : .gray)
-                .background(isSelected ? Color.blue : Color.clear)
-                .contentShape(Rectangle())
+                .background(isSelected ? Color.blue : Color.white)
         }
         .buttonStyle(PlainButtonStyle())
-        .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .overlay(
-            RoundedRectangle(cornerRadius: 8)
-                .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
-        )
     }
 }
