@@ -86,11 +86,6 @@ struct AddDoctorView: View {
 
     let genderOptions = ["Male", "Female", "Other"]
 
-    @State private var isLoading = false
-    @State private var showError = false
-    @State private var errorMessage = ""
-    @State private var isFormValid = false
-
     var body: some View {
         NavigationView {
             ZStack {
@@ -438,7 +433,7 @@ struct AddDoctorView: View {
                         Color(.systemBackground)
                             .opacity(0.8)
                             .edgesIgnoringSafeArea(.all)
-                        
+
                         VStack(spacing: 16) {
                             ProgressView()
                                 .scaleEffect(1.5)
@@ -526,6 +521,11 @@ struct AddDoctorView: View {
     }
 
     // MARK: Private
+
+    @State private var isLoading = false
+    @State private var showError = false
+    @State private var errorMessage = ""
+    @State private var isFormValid = false
 
     @Environment(\.dismiss) private var dismiss
 
@@ -750,7 +750,7 @@ struct AddDoctorView: View {
         Task {
             do {
                 try await DataController.shared.addDoctor(newDoctor)
-                
+
                 // Ensure UI updates happen on the main thread
                 await MainActor.run {
                     isLoading = false

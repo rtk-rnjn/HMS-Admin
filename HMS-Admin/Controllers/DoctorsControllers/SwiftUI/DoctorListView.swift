@@ -14,7 +14,7 @@ struct DoctorListView: View {
     var delegate: DoctorsHostingController?
 
     var totalDoctors: [Staff] = []
-    
+
     // This will be set from the hosting controller
     var searchQuery: String = ""
 
@@ -79,12 +79,12 @@ struct DoctorListView: View {
     private var onLeaveDoctors: [Staff] {
         return totalDoctors.filter { $0.onLeave }
     }
-    
+
     private var filteredDoctors: [Staff] {
         guard !searchQuery.isEmpty else {
             return totalDoctors
         }
-        
+
         let query = searchQuery.lowercased()
         return totalDoctors.filter { doctor in
             doctor.fullName.lowercased().contains(query) ||
