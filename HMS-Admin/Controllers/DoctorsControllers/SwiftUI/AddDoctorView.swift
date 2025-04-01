@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import MapKit
+import CoreLocation
 
 struct AddDoctorView: View {
 
@@ -78,6 +80,8 @@ struct AddDoctorView: View {
         "Hematologist",
         "Rheumatologist"
     ]
+
+    let genderOptions = ["Male", "Female", "Other"]
 
     var body: some View {
         NavigationView {
@@ -366,6 +370,46 @@ struct AddDoctorView: View {
                                 }
                             }
                         }
+
+                        // Availability Section
+                        GroupBox {
+                            VStack(alignment: .leading, spacing: 15) {
+                                Label("Availability", systemImage: "clock.fill")
+                                    .font(.headline)
+                                    .foregroundColor(.primary)
+                                    .padding(.bottom, 5)
+
+                                // Working Hours
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("Working Hours")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+
+                                    HStack {
+                                        VStack(alignment: .leading) {
+                                            Text("Start Time")
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                            DatePicker("", selection: $startTime, displayedComponents: .hourAndMinute)
+                                                .labelsHidden()
+                                        }
+
+                                        Spacer()
+
+                                        VStack(alignment: .leading) {
+                                            Text("End Time")
+                                                .font(.subheadline)
+                                                .foregroundColor(.gray)
+                                            DatePicker("", selection: $endTime, displayedComponents: .hourAndMinute)
+                                                .labelsHidden()
+                                        }
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(8)
+                                }
+                            }
+                        }
                     }
                     .padding()
                 }
@@ -428,7 +472,7 @@ struct AddDoctorView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         if validateForm() {
-                        saveDoctor()
+                            saveDoctor()
                         } else {
                             showingValidationAlert = true
                         }
@@ -445,8 +489,8 @@ struct AddDoctorView: View {
                     dismissButton: .default(Text("OK"))
                 )
             }
-            }
-            .onAppear {
+        }
+        .onAppear {
             checkFormValidity()
         }
         .onChange(of: firstName) { _ in checkFormValidity() }
@@ -495,7 +539,6 @@ struct AddDoctorView: View {
     @State private var specializationError = ""
 
     // Dropdown state
-    @State private var showingDepartmentDropdown = false
     @State private var showingSpecializationDropdown = false
     @State private var selectedSpecializations: Set<String> = []
 
@@ -503,6 +546,10 @@ struct AddDoctorView: View {
     @State private var showingValidationAlert = false
     @State private var validationMessage = ""
     @State private var isFormValid = false
+
+    // Availability states
+    @State private var startTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? Date()
+    @State private var endTime = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
 
     private func validateForm() -> Bool {
         // Reset all error messages
