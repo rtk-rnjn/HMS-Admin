@@ -28,6 +28,9 @@ struct AddDoctorView: View {
             _consultationFee = State(initialValue: String(doctor.consultationFee))
             _department = State(initialValue: doctor.department)
             _specialization = State(initialValue: doctor.specialization)
+        } else {
+            // Set default gender to male for new doctors
+            _selectedGender = State(initialValue: .male)
         }
     }
 
@@ -83,6 +86,11 @@ struct AddDoctorView: View {
 
     let genderOptions = ["Male", "Female", "Other"]
 
+    @State private var isLoading = false
+    @State private var showError = false
+    @State private var errorMessage = ""
+    @State private var isFormValid = false
+
     var body: some View {
         NavigationView {
             ZStack {
@@ -127,8 +135,17 @@ struct AddDoctorView: View {
                                     title: "Contact Number",
                                     text: $contactNumber,
                                     error: contactNumberError,
-                                    keyboardType: .phonePad,
-                                    onChange: { _ in
+                                    keyboardType: .numberPad,
+                                    onChange: { newValue in
+                                        // Only allow numbers
+                                        let filtered = newValue.filter { $0.isNumber }
+                                        if filtered != newValue {
+                                            contactNumber = filtered
+                                        }
+                                        // Limit to 10 digits
+                                        if filtered.count > 10 {
+                                            contactNumber = String(filtered.prefix(10))
+                                        }
                                         if !contactNumber.isEmpty {
                                             contactNumberError = ""
                                         }
@@ -413,6 +430,23 @@ struct AddDoctorView: View {
                     }
                     .padding()
                 }
+                .disabled(isLoading)
+                .opacity(isLoading ? 0.6 : 1)
+
+                if isLoading {
+                    ZStack {
+                        Color(.systemBackground)
+                            .opacity(0.8)
+                            .edgesIgnoringSafeArea(.all)
+                        
+                        VStack(spacing: 16) {
+                            ProgressView()
+                                .scaleEffect(1.5)
+                            Text("Saving doctor information...")
+                                .font(.headline)
+                        }
+                    }
+                }
             }
             .sheet(isPresented: $showingSpecializationDropdown) {
                 NavigationView {
@@ -461,33 +495,20 @@ struct AddDoctorView: View {
             }
             .navigationTitle(doctor == nil ? "Add Doctor" : "Edit Doctor")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                    .foregroundColor(.blue)
+            .navigationBarItems(
+                leading: Button("Cancel") {
+                    dismiss()
                 }
-
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        if validateForm() {
-                            saveDoctor()
-                        } else {
-                            showingValidationAlert = true
-                        }
-                    }
-                    .foregroundColor(isFormValid ? .blue : Color.blue.opacity(0.5))
-                    .fontWeight(.semibold)
-                    .disabled(!isFormValid)
+                .disabled(isLoading),
+                trailing: Button("Save") {
+                    saveDoctor()
                 }
-            }
-            .alert(isPresented: $showingValidationAlert) {
-                Alert(
-                    title: Text("Validation Error"),
-                    message: Text(validationMessage),
-                    dismissButton: .default(Text("OK"))
-                )
+                .disabled(isLoading)
+            )
+            .alert("Error", isPresented: $showError) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(errorMessage)
             }
         }
         .onAppear {
@@ -542,11 +563,6 @@ struct AddDoctorView: View {
     @State private var showingSpecializationDropdown = false
     @State private var selectedSpecializations: Set<String> = []
 
-    // Form validation
-    @State private var showingValidationAlert = false
-    @State private var validationMessage = ""
-    @State private var isFormValid = false
-
     // Availability states
     @State private var startTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? Date()
     @State private var endTime = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
@@ -585,16 +601,9 @@ struct AddDoctorView: View {
         if contactNumber.isEmpty {
             contactNumberError = "Contact number is required"
             isValid = false
-        } else if !contactNumber.allSatisfy({ $0.isNumber || $0 == "+" || $0 == " " || $0 == "-" || $0 == "(" || $0 == ")" }) {
-            contactNumberError = "Contact number should contain only digits, +, -, spaces, or parentheses"
+        } else if contactNumber.count != 10 {
+            contactNumberError = "Contact number must be exactly 10 digits"
             isValid = false
-        } else {
-            // Strip all non-numeric characters and check length
-            let numericOnly = contactNumber.filter { $0.isNumber }
-            if numericOnly.count < 10 || numericOnly.count > 15 {
-                contactNumberError = "Contact number should have 10-15 digits"
-                isValid = false
-            }
         }
 
         // Email validation
@@ -617,6 +626,22 @@ struct AddDoctorView: View {
         let ageComponents = calendar.dateComponents([.year], from: dateOfBirth, to: Date())
         let age = ageComponents.year ?? 0
 
+        // Age validation - must be between 25 and 85 years old
+        if age < 25 {
+            dateOfBirthError = "Doctor must be at least 25 years old"
+            isValid = false
+        } else if age > 85 {
+            dateOfBirthError = "Doctor's age cannot exceed 85 years"
+            isValid = false
+        }
+
+        // Experience validation - cannot exceed age - 25
+        let maxExperience = age - 25
+        if yearsOfExperience > maxExperience {
+            yearsOfExperienceError = "Years of experience cannot exceed \(maxExperience) years based on age"
+            isValid = false
+        }
+
         // Medical License validation
         if medicalLicenseNumber.isEmpty {
             medicalLicenseError = "Medical license number is required"
@@ -630,8 +655,8 @@ struct AddDoctorView: View {
         }
 
         // Years of Experience validation
-        if yearsOfExperience > 65 {
-            yearsOfExperienceError = "Years of experience cannot exceed 65 years"
+        if yearsOfExperience < 0 {
+            yearsOfExperienceError = "Years of experience cannot be negative"
             isValid = false
         }
 
@@ -673,7 +698,7 @@ struct AddDoctorView: View {
 
         if !isValid {
             // Set the main validation message
-            validationMessage = "Please correct the highlighted errors"
+            errorMessage = "Please correct the highlighted errors"
         }
 
         return isValid
@@ -700,60 +725,47 @@ struct AddDoctorView: View {
     }
 
     private func saveDoctor() {
-        // Parse specializations correctly - they're already comma-separated from the multi-selection
-        let specializations = specialization.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Validate all fields
+        if !validateForm() || !isFormValid {
+            return
+        }
 
-        let fee = Double(consultationFee) ?? 0.0
+        isLoading = true
 
-        if let existingDoctor = doctor {
-            // Update existing doctor
-            var updatedDoctor = existingDoctor
-            updatedDoctor.firstName = firstName
-            updatedDoctor.lastName = lastName
-            updatedDoctor.emailAddress = email
-            updatedDoctor.contactNumber = contactNumber
-            updatedDoctor.dateOfBirth = dateOfBirth
-            updatedDoctor.gender = selectedGender
-            updatedDoctor.licenseId = medicalLicenseNumber
-            updatedDoctor.yearOfExperience = yearsOfExperience
-            updatedDoctor.consultationFee = Int(fee)
-            updatedDoctor.department = department
-            updatedDoctor.specialization = specializations
+        let newDoctor = Staff(
+            firstName: firstName,
+            lastName: lastName.isEmpty ? nil : lastName,
+            gender: selectedGender,
+            emailAddress: email,
+            dateOfBirth: dateOfBirth,
+            password: "default123", // This should be changed by the doctor later
+            contactNumber: contactNumber,
+            specialization: specialization,
+            department: department,
+            licenseId: medicalLicenseNumber,
+            yearOfExperience: yearsOfExperience,
+            role: .doctor
+        )
 
-//            doctorStore.updateDoctor(updatedDoctor)
-            // Dismiss the view after update
-            dismiss()
-        } else {
-            // Generate a secure random password
-            let password = generateRandomPassword()
-
-            // Create new doctor
-            let newDoctor = Staff(
-                firstName: firstName,
-                lastName: lastName,
-                emailAddress: email,
-                dateOfBirth: dateOfBirth,
-                password: password,
-                contactNumber: contactNumber,
-                specialization: specializations,
-                department: department,
-                onLeave: false,
-                consultationFee: Int(fee),
-                unavailabilityPeriods: [],
-                licenseId: medicalLicenseNumber,
-                yearOfExperience: yearsOfExperience,
-                role: .doctor,
-                hospitalId: DataController.shared.hospital?.id ?? ""
-            )
-
-            Task {
-                guard let created = await DataController.shared.addDoctor(newDoctor) else {
-                    return
+        Task {
+            do {
+                try await DataController.shared.addDoctor(newDoctor)
+                
+                // Ensure UI updates happen on the main thread
+                await MainActor.run {
+                    isLoading = false
+                    // Post notification to refresh doctors list
+                    NotificationCenter.default.post(name: NSNotification.Name("RefreshDoctorsList"), object: nil)
+                    // Dismiss the view
+                    dismiss()
                 }
-
-                printEmail(to: email, name: "\(firstName) \(lastName)", password: password)
-                dismiss()
-
+            } catch {
+                // Handle error on the main thread
+                await MainActor.run {
+                    isLoading = false
+                    errorMessage = error.localizedDescription
+                    showError = true
+                }
             }
         }
     }

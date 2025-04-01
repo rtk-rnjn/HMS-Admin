@@ -22,11 +22,36 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
         super.viewDidLoad()
 
         prepareSearchController()
+        
+        // Add notification observer for refreshing doctors list
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleRefreshNotification),
+            name: NSNotification.Name("RefreshDoctorsList"),
+            object: nil
+        )
+    }
+
+    deinit {
+        // Remove notification observer when the controller is deallocated
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func handleRefreshNotification() {
+        refreshDoctorsList()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        Task {
+            if let staffs = await DataController.shared.fetchDoctors() {
+                rootView.totalDoctors = staffs
+            }
+        }
+    }
+
+    func refreshDoctorsList() {
         Task {
             if let staffs = await DataController.shared.fetchDoctors() {
                 rootView.totalDoctors = staffs
@@ -49,5 +74,16 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
 }
 
 extension DoctorsHostingController: UISearchBarDelegate, UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {}
+    func updateSearchResults(for searchController: UISearchController) {
+        // Get the search text from the search controller
+        let searchText = searchController.searchBar.text ?? ""
+        
+        // Update the SwiftUI view's search query
+        rootView.searchQuery = searchText
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        // Clear the search query when cancel is clicked
+        rootView.searchQuery = ""
+    }
 }

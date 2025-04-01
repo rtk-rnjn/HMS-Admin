@@ -14,6 +14,9 @@ struct DoctorListView: View {
     var delegate: DoctorsHostingController?
 
     var totalDoctors: [Staff] = []
+    
+    // This will be set from the hosting controller
+    var searchQuery: String = ""
 
     var body: some View {
 
@@ -47,8 +50,14 @@ struct DoctorListView: View {
                     }
                     .padding(.horizontal)
                     VStack(spacing: 16) {
-                        ForEach(totalDoctors, id: \.id) { doctor in
+                        ForEach(filteredDoctors, id: \.id) { doctor in
                             DoctorCard(doctor: doctor)
+                        }
+
+                        if filteredDoctors.isEmpty && !searchQuery.isEmpty {
+                            Text("No doctors found matching '\(searchQuery)'")
+                                .foregroundColor(.secondary)
+                                .padding()
                         }
 
                         Color.clear.frame(height: 20)
@@ -61,7 +70,6 @@ struct DoctorListView: View {
 
     // MARK: Private
 
-    @State private var searchText = ""
     @State private var showingAddDoctorView = false
 
     private var activeDoctors: [Staff] {
@@ -70,6 +78,19 @@ struct DoctorListView: View {
 
     private var onLeaveDoctors: [Staff] {
         return totalDoctors.filter { $0.onLeave }
+    }
+    
+    private var filteredDoctors: [Staff] {
+        guard !searchQuery.isEmpty else {
+            return totalDoctors
+        }
+        
+        let query = searchQuery.lowercased()
+        return totalDoctors.filter { doctor in
+            doctor.fullName.lowercased().contains(query) ||
+            doctor.specialization.lowercased().contains(query) ||
+            doctor.department.lowercased().contains(query)
+        }
     }
 
 }
