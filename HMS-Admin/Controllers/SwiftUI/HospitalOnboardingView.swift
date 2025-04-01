@@ -18,13 +18,7 @@ struct HospitalOnboardingView: View {
                             TextField("Hospital Name", text: $hospitalName)
                                 .textContentType(.organizationName)
                                 .font(.body)
-                            if !hospitalNameError.isEmpty {
-                                Text(hospitalNameError)
-                                    .font(.caption2)
-                                    .foregroundColor(.red)
-                            }
                         }
-
                         .padding(.vertical, 4)
 
                         VStack(alignment: .leading, spacing: 2) {
@@ -32,40 +26,59 @@ struct HospitalOnboardingView: View {
                                 .keyboardType(.phonePad)
                                 .textContentType(.telephoneNumber)
                                 .font(.body)
-                            if !contactNumberError.isEmpty {
-                                Text(contactNumberError)
-                                    .font(.caption2)
-                                    .foregroundColor(.red)
-                            }
                         }
                         .listRowSeparator(.hidden)
                         .padding(.vertical, 4)
 
                         VStack(alignment: .leading, spacing: 4) {
-                            if !hospitalAddress.isEmpty {
-                                Text(hospitalAddress)
-                                    .font(.body)
-                                    .lineLimit(2)
-                            } else {
-                                Text("Hospital Address")
-                                    .foregroundColor(.gray)
-                            }
-
                             Button(action: {
                                 showingMapPicker = true
                             }) {
-                                HStack {
-                                    Image(systemName: "map")
-                                    Text("Select Location from Map")
-                                        .font(.subheadline)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    if !hospitalAddress.isEmpty {
+                                        HStack(alignment: .top, spacing: 8) {
+                                            Image(systemName: "location.fill")
+                                                .foregroundColor(.blue)
+                                            
+                                            Text(hospitalAddress)
+                                                .font(.body)
+                                                .foregroundColor(.primary)
+                                                .multilineTextAlignment(.leading)
+                                        }
+                                        
+                                        // Show mini map preview if location is selected
+                                        if let lat = selectedLocation?.latitude,
+                                           let long = selectedLocation?.longitude {
+                                            Map(coordinateRegion: .constant(MKCoordinateRegion(
+                                                center: CLLocationCoordinate2D(latitude: lat, longitude: long),
+                                                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                                            )), interactionModes: [], annotationItems: [MapLocation(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: long))]) { location in
+                                                MapMarker(coordinate: location.coordinate, tint: .blue)
+                                            }
+                                            .frame(height: 120)
+                                            .cornerRadius(8)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 8)
+                                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                            )
+                                        }
+                                    } else {
+                                        HStack {
+                                            Image(systemName: "map")
+                                                .foregroundColor(.blue)
+                                            Text("Select Hospital Location")
+                                                .foregroundColor(.blue)
+                                        }
+                                    }
                                 }
-                                .foregroundColor(.blue)
-                            }
-
-                            if !hospitalAddressError.isEmpty {
-                                Text(hospitalAddressError)
-                                    .font(.caption2)
-                                    .foregroundColor(.red)
+                                .padding(12)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .background(Color(.systemBackground))
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                )
                             }
                         }
                         .listRowSeparator(.hidden)
@@ -79,11 +92,6 @@ struct HospitalOnboardingView: View {
                 Section(header: Text("License Details")) {
                     VStack(alignment: .leading, spacing: 4) {
                         TextField("License Number", text: $licenseNumber)
-                        if !licenseNumberError.isEmpty {
-                            Text(licenseNumberError)
-                                .font(.caption)
-                                .foregroundColor(.red)
-                        }
                     }
 
                     DatePicker("Valid Until",
@@ -116,18 +124,12 @@ struct HospitalOnboardingView: View {
                             Text("Add Department")
                         }
                     }
-
-                    if !departmentsError.isEmpty {
-                        Text(departmentsError)
-                            .font(.caption)
-                            .foregroundColor(.red)
-                    }
                 }
 
                 // Submit Button Section
                 Section {
                     Button(action: submitForm) {
-                        Text("Complete Onboarding")
+                        Text("Register Hospital")
                             .frame(maxWidth: .infinity)
                             .frame(height: 44)
                             .foregroundColor(.white)
@@ -144,6 +146,11 @@ struct HospitalOnboardingView: View {
             .navigationBarItems(leading: Button("Back") {
                 dismiss()
             })
+            .alert("Validation Error", isPresented: $showingAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(alertMessage)
+            }
             .sheet(isPresented: $showingAddDepartment) {
                 NavigationView {
                     Form {
@@ -201,72 +208,79 @@ struct HospitalOnboardingView: View {
     @State private var newDepartment = ""
     @State private var showingMapPicker = false
     @State private var selectedLocation: CLLocationCoordinate2D?
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
 
     // Location manager for getting user's current location
     @StateObject private var locationManager: LocationManager = .init()
 
-    // Validation states
-    @State private var hospitalNameError = ""
-    @State private var contactNumberError = ""
-    @State private var hospitalAddressError = ""
-    @State private var licenseNumberError = ""
-    @State private var departmentsError = ""
-
     private func submitForm() {
-        // Reset errors
-        hospitalNameError = ""
-        contactNumberError = ""
-        hospitalAddressError = ""
-        licenseNumberError = ""
-        departmentsError = ""
-
-        var isValid = true
-
         // Validate Hospital Name
         if hospitalName.isEmpty {
-            hospitalNameError = "Hospital name is required"
-            isValid = false
+            alertMessage = "Hospital name is required"
+            showingAlert = true
+            return
         }
 
         // Validate Contact Number
         if contactNumber.isEmpty {
-            contactNumberError = "Contact number is required"
-            isValid = false
+            alertMessage = "Contact number is required"
+            showingAlert = true
+            return
         } else if !isValidPhoneNumber(contactNumber) {
-            contactNumberError = "Please enter a valid phone number"
-            isValid = false
+            alertMessage = "Please enter a valid phone number"
+            showingAlert = true
+            return
         }
 
         // Validate Hospital Address
         if hospitalAddress.isEmpty {
-            hospitalAddressError = "Hospital address is required"
-            isValid = false
+            alertMessage = "Hospital address is required"
+            showingAlert = true
+            return
         }
 
         // Validate License Number
         if licenseNumber.isEmpty {
-            licenseNumberError = "License number is required"
-            isValid = false
+            alertMessage = "License number is required"
+            showingAlert = true
+            return
         }
 
         // Validate Departments
         if departments.isEmpty {
-            departmentsError = "At least one department is required"
-            isValid = false
+            alertMessage = "At least one department is required"
+            showingAlert = true
+            return
         }
 
-        if isValid {
+        guard let admin = DataController.shared.admin else { fatalError() }
+        let hospital = Hospital(name: hospitalName, 
+                             address: hospitalAddress, 
+                             contact: contactNumber, 
+                             departments: departments, 
+                             latitude: selectedLocation?.latitude, 
+                             longitude: selectedLocation?.longitude, 
+                             adminId: admin.id, 
+                             hospitalLicenceNumber: licenseNumber)
 
-            guard let admin = DataController.shared.admin else { fatalError() }
-            let hospital = Hospital(name: hospitalName, address: hospitalAddress, contact: contactNumber, departments: departments, latitude: selectedLocation?.latitude, longitude: selectedLocation?.longitude, adminId: admin.id, hospitalLicenceNumber: licenseNumber)
-
-            Task {
-                let created = await DataController.shared.createHospital(hospital)
-                if created {
-                    DispatchQueue.main.async {
-                        UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
-                        UserDefaults.standard.set(true, forKey: "isHospitalOnboarded")
-                        delegate?.performSegue(withIdentifier: "segueShowInitialTabBarController", sender: nil)
+        Task {
+            let created = await DataController.shared.createHospital(hospital)
+            if created {
+                DispatchQueue.main.async {
+                    // Show success view
+                    let successView = HospitalOnboardingSuccessView(hospital: hospital, delegate: delegate)
+                    let hostingController = UIHostingController(rootView: successView)
+                    hostingController.modalPresentationStyle = .fullScreen
+                    hostingController.modalTransitionStyle = .crossDissolve
+                    hostingController.isModalInPresentation = true // Prevents dismissal by swipe
+                    
+                    // Ensure we're presenting from the top-most view controller
+                    if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                       let topController = windowScene.windows.first?.rootViewController?.topMostViewController {
+                        topController.present(hostingController, animated: true)
+                    } else {
+                        delegate?.present(hostingController, animated: true)
                     }
                 }
             }
@@ -593,3 +607,355 @@ extension MKMapItem: Identifiable {
         return "\(placemark.coordinate.latitude),\(placemark.coordinate.longitude)"
     }
 }
+
+// MARK: - Haptic Feedback Manager
+final class HapticManager {
+    static let shared = HapticManager()
+    
+    private init() {}
+    
+    func playSuccess() {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
+    
+    func playSelection() {
+        let generator = UISelectionFeedbackGenerator()
+        generator.selectionChanged()
+    }
+}
+
+// MARK: - Success View Components
+struct HospitalOnboardingSuccessView: View {
+    let hospital: Hospital
+    @Environment(\.dismiss) private var dismiss
+    weak var delegate: HospitalDetailHostingController?
+    @State private var showCheckmark = false
+    @State private var showTitle = false
+    @State private var showCard = false
+    @State private var showMap = false
+    @State private var showButtons = false
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            SuccessHeader(showCheckmark: showCheckmark, showTitle: showTitle)
+            
+            HospitalInfoCard(hospital: hospital)
+                .opacity(showCard ? 1 : 0)
+                .offset(y: showCard ? 0 : 20)
+            
+            LocationMapView(
+                latitude: hospital.latitude,
+                longitude: hospital.longitude,
+                address: hospital.address,
+                isVisible: showMap
+            )
+            .opacity(showMap ? 1 : 0)
+            .offset(y: showMap ? 0 : 20)
+            
+            Spacer()
+            
+            ActionButtons(delegate: delegate, dismiss: dismiss)
+                .opacity(showButtons ? 1 : 0)
+                .offset(y: showButtons ? 0 : 20)
+        }
+        .padding(.vertical, 32)
+        .onAppear {
+            animateEntrance()
+        }
+    }
+    
+    private func animateEntrance() {
+        // Initial success haptic
+        HapticManager.shared.playSuccess()
+        
+        // Staggered animations with haptic feedback
+        withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+            showCheckmark = true
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+                showTitle = true
+            }
+            HapticManager.shared.playSelection()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+                showCard = true
+            }
+            HapticManager.shared.playSelection()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+                showMap = true
+            }
+            HapticManager.shared.playSelection()
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
+            withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
+                showButtons = true
+            }
+            HapticManager.shared.playSelection()
+        }
+    }
+}
+
+// MARK: - Success Header
+private struct SuccessHeader: View {
+    let showCheckmark: Bool
+    let showTitle: Bool
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            Circle()
+                .fill(Color.green)
+                .frame(width: 80, height: 80)
+                .overlay(
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 40, weight: .bold))
+                        .foregroundColor(.white)
+                        .scaleEffect(showCheckmark ? 1 : 0.5)
+                        .opacity(showCheckmark ? 1 : 0)
+                )
+                .shadow(color: .green.opacity(0.3), radius: 10, x: 0, y: 4)
+                .scaleEffect(showCheckmark ? 1 : 0.5)
+            
+            Text("Hospital Added Successfully!")
+                .font(.title2)
+                .fontWeight(.bold)
+                .opacity(showTitle ? 1 : 0)
+                .offset(y: showTitle ? 0 : 10)
+        }
+    }
+}
+
+// MARK: - Hospital Info Card
+private struct HospitalInfoCard: View {
+    let hospital: Hospital
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HospitalHeader(hospital: hospital)
+            Divider()
+            HospitalDetails(hospital: hospital)
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(12)
+        .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
+        .padding(.horizontal)
+        .transition(.scale.combined(with: .opacity))
+    }
+}
+
+private struct HospitalHeader: View {
+    let hospital: Hospital
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            Circle()
+                .fill(Color.gray.opacity(0.2))
+                .frame(width: 50, height: 50)
+                .overlay(
+                    Image(systemName: "building.2")
+                        .font(.title2)
+                        .foregroundColor(.gray)
+                )
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(hospital.name)
+                    .font(.headline)
+                Text("License: \(hospital.hospitalLicenceNumber)")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+        }
+    }
+}
+
+private struct HospitalDetails: View {
+    let hospital: Hospital
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            InfoRow(icon: "phone.fill", label: "Contact", value: hospital.contact ?? "Not provided")
+            InfoRow(icon: "building.2.fill", label: "Departments", value: "\(hospital.departments.count) Departments")
+        }
+    }
+}
+
+// MARK: - Location Map View
+private struct LocationMapView: View {
+    let latitude: Double?
+    let longitude: Double?
+    let address: String?
+    let isVisible: Bool
+    @State private var showOverlay = false
+    
+    var body: some View {
+        Group {
+            if let latitude = latitude, let longitude = longitude {
+                let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                ZStack(alignment: .top) {
+                    Map(coordinateRegion: .constant(MKCoordinateRegion(
+                        center: coordinate,
+                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                    )), interactionModes: [], annotationItems: [MapLocation(coordinate: coordinate)]) { location in
+                        MapMarker(coordinate: location.coordinate, tint: .blue)
+                    }
+                    
+                    // Address Overlay
+                    if let address = address {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "location.fill")
+                                    .foregroundColor(.gray)
+                                Text(address)
+                                    .font(.subheadline)
+                                    .foregroundColor(.primary)
+                            }
+                        }
+                        .padding(12)
+                        .background(Color(.systemBackground))
+                        .cornerRadius(8)
+                        .shadow(color: Color.black.opacity(0.1), radius: 4, x: 0, y: 2)
+                        .padding(.top, 12)
+                        .opacity(showOverlay ? 1 : 0)
+                        .offset(y: showOverlay ? 0 : -10)
+                    }
+                }
+                .frame(height: 200)
+                .cornerRadius(12)
+                .padding(.horizontal)
+                .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
+                .onChange(of: isVisible) { newValue in
+                    if newValue {
+                        withAnimation(.easeOut.delay(0.3)) {
+                            showOverlay = true
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Action Buttons
+private struct ActionButtons: View {
+    weak var delegate: HospitalDetailHostingController?
+    let dismiss: DismissAction
+    @State private var viewProfileScale: CGFloat = 1
+    
+    var body: some View {
+        Button(action: {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                viewProfileScale = 0.95
+            }
+            HapticManager.shared.playSuccess()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
+                    viewProfileScale = 1
+                }
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                // Set user state
+                UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
+                UserDefaults.standard.set(true, forKey: "isHospitalOnboarded")
+                
+                // Navigate to dashboard
+                delegate?.navigateToDashboard()
+            }
+        }) {
+            ButtonLabel(title: "Go to Home", style: .primary)
+                .scaleEffect(viewProfileScale)
+        }
+        .padding(.horizontal)
+    }
+}
+
+// MARK: - Button Label
+private struct ButtonLabel: View {
+    let title: String
+    let style: ButtonStyle
+    
+    enum ButtonStyle {
+        case primary
+        case secondary
+        
+        var backgroundColor: Color {
+            switch self {
+            case .primary: return .blue
+            case .secondary: return .blue.opacity(0.1)
+            }
+        }
+        
+        var foregroundColor: Color {
+            switch self {
+            case .primary: return .white
+            case .secondary: return .blue
+            }
+        }
+    }
+    
+    var body: some View {
+        Text(title)
+            .font(.headline)
+            .foregroundColor(style.foregroundColor)
+            .frame(maxWidth: .infinity)
+            .frame(height: 50)
+            .background(style.backgroundColor)
+            .cornerRadius(12)
+    }
+}
+
+// MARK: - Supporting Types
+private struct MapLocation: Identifiable {
+    let id = UUID()
+    let coordinate: CLLocationCoordinate2D
+}
+
+// MARK: - Preview
+#Preview {
+    HospitalOnboardingView()
+}
+
+#Preview {
+    NavigationView {
+        let mockHospital = Hospital(
+            name: "City General Hospital",
+            address: "123 Medical Center Blvd",
+            contact: "+1 (555) 123-4567",
+            departments: ["Cardiology", "Neurology", "Pediatrics"],
+            latitude: 37.7749,
+            longitude: -122.4194,
+            adminId: "admin123",
+            hospitalLicenceNumber: "LIC-2024-001"
+        )
+        
+        HospitalOnboardingSuccessView(hospital: mockHospital, delegate: nil)
+            .preferredColorScheme(.light)
+    }
+}
+
+extension UIViewController {
+    var topMostViewController: UIViewController {
+        if let presented = presentedViewController {
+            return presented.topMostViewController
+        }
+        if let navigation = self as? UINavigationController {
+            return navigation.visibleViewController?.topMostViewController ?? self
+        }
+        if let tab = self as? UITabBarController {
+            return tab.selectedViewController?.topMostViewController ?? self
+        }
+        return self
+    }
+}
+
+
