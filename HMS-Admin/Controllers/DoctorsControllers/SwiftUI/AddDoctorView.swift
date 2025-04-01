@@ -28,6 +28,9 @@ struct AddDoctorView: View {
             _consultationFee = State(initialValue: String(doctor.consultationFee))
             _department = State(initialValue: doctor.department)
             _specialization = State(initialValue: doctor.specialization)
+        } else {
+            // Set default gender to male for new doctors
+            _selectedGender = State(initialValue: .male)
         }
     }
 
@@ -127,8 +130,17 @@ struct AddDoctorView: View {
                                     title: "Contact Number",
                                     text: $contactNumber,
                                     error: contactNumberError,
-                                    keyboardType: .phonePad,
-                                    onChange: { _ in
+                                    keyboardType: .numberPad,
+                                    onChange: { newValue in
+                                        // Only allow numbers
+                                        let filtered = newValue.filter { $0.isNumber }
+                                        if filtered != newValue {
+                                            contactNumber = filtered
+                                        }
+                                        // Limit to 10 digits
+                                        if filtered.count > 10 {
+                                            contactNumber = String(filtered.prefix(10))
+                                        }
                                         if !contactNumber.isEmpty {
                                             contactNumberError = ""
                                         }
@@ -183,16 +195,15 @@ struct AddDoctorView: View {
                                         .foregroundColor(.gray)
 
                                     HStack(spacing: 0) {
-                                        GenderButton(title: "Male", isSelected: selectedGender == .male) {
-                                            selectedGender = .male
-                                        }
-
-                                        GenderButton(title: "Female", isSelected: selectedGender == .female) {
-                                            selectedGender = .female
-                                        }
-
-                                        GenderButton(title: "Other", isSelected: selectedGender == .other) {
-                                            selectedGender = .other
+                                        ForEach([Gender.male, Gender.female, Gender.other], id: \.self) { gender in
+                                            GenderButton(
+                                                title: gender.rawValue,
+                                                isSelected: selectedGender == gender
+                                            ) {
+                                                withAnimation {
+                                                    selectedGender = gender
+                                                }
+                                            }
                                         }
                                     }
                                     .background(Color.white)
@@ -585,16 +596,9 @@ struct AddDoctorView: View {
         if contactNumber.isEmpty {
             contactNumberError = "Contact number is required"
             isValid = false
-        } else if !contactNumber.allSatisfy({ $0.isNumber || $0 == "+" || $0 == " " || $0 == "-" || $0 == "(" || $0 == ")" }) {
-            contactNumberError = "Contact number should contain only digits, +, -, spaces, or parentheses"
+        } else if contactNumber.count != 10 {
+            contactNumberError = "Contact number must be exactly 10 digits"
             isValid = false
-        } else {
-            // Strip all non-numeric characters and check length
-            let numericOnly = contactNumber.filter { $0.isNumber }
-            if numericOnly.count < 10 || numericOnly.count > 15 {
-                contactNumberError = "Contact number should have 10-15 digits"
-                isValid = false
-            }
         }
 
         // Email validation
@@ -617,6 +621,22 @@ struct AddDoctorView: View {
         let ageComponents = calendar.dateComponents([.year], from: dateOfBirth, to: Date())
         let age = ageComponents.year ?? 0
 
+        // Age validation - must be between 25 and 85 years old
+        if age < 25 {
+            dateOfBirthError = "Doctor must be at least 25 years old"
+            isValid = false
+        } else if age > 85 {
+            dateOfBirthError = "Doctor's age cannot exceed 85 years"
+            isValid = false
+        }
+
+        // Experience validation - cannot exceed age - 25
+        let maxExperience = age - 25
+        if yearsOfExperience > maxExperience {
+            yearsOfExperienceError = "Years of experience cannot exceed \(maxExperience) years based on age"
+            isValid = false
+        }
+
         // Medical License validation
         if medicalLicenseNumber.isEmpty {
             medicalLicenseError = "Medical license number is required"
@@ -630,8 +650,8 @@ struct AddDoctorView: View {
         }
 
         // Years of Experience validation
-        if yearsOfExperience > 65 {
-            yearsOfExperienceError = "Years of experience cannot exceed 65 years"
+        if yearsOfExperience < 0 {
+            yearsOfExperienceError = "Years of experience cannot be negative"
             isValid = false
         }
 
@@ -700,61 +720,32 @@ struct AddDoctorView: View {
     }
 
     private func saveDoctor() {
-        // Parse specializations correctly - they're already comma-separated from the multi-selection
-        let specializations = specialization.trimmingCharacters(in: .whitespacesAndNewlines)
+        // Validate all fields
+        if !validateForm() {
+            return
+        }
 
-        let fee = Double(consultationFee) ?? 0.0
+        let newDoctor = Staff(
+            firstName: firstName,
+            lastName: lastName.isEmpty ? nil : lastName,
+            gender: selectedGender,
+            emailAddress: email,
+            dateOfBirth: dateOfBirth,
+            password: "default123", // This should be changed by the doctor later
+            contactNumber: contactNumber,
+            specialization: specialization,
+            department: department,
+            licenseId: medicalLicenseNumber,
+            yearOfExperience: yearsOfExperience,
+            role: .doctor
+        )
 
-        if let existingDoctor = doctor {
-            // Update existing doctor
-            var updatedDoctor = existingDoctor
-            updatedDoctor.firstName = firstName
-            updatedDoctor.lastName = lastName
-            updatedDoctor.emailAddress = email
-            updatedDoctor.contactNumber = contactNumber
-            updatedDoctor.dateOfBirth = dateOfBirth
-            updatedDoctor.gender = selectedGender
-            updatedDoctor.licenseId = medicalLicenseNumber
-            updatedDoctor.yearOfExperience = yearsOfExperience
-            updatedDoctor.consultationFee = Int(fee)
-            updatedDoctor.department = department
-            updatedDoctor.specialization = specializations
-
-//            doctorStore.updateDoctor(updatedDoctor)
-            // Dismiss the view after update
-            dismiss()
-        } else {
-            // Generate a secure random password
-            let password = generateRandomPassword()
-
-            // Create new doctor
-            let newDoctor = Staff(
-                firstName: firstName,
-                lastName: lastName,
-                emailAddress: email,
-                dateOfBirth: dateOfBirth,
-                password: password,
-                contactNumber: contactNumber,
-                specialization: specializations,
-                department: department,
-                onLeave: false,
-                consultationFee: Int(fee),
-                unavailabilityPeriods: [],
-                licenseId: medicalLicenseNumber,
-                yearOfExperience: yearsOfExperience,
-                role: .doctor,
-                hospitalId: DataController.shared.hospital?.id ?? ""
-            )
-
-            Task {
-                guard let created = await DataController.shared.addDoctor(newDoctor) else {
-                    return
-                }
-
-                printEmail(to: email, name: "\(firstName) \(lastName)", password: password)
+        Task {
+                _ = await DataController.shared.addDoctor(newDoctor)
+                // Dismiss the view first
                 dismiss()
-
-            }
+                // Post a notification to refresh the doctors list
+                NotificationCenter.default.post(name: NSNotification.Name("RefreshDoctorsList"), object: nil)
         }
     }
 
@@ -813,9 +804,15 @@ struct GenderButton: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .foregroundColor(isSelected ? .white : .gray)
-                .background(isSelected ? Color.blue : Color.white)
+                .background(isSelected ? Color.blue : Color.clear)
+                .contentShape(Rectangle())
         }
         .buttonStyle(PlainButtonStyle())
+        .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 8))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(isSelected ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
+        )
     }
 }
