@@ -86,21 +86,225 @@ struct AddDoctorView: View {
 
     let genderOptions = ["Male", "Female", "Other"]
 
+    private var maxYearsOfExperience: Int {
+        guard let birthDate = dateOfBirth else {
+            return 0 // Return 0 if no date of birth is selected
+        }
+        let calendar = Calendar.current
+        let ageComponents = calendar.dateComponents([.year], from: birthDate, to: Date())
+        let age = ageComponents.year ?? 0
+        return max(0, age - 25) // Maximum experience is age minus 25 years (medical school)
+    }
+    
+    private var availableYearsOfExperience: [Int] {
+        Array(0...maxYearsOfExperience)
+    }
+
+    // Add department to specializations mapping
+    private let departmentSpecializations: [String: [String]] = [
+        "Cardiology": [
+            "General Cardiologist",
+            "Interventional Cardiologist",
+            "Pediatric Cardiologist",
+            "Electrophysiologist",
+            "Heart Failure Specialist",
+            "Cardiac Surgeon"
+        ],
+        "Neurology": [
+            "General Neurologist",
+            "Pediatric Neurologist",
+            "Neurosurgeon",
+            "Stroke Specialist",
+            "Epilepsy Specialist",
+            "Movement Disorders Specialist",
+            "Neuro-oncologist"
+        ],
+        "Orthopedics": [
+            "General Orthopedic Surgeon",
+            "Sports Medicine Specialist",
+            "Joint Replacement Surgeon",
+            "Spine Surgeon",
+            "Pediatric Orthopedist",
+            "Hand Surgeon",
+            "Foot & Ankle Specialist",
+            "Trauma Surgeon"
+        ],
+        "Pediatrics": [
+            "General Pediatrician",
+            "Neonatologist",
+            "Pediatric Cardiologist",
+            "Pediatric Neurologist",
+            "Pediatric Oncologist",
+            "Pediatric Endocrinologist",
+            "Pediatric Pulmonologist",
+            "Developmental Pediatrician"
+        ],
+        "Gynecology & Obstetrics": [
+            "General Obstetrician/Gynecologist",
+            "Maternal-Fetal Medicine Specialist",
+            "Reproductive Endocrinologist",
+            "Gynecologic Oncologist",
+            "Urogynecologist",
+            "High-Risk Pregnancy Specialist"
+        ],
+        "Oncology": [
+            "Medical Oncologist",
+            "Radiation Oncologist",
+            "Surgical Oncologist",
+            "Pediatric Oncologist",
+            "Hematologic Oncologist",
+            "Neuro-oncologist",
+            "Gynecologic Oncologist"
+        ],
+        "Radiology": [
+            "Diagnostic Radiologist",
+            "Interventional Radiologist",
+            "Neuroradiologist",
+            "Pediatric Radiologist",
+            "Nuclear Medicine Specialist",
+            "Musculoskeletal Radiologist",
+            "Breast Imaging Specialist"
+        ],
+        "Emergency & Trauma": [
+            "Emergency Medicine Physician",
+            "Trauma Surgeon",
+            "Pediatric Emergency Specialist",
+            "Emergency Critical Care Specialist",
+            "Toxicologist",
+            "Disaster Medicine Specialist"
+        ],
+        "Dermatology": [
+            "General Dermatologist",
+            "Pediatric Dermatologist",
+            "Dermatologic Surgeon",
+            "Cosmetic Dermatologist",
+            "Immunodermatologist",
+            "Dermatopathologist"
+        ],
+        "Psychiatry": [
+            "General Psychiatrist",
+            "Child & Adolescent Psychiatrist",
+            "Geriatric Psychiatrist",
+            "Addiction Psychiatrist",
+            "Forensic Psychiatrist",
+            "Neuropsychiatrist"
+        ],
+        "Gastroenterology": [
+            "General Gastroenterologist",
+            "Hepatologist",
+            "Pediatric Gastroenterologist",
+            "Therapeutic Endoscopist",
+            "Inflammatory Bowel Disease Specialist",
+            "Pancreaticobiliary Specialist"
+        ],
+        "Nephrology": [
+            "General Nephrologist",
+            "Pediatric Nephrologist",
+            "Transplant Nephrologist",
+            "Dialysis Specialist",
+            "Hypertension Specialist"
+        ],
+        "Endocrinology": [
+            "General Endocrinologist",
+            "Pediatric Endocrinologist",
+            "Thyroid Specialist",
+            "Diabetes Specialist",
+            "Reproductive Endocrinologist",
+            "Metabolic Disorders Specialist"
+        ],
+        "Pulmonology": [
+            "General Pulmonologist",
+            "Pediatric Pulmonologist",
+            "Critical Care Pulmonologist",
+            "Sleep Medicine Specialist",
+            "Interventional Pulmonologist",
+            "Cystic Fibrosis Specialist"
+        ],
+        "Ophthalmology": [
+            "General Ophthalmologist",
+            "Pediatric Ophthalmologist",
+            "Retina Specialist",
+            "Glaucoma Specialist",
+            "Cornea Specialist",
+            "Oculoplastic Surgeon",
+            "Neuro-ophthalmologist"
+        ],
+        "ENT (Ear, Nose, Throat)": [
+            "General ENT Specialist",
+            "Pediatric ENT Specialist",
+            "Otologist/Neurotologist",
+            "Head & Neck Surgeon",
+            "Laryngologist",
+            "Rhinologist",
+            "Facial Plastic Surgeon"
+        ],
+        "Urology": [
+            "General Urologist",
+            "Pediatric Urologist",
+            "Urologic Oncologist",
+            "Female Urologist",
+            "Neurourologist",
+            "Endourologist",
+            "Reconstructive Urologist"
+        ],
+        "Anesthesiology": [
+            "General Anesthesiologist",
+            "Pediatric Anesthesiologist",
+            "Cardiac Anesthesiologist",
+            "Obstetric Anesthesiologist",
+            "Pain Management Specialist",
+            "Critical Care Anesthesiologist",
+            "Regional Anesthesia Specialist"
+        ],
+        "Pathology & Lab Medicine": [
+            "Anatomic Pathologist",
+            "Clinical Pathologist",
+            "Hematopathologist",
+            "Dermatopathologist",
+            "Cytopathologist",
+            "Molecular Pathologist",
+            "Forensic Pathologist",
+            "Blood Bank/Transfusion Medicine Specialist"
+        ]
+    ]
+
+    // Add computed property for available specializations
+    private var availableSpecializations: [String] {
+        guard !department.isEmpty else { return [] }
+        return departmentSpecializations[department] ?? []
+    }
+
     var body: some View {
         NavigationView {
             ZStack {
                 Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all)
 
                 ScrollView {
-                    VStack(spacing: 20) {
+                    VStack(spacing: 24) {
+                        // Header Image
+                        VStack(spacing: 16) {
+                            Image(systemName: "person.crop.circle.badge.plus")
+                                .font(.system(size: 60))
+                                .foregroundColor(.blue)
+                                .padding(.top, 20)
+                            
+                            Text(doctor == nil ? "Add New Doctor" : "Edit Doctor")
+                                .font(.title2)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                            
+                            Text("Fill in the doctor's information below")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.bottom, 10)
+
                         // Personal Information Section
                         GroupBox {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Label("Personal Information", systemImage: "person.fill")
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                    .padding(.bottom, 5)
-
+                            VStack(alignment: .leading, spacing: 20) {
+                                SectionHeader(title: "Personal Information", icon: "person.fill")
+                                
                                 // First Name
                                 ValidatedTextField(
                                     title: "First Name",
@@ -132,12 +336,10 @@ struct AddDoctorView: View {
                                     error: contactNumberError,
                                     keyboardType: .numberPad,
                                     onChange: { newValue in
-                                        // Only allow numbers
                                         let filtered = newValue.filter { $0.isNumber }
                                         if filtered != newValue {
                                             contactNumber = filtered
                                         }
-                                        // Limit to 10 digits
                                         if filtered.count > 10 {
                                             contactNumber = String(filtered.prefix(10))
                                         }
@@ -162,25 +364,39 @@ struct AddDoctorView: View {
                                 )
 
                                 // Date of Birth
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Date of Birth")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Image(systemName: "calendar")
+                                            .foregroundColor(.gray)
+                                        Text("Date of Birth")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
 
-                                    DatePicker("", selection: $dateOfBirth, in: ...Date(), displayedComponents: .date)
-                                        .labelsHidden()
-                                        .padding()
-                                        .background(Color.white)
-                                        .cornerRadius(8)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(dateOfBirthError.isEmpty ? Color.clear : Color.red, lineWidth: 1)
-                                        )
-                                        .onChange(of: dateOfBirth) { _ in
-                                            dateOfBirthError = ""
+                                    Button(action: {
+                                        withAnimation {
+                                            dateOfBirthHasInteracted = true
+                                            showingDatePicker = true
                                         }
+                                    }) {
+                                        HStack {
+                                            Text(dateOfBirth?.formatted(date: .long, time: .omitted) ?? "Select Date of Birth")
+                                                .foregroundColor(dateOfBirth == nil ? .gray : .black)
+                                            Spacer()
+                                            Image(systemName: "chevron.down")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.white)
+                                        .cornerRadius(10)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(dateOfBirthHasInteracted && !dateOfBirthError.isEmpty ? Color.red : Color.gray.opacity(0.2), lineWidth: 1)
+                                        )
+                                    }
 
-                                    if !dateOfBirthError.isEmpty {
+                                    if dateOfBirthHasInteracted && !dateOfBirthError.isEmpty {
                                         Text(dateOfBirthError)
                                             .font(.footnote)
                                             .foregroundColor(.red)
@@ -189,38 +405,48 @@ struct AddDoctorView: View {
                                 }
 
                                 // Gender Selection
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Gender")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-
-                                    HStack(spacing: 0) {
-                                        GenderButton(title: "Male", isSelected: selectedGender == .male) {
-                                            selectedGender = .male
-                                        }
-
-                                        GenderButton(title: "Female", isSelected: selectedGender == .female) {
-                                            selectedGender = .female
-                                        }
-
-                                        GenderButton(title: "Other", isSelected: selectedGender == .other) {
-                                            selectedGender = .other
-                                        }
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Image(systemName: "person.2.fill")
+                                            .foregroundColor(.gray)
+                                        Text("Gender")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
                                     }
-                                    .background(Color.white)
-                                    .cornerRadius(8)
+
+                                    Menu {
+                                        Picker("Gender", selection: $selectedGender) {
+                                            Text("Male").tag(Gender.male)
+                                            Text("Female").tag(Gender.female)
+                                            Text("Other").tag(Gender.other)
+                                        }
+                                    } label: {
+                                        HStack {
+                                            Text(selectedGender.rawValue)
+                                                .foregroundColor(.black)
+                                            Spacer()
+                                            Image(systemName: "chevron.down")
+                                                .foregroundColor(.gray)
+                                        }
+                                        .padding()
+                                        .frame(maxWidth: .infinity)
+                                        .background(Color.white)
+                                        .cornerRadius(10)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                        )
+                                    }
                                 }
                             }
                         }
+                        .groupBoxStyle(CustomGroupBoxStyle())
 
                         // Professional Information Section
                         GroupBox {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Label("Professional Information", systemImage: "stethoscope")
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                    .padding(.bottom, 5)
-
+                            VStack(alignment: .leading, spacing: 20) {
+                                SectionHeader(title: "Professional Information", icon: "stethoscope")
+                                
                                 // Medical License Number
                                 ValidatedTextField(
                                     title: "Medical License Number",
@@ -234,21 +460,25 @@ struct AddDoctorView: View {
                                 )
 
                                 // Years of Experience
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Years of Experience")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Image(systemName: "clock.fill")
+                                            .foregroundColor(.gray)
+                                        Text("Years of Experience")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
 
                                     Menu {
                                         Picker("Years of Experience", selection: $yearsOfExperience) {
-                                            ForEach(0...65, id: \.self) { year in
+                                            ForEach(availableYearsOfExperience, id: \.self) { year in
                                                 Text("\(year) years").tag(year)
                                             }
                                         }
                                     } label: {
                                         HStack {
-                                            Text("\(yearsOfExperience) years")
-                                                .foregroundColor(.black)
+                                            Text(dateOfBirth == nil ? "Select Date of Birth First" : "\(yearsOfExperience) years")
+                                                .foregroundColor(dateOfBirth == nil ? .gray : .black)
                                             Spacer()
                                             Image(systemName: "chevron.down")
                                                 .foregroundColor(.gray)
@@ -256,12 +486,14 @@ struct AddDoctorView: View {
                                         .padding()
                                         .frame(maxWidth: .infinity)
                                         .background(Color.white)
-                                        .cornerRadius(8)
+                                        .cornerRadius(10)
                                         .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(yearsOfExperienceError.isEmpty ? Color.clear : Color.red, lineWidth: 1)
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(yearsOfExperienceError.isEmpty ? Color.gray.opacity(0.2) : Color.red, lineWidth: 1)
                                         )
                                     }
+                                    .disabled(dateOfBirth == nil)
+                                    .opacity(dateOfBirth == nil ? 0.6 : 1)
 
                                     if !yearsOfExperienceError.isEmpty {
                                         Text(yearsOfExperienceError)
@@ -285,26 +517,32 @@ struct AddDoctorView: View {
                                 )
                             }
                         }
+                        .groupBoxStyle(CustomGroupBoxStyle())
 
                         // Department & Specializations Section
                         GroupBox {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Label("Department & Specializations", systemImage: "building.2")
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                    .padding(.bottom, 5)
-
+                            VStack(alignment: .leading, spacing: 20) {
+                                SectionHeader(title: "Department & Specializations", icon: "building.2")
+                                
                                 // Department
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Department")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Image(systemName: "building.2.fill")
+                                            .foregroundColor(.gray)
+                                        Text("Department")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
 
                                     Menu {
                                         ForEach(departments, id: \.self) { dept in
                                             Button(action: {
+                                                departmentHasInteracted = true
                                                 department = dept
                                                 departmentError = ""
+                                                // Clear specializations when department changes
+                                                selectedSpecializations.removeAll()
+                                                specialization = ""
                                                 checkFormValidity()
                                             }) {
                                                 HStack {
@@ -326,14 +564,14 @@ struct AddDoctorView: View {
                                         .padding()
                                         .frame(maxWidth: .infinity)
                                         .background(Color.white)
-                                        .cornerRadius(8)
+                                        .cornerRadius(10)
                                         .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(departmentError.isEmpty ? Color.clear : Color.red, lineWidth: 1)
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(departmentHasInteracted && !departmentError.isEmpty ? Color.red : Color.gray.opacity(0.2), lineWidth: 1)
                                         )
                                     }
 
-                                    if !departmentError.isEmpty {
+                                    if departmentHasInteracted && !departmentError.isEmpty {
                                         Text(departmentError)
                                             .font(.footnote)
                                             .foregroundColor(.red)
@@ -342,17 +580,24 @@ struct AddDoctorView: View {
                                 }
 
                                 // Specializations
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Specializations")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Image(systemName: "cross.case.fill")
+                                            .foregroundColor(.gray)
+                                        Text("Specializations")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
 
                                     Button(action: {
-                                        showingSpecializationDropdown = true
+                                        if !department.isEmpty {
+                                            specializationHasInteracted = true
+                                            showingSpecializationDropdown = true
+                                        }
                                     }) {
                                         HStack {
                                             if specialization.isEmpty {
-                                                Text("Select Specializations")
+                                                Text(department.isEmpty ? "Select Department First" : "Select Specializations")
                                                     .foregroundColor(.gray)
                                             } else {
                                                 Text(specialization)
@@ -366,14 +611,16 @@ struct AddDoctorView: View {
                                         .padding()
                                         .frame(maxWidth: .infinity)
                                         .background(Color.white)
-                                        .cornerRadius(8)
+                                        .cornerRadius(10)
                                         .overlay(
-                                            RoundedRectangle(cornerRadius: 8)
-                                                .stroke(specializationError.isEmpty ? Color.clear : Color.red, lineWidth: 1)
+                                            RoundedRectangle(cornerRadius: 10)
+                                                .stroke(specializationHasInteracted && !specializationError.isEmpty ? Color.red : Color.gray.opacity(0.2), lineWidth: 1)
                                         )
                                     }
+                                    .disabled(department.isEmpty)
+                                    .opacity(department.isEmpty ? 0.6 : 1)
 
-                                    if !specializationError.isEmpty {
+                                    if specializationHasInteracted && !specializationError.isEmpty {
                                         Text(specializationError)
                                             .font(.footnote)
                                             .foregroundColor(.red)
@@ -382,46 +629,123 @@ struct AddDoctorView: View {
                                 }
                             }
                         }
+                        .groupBoxStyle(CustomGroupBoxStyle())
 
                         // Availability Section
                         GroupBox {
-                            VStack(alignment: .leading, spacing: 15) {
-                                Label("Availability", systemImage: "clock.fill")
-                                    .font(.headline)
-                                    .foregroundColor(.primary)
-                                    .padding(.bottom, 5)
+                            VStack(alignment: .leading, spacing: 20) {
+                                SectionHeader(title: "Availability", icon: "clock.fill")
+                                
+                                // Working Days
+                                VStack(alignment: .leading, spacing: 8) {
+                                    HStack {
+                                        Image(systemName: "calendar.badge.clock")
+                                            .foregroundColor(.gray)
+                                        Text("Working Days")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
+
+                                    ScrollView(.horizontal, showsIndicators: false) {
+                                        HStack(spacing: 8) {
+                                            ForEach(weekDays, id: \.self) { day in
+                                                Button(action: {
+                                                    if selectedDays.contains(day) {
+                                                        selectedDays.remove(day)
+                                                    } else {
+                                                        selectedDays.insert(day)
+                                                    }
+                                                }) {
+                                                    Text(day.prefix(3))
+                                                        .font(.subheadline)
+                                                        .fontWeight(selectedDays.contains(day) ? .semibold : .regular)
+                                                        .padding(.horizontal, 12)
+                                                        .padding(.vertical, 8)
+                                                        .background(selectedDays.contains(day) ? Color.blue : Color.clear)
+                                                        .foregroundColor(selectedDays.contains(day) ? .white : .gray)
+                                                        .cornerRadius(8)
+                                                        .overlay(
+                                                            RoundedRectangle(cornerRadius: 8)
+                                                                .stroke(selectedDays.contains(day) ? Color.blue : Color.gray.opacity(0.3), lineWidth: 1)
+                                                        )
+                                                }
+                                            }
+                                        }
+                                        .padding(.vertical, 4)
+                                    }
+                                }
 
                                 // Working Hours
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Working Hours")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-
+                                VStack(alignment: .leading, spacing: 8) {
                                     HStack {
-                                        VStack(alignment: .leading) {
-                                            Text("Start Time")
-                                                .font(.subheadline)
-                                                .foregroundColor(.gray)
-                                            DatePicker("", selection: $startTime, displayedComponents: .hourAndMinute)
-                                                .labelsHidden()
+                                        Image(systemName: "clock.badge.checkmark")
+                                            .foregroundColor(.gray)
+                                        Text("Working Hours")
+                                            .font(.subheadline)
+                                            .foregroundColor(.gray)
+                                    }
+
+                                    HStack(spacing: 16) {
+                                        // Start Time Button
+                                        Button(action: {
+                                            isEditingStartTime = true
+                                            showingTimePickerSheet = true
+                                        }) {
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text("Start Time")
+                                                    .font(.caption)
+                                                    .foregroundColor(.gray)
+                                                HStack {
+                                                    Text(startTime.formatted(date: .omitted, time: .shortened))
+                                                        .font(.title3)
+                                                        .foregroundColor(.primary)
+                                                    Image(systemName: "chevron.down")
+                                                        .foregroundColor(.gray)
+                                                        .font(.caption)
+                                                }
+                                            }
+                                            .padding()
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.white)
+                                            .cornerRadius(10)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                            )
                                         }
 
-                                        Spacer()
-
-                                        VStack(alignment: .leading) {
-                                            Text("End Time")
-                                                .font(.subheadline)
-                                                .foregroundColor(.gray)
-                                            DatePicker("", selection: $endTime, displayedComponents: .hourAndMinute)
-                                                .labelsHidden()
+                                        // End Time Button
+                                        Button(action: {
+                                            isEditingStartTime = false
+                                            showingTimePickerSheet = true
+                                        }) {
+                                            VStack(alignment: .leading, spacing: 4) {
+                                                Text("End Time")
+                                                    .font(.caption)
+                                                    .foregroundColor(.gray)
+                                                HStack {
+                                                    Text(endTime.formatted(date: .omitted, time: .shortened))
+                                                        .font(.title3)
+                                                        .foregroundColor(.primary)
+                                                    Image(systemName: "chevron.down")
+                                                        .foregroundColor(.gray)
+                                                        .font(.caption)
+                                                }
+                                            }
+                                            .padding()
+                                            .frame(maxWidth: .infinity)
+                                            .background(Color.white)
+                                            .cornerRadius(10)
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 10)
+                                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                                            )
                                         }
                                     }
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(8)
                                 }
                             }
                         }
+                        .groupBoxStyle(CustomGroupBoxStyle())
                     }
                     .padding()
                 }
@@ -446,7 +770,7 @@ struct AddDoctorView: View {
             .sheet(isPresented: $showingSpecializationDropdown) {
                 NavigationView {
                     List(selection: $selectedSpecializations) {
-                        ForEach(specializations, id: \.self) { spec in
+                        ForEach(availableSpecializations, id: \.self) { spec in
                             HStack {
                                 Text(spec)
                                 Spacer()
@@ -481,12 +805,69 @@ struct AddDoctorView: View {
                 }
                 .presentationDetents([.medium])
                 .onAppear {
-                    selectedSpecializations = Set(
-                        specialization.split(separator: ",")
-                            .map { String($0.trimmingCharacters(in: .whitespaces)) }
-                            .filter { !$0.isEmpty }
-                    )
+                    // Clear selected specializations if department changed
+                    if !department.isEmpty {
+                        let availableSpecs = Set(availableSpecializations)
+                        selectedSpecializations = selectedSpecializations.intersection(availableSpecs)
+                        specialization = Array(selectedSpecializations).sorted().joined(separator: ", ")
+                    }
                 }
+            }
+            .sheet(isPresented: $showingDatePicker) {
+                NavigationView {
+                    DatePicker(
+                        "Select Date of Birth",
+                        selection: Binding(
+                            get: { self.dateOfBirth ?? Date() },
+                            set: { self.dateOfBirth = $0 }
+                        ),
+                        in: ...Date(),
+                        displayedComponents: .date
+                    )
+                    .datePickerStyle(.graphical)
+                    .navigationTitle("Date of Birth")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarLeading) {
+                            Button("Cancel") {
+                                showingDatePicker = false
+                            }
+                        }
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Done") {
+                                showingDatePicker = false
+                                dateOfBirthError = ""
+                                checkFormValidity()
+                            }
+                        }
+                    }
+                    .padding()
+                }
+                .presentationDetents([.medium])
+            }
+            .sheet(isPresented: $showingTimePickerSheet) {
+                NavigationView {
+                    VStack {
+                        DatePicker(
+                            isEditingStartTime ? "Select Start Time" : "Select End Time",
+                            selection: isEditingStartTime ? $startTime : $endTime,
+                            displayedComponents: .hourAndMinute
+                        )
+                        .datePickerStyle(.wheel)
+                        .labelsHidden()
+                        .padding()
+                    }
+                    .navigationTitle(isEditingStartTime ? "Start Time" : "End Time")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button("Done") {
+                                showingTimePickerSheet = false
+                            }
+                        }
+                    }
+                }
+                .presentationDetents([.height(300)])
             }
             .navigationTitle(doctor == nil ? "Add Doctor" : "Edit Doctor")
             .navigationBarTitleDisplayMode(.inline)
@@ -498,7 +879,7 @@ struct AddDoctorView: View {
                 trailing: Button("Save") {
                     saveDoctor()
                 }
-                .disabled(isLoading)
+                .disabled(isLoading || !isFormValid)
             )
             .alert("Error", isPresented: $showError) {
                 Button("OK", role: .cancel) {}
@@ -534,7 +915,7 @@ struct AddDoctorView: View {
     @State private var lastName = ""
     @State private var contactNumber = ""
     @State private var email = ""
-    @State private var dateOfBirth: Date = .init()
+    @State private var dateOfBirth: Date? = nil
     @State private var selectedGender: Gender = .male
 
     // Professional Information
@@ -567,161 +948,129 @@ struct AddDoctorView: View {
     @State private var startTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? Date()
     @State private var endTime = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
 
+    // Add to the properties section
+    @State private var showingDatePicker = false
+    @State private var dateOfBirthHasInteracted = false
+    @State private var departmentHasInteracted = false
+    @State private var specializationHasInteracted = false
+
+    // Add to properties section
+    @State private var selectedDays: Set<String> = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+    private let weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    @State private var showingTimePickerSheet = false
+    @State private var isEditingStartTime = true
+
     private func validateForm() -> Bool {
-        // Reset all error messages
-        firstNameError = ""
-        lastNameError = ""
-        contactNumberError = ""
-        emailError = ""
-        dateOfBirthError = ""
-        medicalLicenseError = ""
-        yearsOfExperienceError = ""
-        consultationFeeError = ""
-        departmentError = ""
-        specializationError = ""
-
         var isValid = true
-
-        // First Name validation
-        if firstName.isEmpty {
+        
+        // First Name Validation
+        if firstName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             firstNameError = "First name is required"
             isValid = false
-        } else if !firstName.allSatisfy({ $0.isLetter || $0.isWhitespace }) {
-            firstNameError = "First name should contain only letters and spaces"
+        } else if firstName.count < 2 {
+            firstNameError = "First name must be at least 2 characters"
             isValid = false
-        }
-
-        // Last Name validation
-        if !lastName.isEmpty && !lastName.allSatisfy({ $0.isLetter || $0.isWhitespace }) {
-            lastNameError = "Last name should contain only letters and spaces"
+        } else if firstName.count > 50 {
+            firstNameError = "First name must be less than 50 characters"
             isValid = false
+        } else {
+            firstNameError = ""
         }
-
-        // Contact Number validation
+        
+        // Last Name Validation (optional but if provided, must be valid)
+        if !lastName.isEmpty {
+            if lastName.count < 2 {
+                lastNameError = "Last name must be at least 2 characters"
+                isValid = false
+            } else if lastName.count > 50 {
+                lastNameError = "Last name must be less than 50 characters"
+                isValid = false
+            } else {
+                lastNameError = ""
+            }
+        }
+        
+        // Contact Number Validation
         if contactNumber.isEmpty {
             contactNumberError = "Contact number is required"
             isValid = false
-        } else if contactNumber.count != 10 {
-            contactNumberError = "Contact number must be exactly 10 digits"
+        } else if !isValidPhoneNumber(contactNumber) {
+            contactNumberError = "Please enter a valid phone number"
             isValid = false
+        } else {
+            contactNumberError = ""
         }
-
-        // Email validation
+        
+        // Email Validation
         if email.isEmpty {
             emailError = "Email is required"
             isValid = false
         } else if !isValidEmail(email) {
             emailError = "Please enter a valid email address"
             isValid = false
+        } else {
+            emailError = ""
         }
-
-        // Date of Birth validation
-        if dateOfBirth > Date() {
-            dateOfBirthError = "Date of birth cannot be in the future"
-            isValid = false
+        
+        // Date of Birth Validation
+        if dateOfBirth == nil {
+            isValid = false  // Form is invalid if date not selected
         }
-
-        // Calculate age
-        let calendar = Calendar.current
-        let ageComponents = calendar.dateComponents([.year], from: dateOfBirth, to: Date())
-        let age = ageComponents.year ?? 0
-
-        // Age validation - must be between 25 and 85 years old
-        if age < 25 {
-            dateOfBirthError = "Doctor must be at least 25 years old"
-            isValid = false
-        } else if age > 85 {
-            dateOfBirthError = "Doctor's age cannot exceed 85 years"
-            isValid = false
-        }
-
-        // Experience validation - cannot exceed age - 25
-        let maxExperience = age - 25
-        if yearsOfExperience > maxExperience {
-            yearsOfExperienceError = "Years of experience cannot exceed \(maxExperience) years based on age"
-            isValid = false
-        }
-
-        // Medical License validation
+        
+        // Medical License Number Validation
         if medicalLicenseNumber.isEmpty {
             medicalLicenseError = "Medical license number is required"
             isValid = false
-        } else if medicalLicenseNumber.count < 6 {
-            medicalLicenseError = "Medical license number should be at least 6 characters"
-            isValid = false
-        } else if !medicalLicenseNumber.allSatisfy({ $0.isLetter || $0.isNumber || $0 == "-" }) {
-            medicalLicenseError = "Medical license should contain only letters, numbers, and hyphens"
-            isValid = false
+        } else {
+            medicalLicenseError = ""
         }
-
-        // Years of Experience validation
-        if yearsOfExperience < 0 {
-            yearsOfExperienceError = "Years of experience cannot be negative"
-            isValid = false
-        }
-
-        // Consultation Fee validation
+        
+        // Consultation Fee Validation
         if consultationFee.isEmpty {
             consultationFeeError = "Consultation fee is required"
             isValid = false
-        } else {
-            // Ensure the consultation fee has maximum 2 decimal places
-            let components = consultationFee.components(separatedBy: ".")
-            if components.count > 1 && components[1].count > 2 {
-                consultationFeeError = "Consultation fee should have maximum 2 decimal places"
+        } else if let fee = Double(consultationFee) {
+            if fee <= 0 {
+                consultationFeeError = "Consultation fee must be greater than 0"
                 isValid = false
-            } else if let fee = Double(consultationFee) {
-                if fee < 0 {
-                    consultationFeeError = "Consultation fee cannot be negative"
-                    isValid = false
-                }
+            } else if fee > 10000 {
+                consultationFeeError = "Consultation fee must be less than 10,000"
+                isValid = false
             } else {
-                consultationFeeError = "Consultation fee must be a valid number"
-                isValid = false
+                consultationFeeError = ""
             }
+        } else {
+            consultationFeeError = "Please enter a valid amount"
+            isValid = false
         }
-
-        // Department validation
+        
+        // Department Validation
         if department.isEmpty {
-            departmentError = "Department is required"
-            isValid = false
-        } else if !departments.contains(department) {
-            departmentError = "Please select a valid department from the list"
             isValid = false
         }
-
-        // Specialization validation
+        
+        // Specialization Validation
         if specialization.isEmpty {
-            specializationError = "At least one specialization is required"
             isValid = false
         }
-
-        if !isValid {
-            // Set the main validation message
-            errorMessage = "Please correct the highlighted errors"
-        }
-
+        
         return isValid
     }
-
-    private func checkFormValidity() {
-        // This performs a light validation to enable/disable the save button
-        // We only check if mandatory fields are filled, not detailed validation
-        isFormValid = !firstName.isEmpty &&
-                     !contactNumber.isEmpty &&
-                     !email.isEmpty &&
-                     isValidEmail(email) &&
-                     !medicalLicenseNumber.isEmpty &&
-                     !consultationFee.isEmpty &&
-                     !department.isEmpty &&
-                     !specialization.isEmpty
+    
+    private func isValidPhoneNumber(_ phone: String) -> Bool {
+        let phoneRegex = "^[0-9]{10}$"
+        let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
+        return phonePredicate.evaluate(with: phone)
     }
-
-    // Email validation helper
+    
     private func isValidEmail(_ email: String) -> Bool {
         let emailRegex = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         return emailPredicate.evaluate(with: email)
+    }
+    
+    private func checkFormValidity() {
+        isFormValid = validateForm()
     }
 
     private func saveDoctor() {
@@ -737,8 +1086,8 @@ struct AddDoctorView: View {
             lastName: lastName.isEmpty ? nil : lastName,
             gender: selectedGender,
             emailAddress: email,
-            dateOfBirth: dateOfBirth,
-            password: "default123", // This should be changed by the doctor later
+            dateOfBirth: dateOfBirth ?? Date(), // Provide a default, though this shouldn't happen due to validation
+            password: "default123",
             contactNumber: contactNumber,
             specialization: specialization,
             department: department,
@@ -813,6 +1162,38 @@ struct AddDoctorView: View {
     }
 }
 
+// Custom GroupBox Style
+struct CustomGroupBoxStyle: GroupBoxStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            configuration.content
+        }
+        .padding()
+        .background(Color(.systemBackground))
+        .cornerRadius(15)
+        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
+    }
+}
+
+// Section Header View
+struct SectionHeader: View {
+    let title: String
+    let icon: String
+    
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundColor(.blue)
+            Text(title)
+                .font(.headline)
+                .foregroundColor(.primary)
+        }
+        .padding(.bottom, 5)
+    }
+}
+
+// Updated GenderButton
 struct GenderButton: View {
     let title: String
     let isSelected: Bool
@@ -826,8 +1207,12 @@ struct GenderButton: View {
                 .padding(.vertical, 12)
                 .foregroundColor(isSelected ? .white : .gray)
                 .background(isSelected ? Color.blue : Color.white)
+                .cornerRadius(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(isSelected ? Color.blue : Color.gray.opacity(0.2), lineWidth: 1)
+                )
         }
         .buttonStyle(PlainButtonStyle())
-        .clipShape(RoundedRectangle(cornerRadius: 8))
     }
 }
