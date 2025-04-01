@@ -53,7 +53,7 @@ class ResetPasswordViewController: UIViewController {
 
     @IBAction func textFieldChanged(_ sender: UITextField) {
         signInButton.isEnabled = isValidInputs
-        
+
         // Enable/disable eye buttons based on text field content
         if sender == passwordTextField {
             newPasswordEyeButton.isEnabled = !(sender.text?.isEmpty ?? true)
