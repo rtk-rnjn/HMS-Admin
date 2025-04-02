@@ -1081,6 +1081,17 @@ struct AddDoctorView: View {
     }
 
     private func saveDoctor() {
+
+        // Parse specializations correctly - they're already comma-separated from the multi-selection
+        let specializations = specialization.trimmingCharacters(in: .whitespacesAndNewlines)
+        let fee = Double(consultationFee) ?? 0.0
+        
+        // Create working hours object
+        let workingHours = WorkingHours(
+            startTime: startTime,
+            endTime: endTime
+        )
+
         // Validate all fields
         if !validateForm() || !isFormValid {
             return
@@ -1088,7 +1099,7 @@ struct AddDoctorView: View {
 
         isLoading = true
 
-        let newDoctor = Staff(
+        _ = Staff(
             firstName: firstName,
             lastName: lastName.isEmpty ? nil : lastName,
             gender: selectedGender,
@@ -1103,25 +1114,61 @@ struct AddDoctorView: View {
             role: .doctor
         )
 
-        Task {
-            do {
-                _ = try await DataController.shared.addDoctor(newDoctor)
+        if let existingDoctor = doctor {
+            // Update existing doctor
+            var updatedDoctor = existingDoctor
+            updatedDoctor.firstName = firstName
+            updatedDoctor.lastName = lastName
+            updatedDoctor.emailAddress = email
+            updatedDoctor.contactNumber = contactNumber
+            updatedDoctor.dateOfBirth = dateOfBirth ?? Date()
+            updatedDoctor.gender = selectedGender
+            updatedDoctor.licenseId = medicalLicenseNumber
+            updatedDoctor.yearOfExperience = yearsOfExperience
+            updatedDoctor.consultationFee = Int(fee)
+            updatedDoctor.department = department
+            updatedDoctor.specialization = specializations
+            updatedDoctor.workingHours = workingHours
 
-                // Ensure UI updates happen on the main thread
-                await MainActor.run {
-                    isLoading = false
-                    // Post notification to refresh doctors list
-                    NotificationCenter.default.post(name: NSNotification.Name("RefreshDoctorsList"), object: nil)
-                    // Dismiss the view
+            Task {
+                let success = await DataController.shared.updateDoctor(updatedDoctor)
+                if success {
                     dismiss()
                 }
-            } catch {
-                // Handle error on the main thread
-                await MainActor.run {
-                    isLoading = false
-                    errorMessage = error.localizedDescription
-                    showError = true
+            }
+        } else {
+            // Generate a secure random password
+            let password = generateRandomPassword()
+
+            // Create new doctor
+            var newDoctor = Staff(
+                firstName: firstName,
+                lastName: lastName,
+                emailAddress: email,
+                dateOfBirth: dateOfBirth ?? Date(),
+                password: password,
+                contactNumber: contactNumber,
+                specialization: specializations,
+                department: department,
+                onLeave: false,
+                consultationFee: Int(fee),
+                unavailabilityPeriods: [],
+                licenseId: medicalLicenseNumber,
+                yearOfExperience: yearsOfExperience,
+                role: .doctor,
+                hospitalId: DataController.shared.hospital?.id ?? ""
+            )
+            
+            // Add working hours separately
+            newDoctor.workingHours = workingHours
+
+            Task {
+                guard (await DataController.shared.addDoctor(newDoctor)) != nil else {
+                    return
                 }
+
+                printEmail(to: email, name: "\(firstName) \(lastName)", password: password)
+                dismiss()
             }
         }
     }

@@ -2,6 +2,21 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
+// Main wrapper for MKMapItem to make it identifiable
+struct MapItemWrapper: Identifiable {
+    let id = UUID()
+    let mapItem: MKMapItem
+    var coordinate: CLLocationCoordinate2D {
+        mapItem.placemark.coordinate
+    }
+}
+
+// Simple location with coordinate for map annotations
+struct MapCoordinate: Identifiable {
+    let id = UUID()
+    let coordinate: CLLocationCoordinate2D
+}
+
 struct HospitalOnboardingView: View {
 
     // MARK: Internal
@@ -9,136 +24,24 @@ struct HospitalOnboardingView: View {
     weak var delegate: HospitalDetailHostingController?
 
     var body: some View {
+        buildNavigationView()
+    }
+    
+    @ViewBuilder
+    private func buildNavigationView() -> some View {
         NavigationView {
             Form {
                 // Hospital Details Section
-                Section {
-                    Group {
-                        VStack(alignment: .leading, spacing: 2) {
-                            TextField("Hospital Name", text: $hospitalName)
-                                .textContentType(.organizationName)
-                                .font(.body)
-                        }
-                        .padding(.vertical, 4)
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            TextField("Contact Number", text: $contactNumber)
-                                .keyboardType(.phonePad)
-                                .textContentType(.telephoneNumber)
-                                .font(.body)
-                        }
-                        .listRowSeparator(.hidden)
-                        .padding(.vertical, 4)
-
-                        VStack(alignment: .leading, spacing: 4) {
-                            Button(action: {
-                                showingMapPicker = true
-                            }) {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    if !hospitalAddress.isEmpty {
-                                        HStack(alignment: .top, spacing: 8) {
-                                            Image(systemName: "location.fill")
-                                                .foregroundColor(.blue)
-
-                                            Text(hospitalAddress)
-                                                .font(.body)
-                                                .foregroundColor(.primary)
-                                                .multilineTextAlignment(.leading)
-                                        }
-
-                                        // Show mini map preview if location is selected
-                                        if let lat = selectedLocation?.latitude,
-                                           let long = selectedLocation?.longitude {
-                                            Map(coordinateRegion: .constant(MKCoordinateRegion(
-                                                center: CLLocationCoordinate2D(latitude: lat, longitude: long),
-                                                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                                            )), interactionModes: [], annotationItems: [MapLocation(coordinate: CLLocationCoordinate2D(latitude: lat, longitude: long))]) { location in
-                                                MapMarker(coordinate: location.coordinate, tint: .blue)
-                                            }
-                                            .frame(height: 120)
-                                            .cornerRadius(8)
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 8)
-                                                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                                            )
-                                        }
-                                    } else {
-                                        HStack {
-                                            Image(systemName: "map")
-                                                .foregroundColor(.blue)
-                                            Text("Select Hospital Location")
-                                                .foregroundColor(.blue)
-                                        }
-                                    }
-                                }
-                                .padding(12)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .background(Color(.systemBackground))
-                                .cornerRadius(8)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
-                                )
-                            }
-                        }
-                        .listRowSeparator(.hidden)
-                        .padding(.vertical, 4)
-                    }
-                }
-                .listRowBackground(Color(.systemBackground))
-                .listSectionSeparator(.hidden)
+                buildHospitalDetailsSection()
 
                 // License Details Section
-                Section(header: Text("License Details")) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        TextField("License Number", text: $licenseNumber)
-                    }
-
-                    DatePicker("Valid Until",
-                              selection: $licenseValidUntil,
-                              in: Date()...,
-                              displayedComponents: .date)
-                        .datePickerStyle(.compact)
-                }
+                buildLicenseDetailsSection()
 
                 // Departments Section
-                Section(header: Text("Departments")) {
-                    ForEach(departments, id: \.self) { department in
-                        HStack {
-                            Text(department)
-                            Spacer()
-                            Button(action: {
-                                departments.removeAll { $0 == department }
-                            }) {
-                                Image(systemName: "xmark.circle.fill")
-                                    .foregroundColor(.gray)
-                            }
-                        }
-                    }
-
-                    Button(action: {
-                        showingAddDepartment = true
-                    }) {
-                        HStack {
-                            Image(systemName: "plus.circle.fill")
-                            Text("Add Department")
-                        }
-                    }
-                }
+                buildDepartmentsSection()
 
                 // Submit Button Section
-                Section {
-                    Button(action: submitForm) {
-                        Text("Register Hospital")
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 44)
-                            .foregroundColor(.white)
-                            .background(Color.blue)
-                            .cornerRadius(8)
-                    }
-                    .listRowInsets(EdgeInsets())
-                    .listRowBackground(Color.clear)
-                }
+                buildSubmitButtonSection()
             }
             .navigationTitle("Hospital Registration")
             .navigationBarTitleDisplayMode(.inline)
@@ -152,35 +55,7 @@ struct HospitalOnboardingView: View {
                 Text(alertMessage)
             }
             .sheet(isPresented: $showingAddDepartment) {
-                NavigationView {
-                    Form {
-                        Section {
-                            TextField("Department Name", text: $newDepartment)
-                                .autocapitalization(.words)
-                        }
-                    }
-                    .navigationTitle("Add Department")
-                    .navigationBarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                newDepartment = ""
-                                showingAddDepartment = false
-                            }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Add") {
-                                if !newDepartment.isEmpty {
-                                    departments.append(newDepartment)
-                                    newDepartment = ""
-                                    showingAddDepartment = false
-                                }
-                            }
-                            .disabled(newDepartment.isEmpty)
-                        }
-                    }
-                }
-                .presentationDetents([.height(200)])
+                buildAddDepartmentSheet()
             }
             .sheet(isPresented: $showingMapPicker) {
                 NavigationView {
@@ -191,7 +66,196 @@ struct HospitalOnboardingView: View {
             }
             .scrollContentBackground(.hidden)
             .background(Color(.systemGroupedBackground))
+            .onChange(of: shouldNavigateToDashboard) { oldValue, newValue in
+                if newValue {
+                    // Navigate to dashboard
+                    delegate?.navigateToDashboard()
+                }
+            }
         }
+    }
+    
+    @ViewBuilder
+    private func buildHospitalDetailsSection() -> some View {
+        Section {
+            Group {
+                // Hospital name field
+                VStack(alignment: .leading, spacing: 2) {
+                    TextField("Hospital Name", text: $hospitalName)
+                        .textContentType(.organizationName)
+                        .font(.body)
+                }
+                .padding(.vertical, 4)
+
+                // Contact number field
+                VStack(alignment: .leading, spacing: 2) {
+                    TextField("Contact Number", text: $contactNumber)
+                        .keyboardType(.phonePad)
+                        .textContentType(.telephoneNumber)
+                        .font(.body)
+                }
+                .listRowSeparator(.hidden)
+                .padding(.vertical, 4)
+
+                // Location selection button
+                buildLocationSelectionButton()
+            }
+        }
+        .listRowBackground(Color(.systemBackground))
+        .listSectionSeparator(.hidden)
+    }
+    
+    @ViewBuilder
+    private func buildLocationSelectionButton() -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Button(action: {
+                showingMapPicker = true
+            }) {
+                VStack(alignment: .leading, spacing: 8) {
+                    if !hospitalAddress.isEmpty {
+                        // Address display
+                        HStack(alignment: .top, spacing: 8) {
+                            Image(systemName: "location.fill")
+                                .foregroundColor(.blue)
+
+                            Text(hospitalAddress)
+                                .font(.body)
+                                .foregroundColor(.primary)
+                                .multilineTextAlignment(.leading)
+                        }
+
+                        // Map preview
+                        buildMapPreview()
+                    } else {
+                        HStack {
+                            Image(systemName: "map")
+                                .foregroundColor(.blue)
+                            Text("Select Hospital Location")
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+                .padding(12)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.systemBackground))
+                .cornerRadius(8)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                )
+            }
+        }
+        .listRowSeparator(.hidden)
+        .padding(.vertical, 4)
+    }
+    
+    @ViewBuilder
+    private func buildMapPreview() -> some View {
+        if let _ = selectedLocation?.latitude,
+           let _ = selectedLocation?.longitude {
+            Map {
+                if let location = selectedLocation {
+                    Marker("Hospital Location", coordinate: location)
+                }
+            }
+            .frame(height: 120)
+            .cornerRadius(8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+            )
+        }
+    }
+    
+    @ViewBuilder
+    private func buildLicenseDetailsSection() -> some View {
+        Section(header: Text("License Details")) {
+            VStack(alignment: .leading, spacing: 4) {
+                TextField("License Number", text: $licenseNumber)
+            }
+
+            DatePicker("Valid Until",
+                      selection: $licenseValidUntil,
+                      in: Date()...,
+                      displayedComponents: .date)
+                .datePickerStyle(.compact)
+        }
+    }
+    
+    @ViewBuilder
+    private func buildDepartmentsSection() -> some View {
+        Section(header: Text("Departments")) {
+            ForEach(departments, id: \.self) { department in
+                HStack {
+                    Text(department)
+                    Spacer()
+                    Button(action: {
+                        departments.removeAll { $0 == department }
+                    }) {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+
+            Button(action: {
+                showingAddDepartment = true
+            }) {
+                HStack {
+                    Image(systemName: "plus.circle.fill")
+                    Text("Add Department")
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func buildSubmitButtonSection() -> some View {
+        Section {
+            Button(action: submitForm) {
+                Text("Register Hospital")
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 44)
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(8)
+            }
+            .listRowInsets(EdgeInsets())
+            .listRowBackground(Color.clear)
+        }
+    }
+    
+    @ViewBuilder
+    private func buildAddDepartmentSheet() -> some View {
+        NavigationView {
+            Form {
+                Section {
+                    TextField("Department Name", text: $newDepartment)
+                        .autocapitalization(.words)
+                }
+            }
+            .navigationTitle("Add Department")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        newDepartment = ""
+                        showingAddDepartment = false
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Add") {
+                        if !newDepartment.isEmpty {
+                            departments.append(newDepartment)
+                            newDepartment = ""
+                            showingAddDepartment = false
+                        }
+                    }
+                    .disabled(newDepartment.isEmpty)
+                }
+            }
+        }
+        .presentationDetents([.height(200)])
     }
 
     // MARK: Private
@@ -210,9 +274,19 @@ struct HospitalOnboardingView: View {
     @State private var selectedLocation: CLLocationCoordinate2D?
     @State private var showingAlert = false
     @State private var alertMessage = ""
+    @State private var selectedMapItem: MapItemWrapper?
 
     // Location manager for getting user's current location
     @StateObject private var locationManager: LocationManager = .init()
+
+    @State private var region: MKCoordinateRegion = .init(
+        center: CLLocationCoordinate2D(latitude: 37.3361, longitude: -122.0380),
+        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+    )
+    @State private var searchText = ""
+    @State private var searchResults: [MapItemWrapper] = []
+    @State private var showingSearchResults = false
+    @State private var isLoadingAddress = false
 
     private func submitForm() {
         // Validate Hospital Name
@@ -292,6 +366,54 @@ struct HospitalOnboardingView: View {
         let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
         return phonePredicate.evaluate(with: number)
     }
+
+    private func reverseGeocode(_ coordinate: CLLocationCoordinate2D) {
+        isLoadingAddress = true
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+
+        let geocoder = CLGeocoder()
+        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+            isLoadingAddress = false
+
+            if let error {
+                print("Reverse geocoding error: \(error.localizedDescription)")
+                return
+            }
+
+            if let placemark = placemarks?.first {
+                let mkPlacemark = MKPlacemark(placemark: placemark)
+                let mapItem = MKMapItem(placemark: mkPlacemark)
+                let wrapper = MapItemWrapper(mapItem: mapItem)
+                selectLocation(wrapper)
+            }
+        }
+    }
+
+    private func performSearch() {
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchText
+        request.region = region
+
+        MKLocalSearch(request: request).start { response, error in
+            guard let response else {
+                print("Search error: \(error?.localizedDescription ?? "Unknown error")")
+                return
+            }
+
+            self.searchResults = response.mapItems.map { MapItemWrapper(mapItem: $0) }
+        }
+    }
+
+    private func selectLocation(_ item: MapItemWrapper) {
+        selectedMapItem = item
+        showingSearchResults = false
+        searchText = item.mapItem.name ?? ""
+
+        withAnimation {
+            region.center = item.coordinate
+            region.span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        }
+    }
 }
 
 // Location Manager to handle location permissions and updates
@@ -340,21 +462,9 @@ struct MapLocationPicker: View {
     var body: some View {
         ZStack(alignment: .top) {
             // Map View
-            Map(coordinateRegion: $region,
-                interactionModes: .all,
-                showsUserLocation: true,
-                annotationItems: selectedMapItem.map { [$0] } ?? []) { item in
-                MapAnnotation(coordinate: item.placemark.coordinate) {
-                    VStack(spacing: 0) {
-                        Image(systemName: "mappin.circle.fill")
-                            .font(.title)
-                            .foregroundColor(.red)
-
-                        Image(systemName: "arrowtriangle.down.fill")
-                            .font(.caption)
-                            .foregroundColor(.red)
-                            .offset(x: 0, y: -5)
-                    }
+            Map {
+                if let selectedMapItem = selectedMapItem {
+                    Marker(selectedMapItem.mapItem.name ?? "Location", coordinate: selectedMapItem.coordinate)
                 }
             }
             .edgesIgnoringSafeArea(.all)
@@ -377,7 +487,7 @@ struct MapLocationPicker: View {
                             LazyVStack(alignment: .leading, spacing: 0) {
                                 ForEach(searchResults) { item in
                                     Button(action: { selectLocation(item) }) {
-                                        SearchResultRow(mapItem: item)
+                                        SearchResultRow(mapItem: item.mapItem)
                                     }
                                     .buttonStyle(PlainButtonStyle())
 
@@ -406,10 +516,10 @@ struct MapLocationPicker: View {
                 if let selectedItem = selectedMapItem {
                     // Selected Location Card
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(selectedItem.name ?? "Selected Location")
+                        Text(selectedItem.mapItem.name ?? "Selected Location")
                             .font(.headline)
 
-                        Text(selectedItem.placemark.formattedAddress)
+                        Text(selectedItem.mapItem.placemark.formattedAddress)
                             .font(.subheadline)
                             .foregroundColor(.gray)
 
@@ -417,8 +527,8 @@ struct MapLocationPicker: View {
                             Spacer()
 
                             Button(action: {
-                                address = selectedItem.placemark.formattedAddress
-                                selectedLocation = selectedItem.placemark.coordinate
+                                address = selectedItem.mapItem.placemark.formattedAddress
+                                selectedLocation = selectedItem.coordinate
                                 isPresented = false
                             }) {
                                 Text("Confirm Location")
@@ -465,8 +575,8 @@ struct MapLocationPicker: View {
                 }
             }
         }
-        .onChange(of: searchText) { _ in
-            if !searchText.isEmpty {
+        .onChange(of: searchText) { oldValue, newValue in
+            if !newValue.isEmpty {
                 performSearch()
                 showingSearchResults = true
             } else {
@@ -484,8 +594,8 @@ struct MapLocationPicker: View {
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
     )
     @State private var searchText = ""
-    @State private var searchResults: [MKMapItem] = []
-    @State private var selectedMapItem: MKMapItem?
+    @State private var searchResults: [MapItemWrapper] = []
+    @State private var selectedMapItem: MapItemWrapper?
     @State private var showingSearchResults = false
     @State private var isLoadingAddress = false
 
@@ -505,7 +615,8 @@ struct MapLocationPicker: View {
             if let placemark = placemarks?.first {
                 let mkPlacemark = MKPlacemark(placemark: placemark)
                 let mapItem = MKMapItem(placemark: mkPlacemark)
-                selectLocation(mapItem)
+                let wrapper = MapItemWrapper(mapItem: mapItem)
+                selectLocation(wrapper)
             }
         }
     }
@@ -521,17 +632,17 @@ struct MapLocationPicker: View {
                 return
             }
 
-            searchResults = response.mapItems
+            self.searchResults = response.mapItems.map { MapItemWrapper(mapItem: $0) }
         }
     }
 
-    private func selectLocation(_ item: MKMapItem) {
+    private func selectLocation(_ item: MapItemWrapper) {
         selectedMapItem = item
         showingSearchResults = false
-        searchText = item.name ?? ""
+        searchText = item.mapItem.name ?? ""
 
         withAnimation {
-            region.center = item.placemark.coordinate
+            region.center = item.coordinate
             region.span = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
         }
     }
@@ -599,12 +710,6 @@ extension MKPlacemark {
         ].compactMap { $0 }
 
         return components.joined(separator: ", ")
-    }
-}
-
-extension MKMapItem: Identifiable {
-    public var id: String {
-        return "\(placemark.coordinate.latitude),\(placemark.coordinate.longitude)"
     }
 }
 
@@ -808,11 +913,8 @@ private struct LocationMapView: View {
             if let latitude, let longitude {
                 let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 ZStack(alignment: .top) {
-                    Map(coordinateRegion: .constant(MKCoordinateRegion(
-                        center: coordinate,
-                        span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
-                    )), interactionModes: [], annotationItems: [MapLocation(coordinate: coordinate)]) { location in
-                        MapMarker(coordinate: location.coordinate, tint: .blue)
+                    Map {
+                        Marker("Hospital Location", coordinate: coordinate)
                     }
 
                     // Address Overlay
@@ -839,7 +941,7 @@ private struct LocationMapView: View {
                 .cornerRadius(12)
                 .padding(.horizontal)
                 .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
-                .onChange(of: isVisible) { newValue in
+                .onChange(of: isVisible) { oldValue, newValue in
                     if newValue {
                         withAnimation(.easeOut.delay(0.3)) {
                             showOverlay = true
@@ -853,7 +955,6 @@ private struct LocationMapView: View {
     // MARK: Private
 
     @State private var showOverlay = false
-
 }
 
 // MARK: - Action Buttons
@@ -933,12 +1034,6 @@ private struct ButtonLabel: View {
             .background(style.backgroundColor)
             .cornerRadius(12)
     }
-}
-
-// MARK: - Supporting Types
-private struct MapLocation: Identifiable {
-    let id: UUID = .init()
-    let coordinate: CLLocationCoordinate2D
 }
 
 // MARK: - Preview

@@ -12,14 +12,22 @@ struct ValidatedTextField: View {
     var title: String
     @Binding var text: String
     var error: String
+    var textContentType: UITextContentType?
     var keyboardType: UIKeyboardType = .default
     var autocapitalization: UITextAutocapitalizationType = .sentences
     var onChange: ((String) -> Void)?
     @State private var hasInteracted = false
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            TextField(title, text: $text)
+            Text(title)
+                .font(.subheadline)
+                .foregroundColor(.gray)
+            
+            TextField("", text: $text)
+                .textContentType(textContentType)
+                .keyboardType(keyboardType)
+                .autocapitalization(autocapitalization)
                 .padding()
                 .background(Color.white)
                 .cornerRadius(8)
@@ -30,13 +38,11 @@ struct ValidatedTextField: View {
                             lineWidth: 1
                         )
                 )
-                .onChange(of: text) { newValue in
+                .onChange(of: text) { oldValue, newValue in
                     hasInteracted = true
                     onChange?(newValue)
                 }
-                .keyboardType(keyboardType)
-                .autocapitalization(autocapitalization)
-
+                
             if hasInteracted && !error.isEmpty {
                 Text(error)
                     .font(.footnote)
@@ -45,210 +51,210 @@ struct ValidatedTextField: View {
             }
         }
     }
-}
-
-// Dropdown selector with validation
-struct DropdownSelector: View {
-    var title: String
-    @Binding var selection: String
-    var options: [String]
-    var error: String
-    @Binding var isExpanded: Bool
-    @State private var hasInteracted = false
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Button(action: {
-                withAnimation {
-                    hasInteracted = true
-                    isExpanded.toggle()
-                }
-            }) {
-                HStack {
-                    Text(selection.isEmpty ? title : selection)
-                        .foregroundColor(selection.isEmpty ? .gray : .black)
-                        .padding()
-
-                    Spacer()
-
-                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .foregroundColor(.gray)
-                        .padding(.trailing)
-                }
-                .background(Color.white)
-                .cornerRadius(8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(
-                            hasInteracted && !error.isEmpty ? Color.red : Color.gray.opacity(0.2),
-                            lineWidth: 1
-                        )
-                )
-            }
-
-            if hasInteracted && !error.isEmpty {
-                Text(error)
-                    .font(.footnote)
-                    .foregroundColor(.red)
-                    .padding(.horizontal, 4)
-            }
-
-            if isExpanded {
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        ForEach(options, id: \.self) { option in
-                            Button(action: {
-                                selection = option
-                                isExpanded = false
-                            }) {
-                                Text(option)
-                                    .foregroundColor(.black)
-                                    .padding()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(selection == option ? Color.blue.opacity(0.1) : Color.white)
-                            }
-                            Divider()
-                        }
+    
+    // Dropdown selector with validation
+    struct DropdownSelector: View {
+        var title: String
+        @Binding var selection: String
+        var options: [String]
+        var error: String
+        @Binding var isExpanded: Bool
+        @State private var hasInteracted = false
+        
+        var body: some View {
+            VStack(alignment: .leading, spacing: 4) {
+                Button(action: {
+                    withAnimation {
+                        hasInteracted = true
+                        isExpanded.toggle()
                     }
-                }
-                .frame(height: min(CGFloat(options.count) * 44, 200))
-                .background(Color.white)
-                .cornerRadius(8)
-                .zIndex(1)
-            }
-        }
-    }
-}
-
-// Multi-selection dropdown with chips
-struct MultiSelectionDropdown: View {
-    var title: String
-    @Binding var selectedItems: [String]
-    var options: [String]
-    var error: String
-    @Binding var isExpanded: Bool
-    @State private var searchText = ""
-    @State private var hasInteracted = false
-
-    var filteredOptions: [String] {
-        if searchText.isEmpty {
-            return options
-        } else {
-            return options.filter { $0.lowercased().contains(searchText.lowercased()) }
-        }
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Button(action: {
-                withAnimation {
-                    hasInteracted = true
-                    isExpanded.toggle()
-                }
-            }) {
-                HStack {
-                    if selectedItems.isEmpty {
-                        Text(title)
-                            .foregroundColor(.gray)
-                            .padding()
-                    } else {
-                        Text("\(selectedItems.count) selected")
-                            .foregroundColor(.black)
-                            .padding()
-                    }
-
-                    Spacer()
-
-                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
-                        .foregroundColor(.gray)
-                        .padding(.trailing)
-                }
-                .background(Color.white)
-                .cornerRadius(8)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(
-                            hasInteracted && !error.isEmpty ? Color.red : Color.gray.opacity(0.2),
-                            lineWidth: 1
-                        )
-                )
-            }
-
-            if !selectedItems.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
+                }) {
                     HStack {
-                        ForEach(selectedItems, id: \.self) { item in
-                            HStack(spacing: 4) {
-                                Text(item)
-                                    .font(.footnote)
-                                    .padding(.leading, 8)
-
-                                Button(action: {
-                                    if let index = selectedItems.firstIndex(of: item) {
-                                        selectedItems.remove(at: index)
-                                    }
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.gray)
-                                }
-                                .padding(4)
-                            }
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(16)
-                        }
+                        Text(selection.isEmpty ? title : selection)
+                            .foregroundColor(selection.isEmpty ? .gray : .black)
+                            .padding()
+                        
+                        Spacer()
+                        
+                        Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                            .foregroundColor(.gray)
+                            .padding(.trailing)
                     }
-                    .padding(.vertical, 4)
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(
+                                hasInteracted && !error.isEmpty ? Color.red : Color.gray.opacity(0.2),
+                                lineWidth: 1
+                            )
+                    )
                 }
-            }
-
-            if hasInteracted && !error.isEmpty {
-                Text(error)
-                    .font(.footnote)
-                    .foregroundColor(.red)
-                    .padding(.horizontal, 4)
-            }
-
-            if isExpanded {
-                VStack {
-                    TextField("Search", text: $searchText)
-                        .padding(8)
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(8)
-                        .padding(.horizontal)
-
+                
+                if hasInteracted && !error.isEmpty {
+                    Text(error)
+                        .font(.footnote)
+                        .foregroundColor(.red)
+                        .padding(.horizontal, 4)
+                }
+                
+                if isExpanded {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 0) {
-                            ForEach(filteredOptions, id: \.self) { option in
+                            ForEach(options, id: \.self) { option in
                                 Button(action: {
-                                    if selectedItems.contains(option) {
-                                        selectedItems.removeAll { $0 == option }
-                                    } else {
-                                        selectedItems.append(option)
-                                    }
+                                    selection = option
+                                    isExpanded = false
                                 }) {
-                                    HStack {
-                                        Text(option)
-                                            .foregroundColor(.black)
-
-                                        Spacer()
-
-                                        if selectedItems.contains(option) {
-                                            Image(systemName: "checkmark")
-                                                .foregroundColor(.blue)
-                                        }
-                                    }
-                                    .padding()
-                                    .background(selectedItems.contains(option) ? Color.blue.opacity(0.1) : Color.white)
+                                    Text(option)
+                                        .foregroundColor(.black)
+                                        .padding()
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .background(selection == option ? Color.blue.opacity(0.1) : Color.white)
                                 }
                                 Divider()
                             }
                         }
                     }
-                    .frame(height: min(CGFloat(filteredOptions.count) * 44, 200))
+                    .frame(height: min(CGFloat(options.count) * 44, 200))
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .zIndex(1)
                 }
-                .background(Color.white)
-                .cornerRadius(8)
-                .zIndex(1)
+            }
+        }
+    }
+    
+    // Multi-selection dropdown with chips
+    struct MultiSelectionDropdown: View {
+        var title: String
+        @Binding var selectedItems: [String]
+        var options: [String]
+        var error: String
+        @Binding var isExpanded: Bool
+        @State private var searchText = ""
+        @State private var hasInteracted = false
+        
+        var filteredOptions: [String] {
+            if searchText.isEmpty {
+                return options
+            } else {
+                return options.filter { $0.lowercased().contains(searchText.lowercased()) }
+            }
+        }
+        
+        var body: some View {
+            VStack(alignment: .leading, spacing: 4) {
+                Button(action: {
+                    withAnimation {
+                        hasInteracted = true
+                        isExpanded.toggle()
+                    }
+                }) {
+                    HStack {
+                        if selectedItems.isEmpty {
+                            Text(title)
+                                .foregroundColor(.gray)
+                                .padding()
+                        } else {
+                            Text("\(selectedItems.count) selected")
+                                .foregroundColor(.black)
+                                .padding()
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                            .foregroundColor(.gray)
+                            .padding(.trailing)
+                    }
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(
+                                hasInteracted && !error.isEmpty ? Color.red : Color.gray.opacity(0.2),
+                                lineWidth: 1
+                            )
+                    )
+                }
+                
+                if !selectedItems.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(selectedItems, id: \.self) { item in
+                                HStack(spacing: 4) {
+                                    Text(item)
+                                        .font(.footnote)
+                                        .padding(.leading, 8)
+                                    
+                                    Button(action: {
+                                        if let index = selectedItems.firstIndex(of: item) {
+                                            selectedItems.remove(at: index)
+                                        }
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.gray)
+                                    }
+                                    .padding(4)
+                                }
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(16)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                }
+                
+                if hasInteracted && !error.isEmpty {
+                    Text(error)
+                        .font(.footnote)
+                        .foregroundColor(.red)
+                        .padding(.horizontal, 4)
+                }
+                
+                if isExpanded {
+                    VStack {
+                        TextField("Search", text: $searchText)
+                            .padding(8)
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(8)
+                            .padding(.horizontal)
+                        
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 0) {
+                                ForEach(filteredOptions, id: \.self) { option in
+                                    Button(action: {
+                                        if selectedItems.contains(option) {
+                                            selectedItems.removeAll { $0 == option }
+                                        } else {
+                                            selectedItems.append(option)
+                                        }
+                                    }) {
+                                        HStack {
+                                            Text(option)
+                                                .foregroundColor(.black)
+                                            
+                                            Spacer()
+                                            
+                                            if selectedItems.contains(option) {
+                                                Image(systemName: "checkmark")
+                                                    .foregroundColor(.blue)
+                                            }
+                                        }
+                                        .padding()
+                                        .background(selectedItems.contains(option) ? Color.blue.opacity(0.1) : Color.white)
+                                    }
+                                    Divider()
+                                }
+                            }
+                        }
+                        .frame(height: min(CGFloat(filteredOptions.count) * 44, 200))
+                    }
+                    .background(Color.white)
+                    .cornerRadius(8)
+                    .zIndex(1)
+                }
             }
         }
     }

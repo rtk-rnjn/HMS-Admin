@@ -136,6 +136,15 @@ extension DataController {
 
         return await MiddlewareManager.shared.post(url: "/staff/create", body: doctorData)
     }
+    
+    func updateDoctor(_ doctor: Staff) async -> Bool {
+        guard let doctorData = doctor.toData() else {
+            fatalError("Could not update doctor: Invalid data")
+        }
+        
+        let response: ServerResponse? = await MiddlewareManager.shared.patch(url: "/staff/\(doctor.id)", body: doctorData)
+        return response?.success ?? false
+    }
 
     func deleteDoctor(_ doctor: Staff) async -> Bool {
         guard let doctorData = doctor.toData() else {
