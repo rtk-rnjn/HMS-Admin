@@ -12,6 +12,7 @@ struct DoctorProfileView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.horizontalSizeClass) var sizeClass
     @State private var showingDeleteConfirmation = false
+    @State private var reviews: [Review] = []
 
     var body: some View {
         ScrollView {
@@ -72,6 +73,9 @@ struct DoctorProfileView: View {
                     }
                 }
 
+                // Add reviews section at the bottom
+                ReviewSection(reviews: reviews, doctor: doctor)
+
                 // Bottom padding for scroll view
                 Color.clear.frame(height: 20)
             }
@@ -100,6 +104,10 @@ struct DoctorProfileView: View {
                 secondaryButton: .cancel()
             )
         }
+        .onAppear {
+            // Load reviews when view appears
+            loadReviews()
+        }
     }
 
     private func formatDate(_ date: Date) -> String {
@@ -115,6 +123,24 @@ struct DoctorProfileView: View {
                 presentationMode.wrappedValue.dismiss()
             }
         }
+    }
+
+    private func loadReviews() {
+        // Temporary mock data for testing
+        reviews = [
+            Review(patientName: "Patient 1",
+                  rating: 4,
+                  comment: "Dashing through the snow. On a one horse open sleigh. Over the hills we go, laughing all the way.",
+                  date: Calendar.current.date(byAdding: .day, value: -5, to: Date()) ?? Date()),
+            Review(patientName: "Patient 1",
+                  rating: 4,
+                  comment: "Dashing through the snow. On a one horse open sleigh. Over the hills we go, laughing all the way.",
+                  date: Calendar.current.date(byAdding: .day, value: -10, to: Date()) ?? Date()),
+            Review(patientName: "Patient 1",
+                  rating: 4,
+                  comment: "Dashing through the snow. On a one horse open sleigh. Over the hills we go, laughing all the way.",
+                  date: Calendar.current.date(byAdding: .day, value: -15, to: Date()) ?? Date())
+        ]
     }
 }
 
@@ -174,5 +200,85 @@ struct InfoRow: View {
             Spacer()
         }
         .padding(.vertical, 8)
+    }
+}
+
+struct ReviewSection: View {
+    let reviews: [Review]
+    let doctor: Staff
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Text("Reviews")
+                    .font(.title2)
+                    .fontWeight(.bold)
+                
+                Spacer()
+                
+                NavigationLink(destination: DoctorReviewsView(doctor: doctor)) {
+                    Text("See All")
+                        .foregroundColor(.blue)
+                }
+            }
+            .padding(.horizontal)
+            
+            if reviews.isEmpty {
+                Text("No reviews yet")
+                    .foregroundColor(.secondary)
+                    .padding(.horizontal)
+            } else {
+                ForEach(reviews) { review in
+                    NavigationLink(destination: DoctorReviewsView(doctor: doctor)) {
+                        ReviewCard(review: review)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                }
+            }
+        }
+        .padding(.vertical)
+    }
+}
+
+struct ReviewCard: View {
+    let review: Review
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            // Patient name and rating in one row
+            HStack(alignment: .center) {
+                Text(review.patientName)
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundColor(.primary)
+                
+                Spacer()
+                
+                HStack(spacing: 4) {
+                    Text(String(format: "%.1f", review.rating))
+                        .font(.system(size: 20, weight: .semibold))
+                    Image(systemName: "star.fill")
+                        .foregroundColor(.yellow)
+                        .font(.system(size: 16))
+                }
+            }
+            
+            // Date
+            Text(review.date.formatted(date: .numeric, time: .omitted))
+                .font(.system(size: 16))
+                .foregroundColor(.gray)
+                .padding(.top, 2)
+            
+            // Review comment
+            Text(review.comment)
+                .font(.system(size: 16))
+                .foregroundColor(.gray)
+                .padding(.top, 8)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(red: 255/255, green: 255/255, blue: 255/255))
+        .cornerRadius(16)
+        .padding(.horizontal, 4)
     }
 }
