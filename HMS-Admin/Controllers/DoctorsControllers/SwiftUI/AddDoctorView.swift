@@ -1090,6 +1090,7 @@ struct AddDoctorView: View {
         let workingHours = WorkingHours(
             startTime: startTime,
             endTime: endTime
+        )
 
         // Validate all fields
         if !validateForm() || !isFormValid {
@@ -1098,7 +1099,7 @@ struct AddDoctorView: View {
 
         isLoading = true
 
-        let newDoctor = Staff(
+        _ = Staff(
             firstName: firstName,
             lastName: lastName.isEmpty ? nil : lastName,
             gender: selectedGender,
@@ -1120,7 +1121,7 @@ struct AddDoctorView: View {
             updatedDoctor.lastName = lastName
             updatedDoctor.emailAddress = email
             updatedDoctor.contactNumber = contactNumber
-            updatedDoctor.dateOfBirth = dateOfBirth
+            updatedDoctor.dateOfBirth = dateOfBirth ?? Date()
             updatedDoctor.gender = selectedGender
             updatedDoctor.licenseId = medicalLicenseNumber
             updatedDoctor.yearOfExperience = yearsOfExperience
@@ -1144,7 +1145,7 @@ struct AddDoctorView: View {
                 firstName: firstName,
                 lastName: lastName,
                 emailAddress: email,
-                dateOfBirth: dateOfBirth,
+                dateOfBirth: dateOfBirth ?? Date(),
                 password: password,
                 contactNumber: contactNumber,
                 specialization: specializations,
