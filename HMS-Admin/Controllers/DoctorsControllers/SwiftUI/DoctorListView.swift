@@ -15,11 +15,8 @@ struct DoctorListView: View {
 
     var totalDoctors: [Staff] = []
 
-
     // This will be set from the hosting controller
     var searchQuery: String = ""
-    var filterDepartment: String? = nil
-    var filterSpecialization: String? = nil
 
     var body: some View {
 
@@ -102,30 +99,18 @@ struct DoctorListView: View {
     }
 
     private var filteredDoctors: [Staff] {
-        var doctors = totalDoctors
-
-        // Apply search filter if query exists
-        if !searchQuery.isEmpty {
-            let query = searchQuery.lowercased()
-            doctors = doctors.filter { doctor in
-                doctor.fullName.lowercased().contains(query) ||
-                doctor.specialization.lowercased().contains(query) ||
-                doctor.department.lowercased().contains(query)
-            }
+        guard !searchQuery.isEmpty else {
+            return totalDoctors
         }
 
-        // Apply department filter if selected
-        if let department = filterDepartment {
-            doctors = doctors.filter { $0.department == department }
+        let query = searchQuery.lowercased()
+        return totalDoctors.filter { doctor in
+            doctor.fullName.lowercased().contains(query) ||
+            doctor.specialization.lowercased().contains(query) ||
+            doctor.department.lowercased().contains(query)
         }
-
-        // Apply specialization filter if selected
-        if let specialization = filterSpecialization {
-            doctors = doctors.filter { $0.specialization.contains(specialization) }
-        }
-
-        return doctors
     }
+
 }
 
 struct DoctorCard: View {
