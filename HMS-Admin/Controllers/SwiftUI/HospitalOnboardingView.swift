@@ -39,13 +39,13 @@ struct HospitalOnboardingView: View {
                                         HStack(alignment: .top, spacing: 8) {
                                             Image(systemName: "location.fill")
                                                 .foregroundColor(.blue)
-                                            
+
                                             Text(hospitalAddress)
                                                 .font(.body)
                                                 .foregroundColor(.primary)
                                                 .multilineTextAlignment(.leading)
                                         }
-                                        
+
                                         // Show mini map preview if location is selected
                                         if let lat = selectedLocation?.latitude,
                                            let long = selectedLocation?.longitude {
@@ -147,7 +147,7 @@ struct HospitalOnboardingView: View {
                 dismiss()
             })
             .alert("Validation Error", isPresented: $showingAlert) {
-                Button("OK", role: .cancel) { }
+                Button("OK", role: .cancel) {}
             } message: {
                 Text(alertMessage)
             }
@@ -255,13 +255,13 @@ struct HospitalOnboardingView: View {
         }
 
         guard let admin = DataController.shared.admin else { fatalError() }
-        let hospital = Hospital(name: hospitalName, 
-                             address: hospitalAddress, 
-                             contact: contactNumber, 
-                             departments: departments, 
-                             latitude: selectedLocation?.latitude, 
-                             longitude: selectedLocation?.longitude, 
-                             adminId: admin.id, 
+        let hospital = Hospital(name: hospitalName,
+                             address: hospitalAddress,
+                             contact: contactNumber,
+                             departments: departments,
+                             latitude: selectedLocation?.latitude,
+                             longitude: selectedLocation?.longitude,
+                             adminId: admin.id,
                              hospitalLicenceNumber: licenseNumber)
 
         Task {
@@ -274,7 +274,7 @@ struct HospitalOnboardingView: View {
                     hostingController.modalPresentationStyle = .fullScreen
                     hostingController.modalTransitionStyle = .crossDissolve
                     hostingController.isModalInPresentation = true // Prevents dismissal by swipe
-                    
+
                     // Ensure we're presenting from the top-most view controller
                     if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                        let topController = windowScene.windows.first?.rootViewController?.topMostViewController {
@@ -610,15 +610,20 @@ extension MKMapItem: Identifiable {
 
 // MARK: - Haptic Feedback Manager
 final class HapticManager {
-    static let shared = HapticManager()
-    
+
+    // MARK: Lifecycle
+
     private init() {}
-    
+
+    // MARK: Internal
+
+    static let shared: HapticManager = .init()
+
     func playSuccess() {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
     }
-    
+
     func playSelection() {
         let generator = UISelectionFeedbackGenerator()
         generator.selectionChanged()
@@ -635,15 +640,15 @@ struct HospitalOnboardingSuccessView: View {
     @State private var showCard = false
     @State private var showMap = false
     @State private var showButtons = false
-    
+
     var body: some View {
         VStack(spacing: 24) {
             SuccessHeader(showCheckmark: showCheckmark, showTitle: showTitle)
-            
+
             HospitalInfoCard(hospital: hospital)
                 .opacity(showCard ? 1 : 0)
                 .offset(y: showCard ? 0 : 20)
-            
+
             LocationMapView(
                 latitude: hospital.latitude,
                 longitude: hospital.longitude,
@@ -652,9 +657,9 @@ struct HospitalOnboardingSuccessView: View {
             )
             .opacity(showMap ? 1 : 0)
             .offset(y: showMap ? 0 : 20)
-            
+
             Spacer()
-            
+
             ActionButtons(delegate: delegate, dismiss: dismiss)
                 .opacity(showButtons ? 1 : 0)
                 .offset(y: showButtons ? 0 : 20)
@@ -664,37 +669,37 @@ struct HospitalOnboardingSuccessView: View {
             animateEntrance()
         }
     }
-    
+
     private func animateEntrance() {
         // Initial success haptic
         HapticManager.shared.playSuccess()
-        
+
         // Staggered animations with haptic feedback
         withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
             showCheckmark = true
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
                 showTitle = true
             }
             HapticManager.shared.playSelection()
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
                 showCard = true
             }
             HapticManager.shared.playSelection()
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.7) {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
                 showMap = true
             }
             HapticManager.shared.playSelection()
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
             withAnimation(.spring(response: 0.6, dampingFraction: 0.7)) {
                 showButtons = true
@@ -708,7 +713,7 @@ struct HospitalOnboardingSuccessView: View {
 private struct SuccessHeader: View {
     let showCheckmark: Bool
     let showTitle: Bool
-    
+
     var body: some View {
         VStack(spacing: 24) {
             Circle()
@@ -723,7 +728,7 @@ private struct SuccessHeader: View {
                 )
                 .shadow(color: .green.opacity(0.3), radius: 10, x: 0, y: 4)
                 .scaleEffect(showCheckmark ? 1 : 0.5)
-            
+
             Text("Hospital Added Successfully!")
                 .font(.title2)
                 .fontWeight(.bold)
@@ -736,7 +741,7 @@ private struct SuccessHeader: View {
 // MARK: - Hospital Info Card
 private struct HospitalInfoCard: View {
     let hospital: Hospital
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HospitalHeader(hospital: hospital)
@@ -754,7 +759,7 @@ private struct HospitalInfoCard: View {
 
 private struct HospitalHeader: View {
     let hospital: Hospital
-    
+
     var body: some View {
         HStack(spacing: 12) {
             Circle()
@@ -765,7 +770,7 @@ private struct HospitalHeader: View {
                         .font(.title2)
                         .foregroundColor(.gray)
                 )
-            
+
             VStack(alignment: .leading, spacing: 4) {
                 Text(hospital.name)
                     .font(.headline)
@@ -779,7 +784,7 @@ private struct HospitalHeader: View {
 
 private struct HospitalDetails: View {
     let hospital: Hospital
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             InfoRow(icon: "phone.fill", label: "Contact", value: hospital.contact ?? "Not provided")
@@ -790,15 +795,17 @@ private struct HospitalDetails: View {
 
 // MARK: - Location Map View
 private struct LocationMapView: View {
+
+    // MARK: Internal
+
     let latitude: Double?
     let longitude: Double?
     let address: String?
     let isVisible: Bool
-    @State private var showOverlay = false
-    
+
     var body: some View {
         Group {
-            if let latitude = latitude, let longitude = longitude {
+            if let latitude, let longitude {
                 let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
                 ZStack(alignment: .top) {
                     Map(coordinateRegion: .constant(MKCoordinateRegion(
@@ -807,9 +814,9 @@ private struct LocationMapView: View {
                     )), interactionModes: [], annotationItems: [MapLocation(coordinate: coordinate)]) { location in
                         MapMarker(coordinate: location.coordinate, tint: .blue)
                     }
-                    
+
                     // Address Overlay
-                    if let address = address {
+                    if let address {
                         VStack(alignment: .leading, spacing: 4) {
                             HStack(spacing: 8) {
                                 Image(systemName: "location.fill")
@@ -842,32 +849,39 @@ private struct LocationMapView: View {
             }
         }
     }
+
+    // MARK: Private
+
+    @State private var showOverlay = false
+
 }
 
 // MARK: - Action Buttons
 private struct ActionButtons: View {
+
+    // MARK: Internal
+
     weak var delegate: HospitalDetailHostingController?
     let dismiss: DismissAction
-    @State private var viewProfileScale: CGFloat = 1
-    
+
     var body: some View {
         Button(action: {
             withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                 viewProfileScale = 0.95
             }
             HapticManager.shared.playSuccess()
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) {
                     viewProfileScale = 1
                 }
             }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 // Set user state
                 UserDefaults.standard.set(true, forKey: "isUserLoggedIn")
                 UserDefaults.standard.set(true, forKey: "isHospitalOnboarded")
-                
+
                 // Navigate to dashboard
                 delegate?.navigateToDashboard()
             }
@@ -877,24 +891,28 @@ private struct ActionButtons: View {
         }
         .padding(.horizontal)
     }
+
+    // MARK: Private
+
+    @State private var viewProfileScale: CGFloat = 1
+
 }
 
 // MARK: - Button Label
 private struct ButtonLabel: View {
-    let title: String
-    let style: ButtonStyle
-    
     enum ButtonStyle {
         case primary
         case secondary
-        
+
+        // MARK: Internal
+
         var backgroundColor: Color {
             switch self {
             case .primary: return .blue
             case .secondary: return .blue.opacity(0.1)
             }
         }
-        
+
         var foregroundColor: Color {
             switch self {
             case .primary: return .white
@@ -902,7 +920,10 @@ private struct ButtonLabel: View {
             }
         }
     }
-    
+
+    let title: String
+    let style: ButtonStyle
+
     var body: some View {
         Text(title)
             .font(.headline)
@@ -916,7 +937,7 @@ private struct ButtonLabel: View {
 
 // MARK: - Supporting Types
 private struct MapLocation: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let coordinate: CLLocationCoordinate2D
 }
 
@@ -937,7 +958,7 @@ private struct MapLocation: Identifiable {
             adminId: "admin123",
             hospitalLicenceNumber: "LIC-2024-001"
         )
-        
+
         HospitalOnboardingSuccessView(hospital: mockHospital, delegate: nil)
             .preferredColorScheme(.light)
     }
@@ -957,5 +978,3 @@ extension UIViewController {
         return self
     }
 }
-
-
