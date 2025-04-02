@@ -80,7 +80,10 @@ struct DashboardView: View {
                         title: "Reports",
                         subtitle: "View analytics",
                         icon: "chart.bar.fill",
-                        color: .orange
+                        color: .orange,
+                        action: {
+                            delegate?.showReports()
+                        }
                     )
                 }
                 .padding(.horizontal)
