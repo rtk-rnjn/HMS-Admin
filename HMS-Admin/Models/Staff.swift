@@ -23,6 +23,11 @@ struct UnavailablePeriod: Codable, Equatable {
     let endDate: Date
 }
 
+struct WorkingHours: Codable, Equatable {
+    var startTime: Date
+    var endTime: Date
+}
+
 struct Staff: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
         case id = "_id"
@@ -43,6 +48,7 @@ struct Staff: Codable, Equatable {
         case yearOfExperience = "year_of_experience"
         case role = "role"
         case hospitalId = "hospital_id"
+        case workingHours = "working_hours"
     }
 
     var id: String = UUID().uuidString
@@ -70,6 +76,8 @@ struct Staff: Codable, Equatable {
 
     var shiftStartTime: Int = 9
     var shiftEndTime: Int = 17
+    
+    var workingHours: WorkingHours?
 
     var fullName: String {
         let lastName = lastName ?? ""

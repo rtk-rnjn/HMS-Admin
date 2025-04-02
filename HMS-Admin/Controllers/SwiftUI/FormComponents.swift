@@ -12,13 +12,21 @@ struct ValidatedTextField: View {
     var title: String
     @Binding var text: String
     var error: String
+    var textContentType: UITextContentType?
     var keyboardType: UIKeyboardType = .default
     var autocapitalization: UITextAutocapitalizationType = .sentences
     var onChange: ((String) -> Void)?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            TextField(title, text: $text)
+            Text(title)
+                .font(.subheadline)
+                .foregroundColor(.gray)
+
+            TextField("", text: $text)
+                .textContentType(textContentType)
+                .keyboardType(keyboardType)
+                .autocapitalization(autocapitalization)
                 .padding()
                 .background(Color.white)
                 .cornerRadius(8)
@@ -26,11 +34,9 @@ struct ValidatedTextField: View {
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(error.isEmpty ? Color.clear : Color.red, lineWidth: 1)
                 )
-                .onChange(of: text) { newValue in
+                .onChange(of: text) { oldValue, newValue in
                     onChange?(newValue)
                 }
-                .keyboardType(keyboardType)
-                .autocapitalization(autocapitalization)
 
             if !error.isEmpty {
                 Text(error)
