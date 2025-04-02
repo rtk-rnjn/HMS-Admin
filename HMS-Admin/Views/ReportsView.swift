@@ -18,8 +18,8 @@ struct ReportsView: View {
     
     // Metrics data (sample)
     private let metrics: [MetricData] = [
-        MetricData(title: "Appointments", value: "124", icon: "calendar", growth: "+12%", isPositive: true, color: .blue),
-        MetricData(title: "Revenue", value: "$12,450", icon: "dollarsign.circle", growth: "+8%", isPositive: true, color: Color(red: 0.2, green: 0.5, blue: 0.8))
+        MetricData(title: "Appointments", value: "124", icon: "calendar", growth: "+12%", isPositive: true, color: Color("iconBlue")),
+        MetricData(title: "Revenue", value: "$12,450", icon: "dollarsign.circle", growth: "+8%", isPositive: true, color: Color("iconBlue"))
     ]
     
     // Top doctors data (sample)
@@ -392,7 +392,7 @@ struct DoctorCardView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 60, height: 60)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color("iconBlue"))
                     .background(Color.blue.opacity(0.1))
                     .clipShape(Circle())
                 
@@ -436,7 +436,7 @@ struct DoctorCardView: View {
                 // Patient count
                 HStack(spacing: 6) {
                     Image(systemName: "person.fill")
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color("iconBlue"))
                         .font(.system(size: 16))
                     
                     Text("\(doctor.patients)")
@@ -467,7 +467,7 @@ struct StaffMetricView: View {
         HStack(spacing: 10) {
             Image(systemName: icon)
                 .font(.subheadline)
-                .foregroundColor(.blue)
+                .foregroundColor(Color("iconBlue"))
                 .frame(width: 24, height: 24)
                 .background(Color.blue.opacity(0.1))
                 .cornerRadius(6)
@@ -498,7 +498,7 @@ struct RevenueMetricView: View {
         VStack(spacing: 10) {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundColor(color)
+                .foregroundColor(Color("iconBlue"))
                 .frame(width: 36, height: 36)
                 .background(color.opacity(0.1))
                 .cornerRadius(18)

@@ -31,21 +31,21 @@ struct DoctorListView: View {
                             title: "Total Doctors",
                             value: "\(totalDoctors.count)",
                             icon: "stethoscope",
-                            color: .blue
+                            color: Color("iconBlue")
                         )
 
                         DoctorStatCard(
                             title: "Active",
                             value: "\(activeDoctors.count)",
                             icon: "checkmark.circle",
-                            color: .green
+                            color: Color("iconBlue")
                         )
 
                         DoctorStatCard(
                             title: "On Leave",
                             value: "\(onLeaveDoctors.count)",
                             icon: "moon.fill",
-                            color: .orange
+                            color: Color("iconBlue")
                         )
                     }
                     .padding(.horizontal)
@@ -54,7 +54,7 @@ struct DoctorListView: View {
                             VStack(spacing: 20) {
                                 Image(systemName: "person.2.slash")
                                     .font(.system(size: 60))
-                                    .foregroundColor(.gray)
+                                    .foregroundColor(Color("iconBlue"))
                                 Text("No Doctors Added")
                                     .font(.title2)
                                     .fontWeight(.semibold)
@@ -124,7 +124,7 @@ struct DoctorCard: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 60, height: 60)
-                    .foregroundColor(Color(.systemGray3))
+                    .foregroundColor(Color("iconBlue"))
                     .clipShape(Circle())
                     .overlay(
                         Circle()

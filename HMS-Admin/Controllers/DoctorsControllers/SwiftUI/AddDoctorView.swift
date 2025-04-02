@@ -283,9 +283,10 @@ struct AddDoctorView: View {
                     VStack(spacing: 24) {
                         // Header Image
                         VStack(spacing: 16) {
-                            Image(systemName: "person.crop.circle.badge.plus")
+                            Image(systemName: "person.fill.badge.plus")
                                 .font(.system(size: 60))
-                                .foregroundColor(.blue)
+                                .foregroundColor(Color("iconBlue"))
+                                
                                 .padding(.top, 20)
                             
                             Text(doctor == nil ? "Add New Doctor" : "Edit Doctor")
@@ -304,6 +305,7 @@ struct AddDoctorView: View {
                         GroupBox {
                             VStack(alignment: .leading, spacing: 20) {
                                 SectionHeader(title: "Personal Information", icon: "person.fill")
+                                  
                                 
                                 // First Name
                                 ValidatedTextField(
@@ -367,7 +369,7 @@ struct AddDoctorView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Image(systemName: "calendar")
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color("iconBlue"))
                                         Text("Date of Birth")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -414,7 +416,7 @@ struct AddDoctorView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Image(systemName: "person.2.fill")
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color("iconBlue"))
                                         Text("Gender")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -469,7 +471,7 @@ struct AddDoctorView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Image(systemName: "clock.fill")
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color("iconBlue"))
                                         Text("Years of Experience")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -534,7 +536,7 @@ struct AddDoctorView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Image(systemName: "building.2.fill")
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color("iconBlue"))
                                         Text("Department")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -555,6 +557,7 @@ struct AddDoctorView: View {
                                                     Text(dept)
                                                     if department == dept {
                                                         Image(systemName: "checkmark")
+                                                            .foregroundColor(Color("iconBlue"))
                                                     }
                                                 }
                                             }
@@ -589,7 +592,7 @@ struct AddDoctorView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Image(systemName: "cross.case.fill")
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color("iconBlue"))
                                         Text("Specializations")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -646,7 +649,7 @@ struct AddDoctorView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Image(systemName: "calendar.badge.clock")
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color("iconBlue"))
                                         Text("Working Days")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -685,7 +688,7 @@ struct AddDoctorView: View {
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
                                         Image(systemName: "clock.badge.checkmark")
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(Color("iconBlue"))
                                         Text("Working Hours")
                                             .font(.subheadline)
                                             .foregroundColor(.gray)
@@ -1238,7 +1241,7 @@ struct SectionHeader: View {
         HStack {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundColor(.blue)
+                .foregroundColor(Color("iconBlue"))
             Text(title)
                 .font(.headline)
                 .foregroundColor(.primary)

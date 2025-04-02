@@ -72,7 +72,7 @@ struct LeaveRequestCard: View {
                     .frame(width: 40, height: 40)
                     .overlay(
                         Image(systemName: "person.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color("iconBlue"))
                     )
                 
                 VStack(alignment: .leading, spacing: 4) {
@@ -156,7 +156,7 @@ struct LeaveRequestCard: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
-                    .background(Color.blue)
+                    .background(Color("successBlue"))
                     .cornerRadius(8)
                 }
                 .disabled(isProcessing)
@@ -193,7 +193,7 @@ struct LeaveDetailRow: View {
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
-                .foregroundColor(.gray)
+                .foregroundColor(Color("iconBlue"))
                 .frame(width: 16)
             
             Text(label)
@@ -226,7 +226,7 @@ struct LeaveRequestListView: View {
                         .frame(width: 40, height: 40)
                         .overlay(
                             Image(systemName: "person.fill")
-                                .foregroundColor(.blue)
+                                .foregroundColor(Color("iconBlue"))
                         )
                     
                     VStack(alignment: .leading, spacing: 4) {
@@ -284,7 +284,7 @@ struct LeaveRequestListView: View {
                         .foregroundColor(.red)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(Color.red.opacity(0.1))
+                        .background(Color("disableBlue"))
                         .cornerRadius(8)
                     }
                     .disabled(processingRequests.contains(request.id))
