@@ -121,9 +121,6 @@
             <objects>
                 <hostingController id="nba-CE-Tsc" customClass="HospitalDetailHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="Hospital Onboarding" id="MC6-Ei-hrn"/>
-                    <connections>
-                        <segue destination="pef-3o-PN0" kind="show" identifier="segueShowInitialTabBarController" id="yyO-y3-Fmb"/>
-                    </connections>
                 </hostingController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Bfy-e0-2Gy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -240,9 +237,6 @@
             <point key="canvasLocation" x="55.725190839694655" y="-27.464788732394368"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="yyO-y3-Fmb"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

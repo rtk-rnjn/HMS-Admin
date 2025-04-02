@@ -15,14 +15,12 @@ struct DoctorListView: View {
 
     var totalDoctors: [Staff] = []
 
-<<<<<<< Updated upstream
-=======
+
     // This will be set from the hosting controller
     var searchQuery: String = ""
     var filterDepartment: String? = nil
     var filterSpecialization: String? = nil
 
->>>>>>> Stashed changes
     var body: some View {
 
         ZStack {
@@ -55,8 +53,32 @@ struct DoctorListView: View {
                     }
                     .padding(.horizontal)
                     VStack(spacing: 16) {
-                        ForEach(totalDoctors, id: \.id) { doctor in
-                            DoctorCard(doctor: doctor)
+                        if totalDoctors.isEmpty {
+                            VStack(spacing: 20) {
+                                Image(systemName: "person.2.slash")
+                                    .font(.system(size: 60))
+                                    .foregroundColor(.gray)
+                                Text("No Doctors Added")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                                Text("Add your first doctor to get started")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(.top, 100)
+                        } else {
+                            ForEach(filteredDoctors, id: \.id) { doctor in
+                                DoctorCard(doctor: doctor)
+                            }
+
+                            if filteredDoctors.isEmpty && !searchQuery.isEmpty {
+                                Text("No doctors found matching '\(searchQuery)'")
+                                    .foregroundColor(.secondary)
+                                    .padding()
+                            }
                         }
 
                         Color.clear.frame(height: 20)
@@ -69,7 +91,6 @@ struct DoctorListView: View {
 
     // MARK: Private
 
-    @State private var searchText = ""
     @State private var showingAddDoctorView = false
 
     private var activeDoctors: [Staff] {
@@ -80,8 +101,6 @@ struct DoctorListView: View {
         return totalDoctors.filter { $0.onLeave }
     }
 
-<<<<<<< Updated upstream
-=======
     private var filteredDoctors: [Staff] {
         var doctors = totalDoctors
 
@@ -107,8 +126,6 @@ struct DoctorListView: View {
 
         return doctors
     }
-
->>>>>>> Stashed changes
 }
 
 struct DoctorCard: View {

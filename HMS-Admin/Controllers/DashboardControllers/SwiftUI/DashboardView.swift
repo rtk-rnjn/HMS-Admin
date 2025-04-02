@@ -14,6 +14,39 @@ struct DashboardView: View {
     @State private var showNotifications = false
     @State private var selectedTimeRange = "Today"
     @State private var showProfile = false
+    @State private var leaveRequests: [LeaveRequest] = [
+        // Sample leave request data
+        LeaveRequest(
+            doctorId: "1",
+            doctorName: "Dr. John Smith",
+            department: "Cardiology",
+            startDate: Calendar.current.date(byAdding: .day, value: 5, to: Date()) ?? Date(),
+            endDate: Calendar.current.date(byAdding: .day, value: 10, to: Date()) ?? Date(),
+            reason: "Annual family vacation",
+            status: .pending,
+            createdAt: Date()
+        ),
+        LeaveRequest(
+            doctorId: "2",
+            doctorName: "Dr. Sarah Johnson",
+            department: "Pediatrics",
+            startDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date(),
+            endDate: Calendar.current.date(byAdding: .day, value: 4, to: Date()) ?? Date(),
+            reason: "Medical conference attendance",
+            status: .pending,
+            createdAt: Calendar.current.date(byAdding: .hour, value: -2, to: Date()) ?? Date()
+        ),
+        LeaveRequest(
+            doctorId: "3",
+            doctorName: "Dr. Michael Chen",
+            department: "Neurology",
+            startDate: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date(),
+            endDate: Calendar.current.date(byAdding: .day, value: 9, to: Date()) ?? Date(),
+            reason: "Personal emergency",
+            status: .pending,
+            createdAt: Calendar.current.date(byAdding: .hour, value: -5, to: Date()) ?? Date()
+        )
+    ]
 
     var activeDoctorCount: Int = 0
     var patientCount: Int = 0
@@ -26,6 +59,8 @@ struct DashboardView: View {
         ("Thu", 32), ("Fri", 25), ("Sat", 20),
         ("Sun", 22)
     ]
+
+    @State private var processingRequests: Set<String> = [] // Track requests being processed
 
     var body: some View {
         ScrollView {
@@ -80,9 +115,21 @@ struct DashboardView: View {
                         title: "Reports",
                         subtitle: "View analytics",
                         icon: "chart.bar.fill",
-                        color: .orange
+                        color: .orange,
+                        action: {
+                            delegate?.showReports()
+                        }
                     )
                 }
+                .padding(.horizontal)
+
+                // Leave Requests Section
+                PendingLeaveRequestsView(
+                    leaveRequests: leaveRequests.filter { $0.status == .pending },
+                    onApprove: handleLeaveApproval,
+                    onReject: handleLeaveRejection,
+                    processingRequests: processingRequests
+                )
                 .padding(.horizontal)
 
                 // Recent Activity
@@ -113,6 +160,91 @@ struct DashboardView: View {
         }
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Dashboard")
+        .onAppear {
+            fetchLeaveRequests()
+        }
+    }
+    
+    private func fetchLeaveRequests() {
+        Task {
+            if let requests = await DataController.shared.fetchLeaveRequests() {
+                DispatchQueue.main.async {
+                    self.leaveRequests = requests
+                }
+            }
+        }
+    }
+    
+    private func handleLeaveApproval(_ request: LeaveRequest) {
+        // Add request to processing set
+        processingRequests.insert(request.id)
+        
+        // Optimistically update local state
+        if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
+            var updatedRequest = request
+            updatedRequest.status = .approved
+            leaveRequests[index] = updatedRequest
+        }
+        
+        Task {
+            // Make API call
+            let success = await DataController.shared.approveLeaveRequest(request)
+            
+            DispatchQueue.main.async {
+                // Remove from processing set
+                processingRequests.remove(request.id)
+                
+                if !success {
+                    // Revert local state if API call failed
+                    if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
+                        var revertedRequest = request
+                        revertedRequest.status = .pending
+                        leaveRequests[index] = revertedRequest
+                    }
+                    // Show error message
+                    // Note: You might want to add an @State property for showing alerts
+                }
+                
+                // Refresh the list to get the latest state
+                fetchLeaveRequests()
+            }
+        }
+    }
+    
+    private func handleLeaveRejection(_ request: LeaveRequest) {
+        // Add request to processing set
+        processingRequests.insert(request.id)
+        
+        // Optimistically update local state
+        if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
+            var updatedRequest = request
+            updatedRequest.status = .rejected
+            leaveRequests[index] = updatedRequest
+        }
+        
+        Task {
+            // Make API call
+            let success = await DataController.shared.rejectLeaveRequest(request)
+            
+            DispatchQueue.main.async {
+                // Remove from processing set
+                processingRequests.remove(request.id)
+                
+                if !success {
+                    // Revert local state if API call failed
+                    if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
+                        var revertedRequest = request
+                        revertedRequest.status = .pending
+                        leaveRequests[index] = revertedRequest
+                    }
+                    // Show error message
+                    // Note: You might want to add an @State property for showing alerts
+                }
+                
+                // Refresh the list to get the latest state
+                fetchLeaveRequests()
+            }
+        }
     }
 }
 

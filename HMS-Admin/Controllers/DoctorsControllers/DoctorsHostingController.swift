@@ -18,17 +18,38 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
         setupFilterMenu()
     }
 
+    deinit {
+        // Remove notification observer when the controller is deallocated
+        NotificationCenter.default.removeObserver(self)
+    }
+
     // MARK: Internal
 
     override func viewDidLoad() {
         super.viewDidLoad()
         searchController.searchBar.searchTextField.clearButtonMode = .never
         prepareSearchController()
+
+        // Add notification observer for refreshing doctors list
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleRefreshNotification),
+            name: NSNotification.Name("RefreshDoctorsList"),
+            object: nil
+        )
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        Task {
+            if let staffs = await DataController.shared.fetchDoctors() {
+                rootView.totalDoctors = staffs
+            }
+        }
+    }
+
+    func refreshDoctorsList() {
         Task {
             if let staffs = await DataController.shared.fetchDoctors() {
                 rootView.totalDoctors = staffs
@@ -46,8 +67,6 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
         return button
     }()
 
-<<<<<<< Updated upstream
-=======
     private let departments = [
         "Cardiology",
         "Neurology",
@@ -105,15 +124,15 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
     private func clearFilters() {
         selectedDepartment = nil
         selectedSpecialization = nil
-        rootView.filterDepartment = nil
-        rootView.filterSpecialization = nil
+//        rootView.filterDepartment = nil
+//        rootView.filterSpecialization = nil
         searchController.searchBar.text = ""
         rootView.searchQuery = ""
     }
 
     private func updateFilters() {
-        rootView.filterDepartment = selectedDepartment
-        rootView.filterSpecialization = selectedSpecialization
+//        rootView.filterDepartment = selectedDepartment
+//        rootView.filterSpecialization = selectedSpecialization
     }
 
     private func updateSearchBarText() {
@@ -136,8 +155,6 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
         searchController.searchBar.text = filterText
         rootView.searchQuery = filterText
     }
-
->>>>>>> Stashed changes
     private func prepareSearchController() {
         searchController.searchBar.delegate = self
         searchController.searchResultsUpdater = self
@@ -168,9 +185,6 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
 }
 
 extension DoctorsHostingController: UISearchBarDelegate, UISearchResultsUpdating {
-<<<<<<< Updated upstream
-    func updateSearchResults(for searchController: UISearchController) {}
-=======
     func updateSearchResults(for searchController: UISearchController) {
         // Get the search text from the search controller
         let searchText = searchController.searchBar.text ?? ""
@@ -183,7 +197,6 @@ extension DoctorsHostingController: UISearchBarDelegate, UISearchResultsUpdating
         // Clear the search query when cancel is clicked
         rootView.searchQuery = ""
     }
-    
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         // Hide filter button when search becomes active
         filterButton.isHidden = true
@@ -193,5 +206,4 @@ extension DoctorsHostingController: UISearchBarDelegate, UISearchResultsUpdating
         // Show filter button when search becomes inactive
         filterButton.isHidden = false
     }
->>>>>>> Stashed changes
 }
