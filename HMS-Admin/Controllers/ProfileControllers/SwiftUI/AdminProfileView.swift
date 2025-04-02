@@ -19,7 +19,7 @@ struct AdminProfileView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: 60, height: 60)
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color("iconBlue"))
                         .background(Circle().fill(Color.blue.opacity(0.1)))
 
                     VStack(alignment: .leading, spacing: 4) {
@@ -45,7 +45,7 @@ struct AdminProfileView: View {
                     delegate?.performSegue(withIdentifier: "segueShowSignInViewController", sender: nil)
                 }) {
                     Label("Sign Out", systemImage: "rectangle.portrait.and.arrow.right")
-                        .foregroundColor(.red)
+                        .foregroundColor(Color("disableBlue"))
                 }
             }
         }

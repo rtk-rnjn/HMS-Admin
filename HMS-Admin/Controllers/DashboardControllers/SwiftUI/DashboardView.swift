@@ -71,7 +71,7 @@ struct DashboardView: View {
                             title: "Active Doctors",
                             value: "\(activeDoctorCount)",
                             icon: "stethoscope",
-                            color: .blue,
+                            color: Color("iconBlue"),
                             trend: "+5%"
                         )
 
@@ -79,7 +79,7 @@ struct DashboardView: View {
                             title: "Today's Patients",
                             value: "\(patientCount)",
                             icon: "person.2.fill",
-                            color: .green,
+                            color: Color("iconBlue"),
                             trend: "+12%"
                         )
                     }
@@ -95,7 +95,7 @@ struct DashboardView: View {
                         title: "Add Doctor",
                         subtitle: "New registration",
                         icon: "person.badge.plus",
-                        color: .blue,
+                        color: Color("iconBlue"),
                         action: {
                             delegate?.performSegue(withIdentifier: "segueShowAddDoctorHostingController", sender: nil)
                         }
@@ -105,7 +105,7 @@ struct DashboardView: View {
                         title: "Announcement",
                         subtitle: "New message",
                         icon: "megaphone.fill",
-                        color: .purple,
+                        color: Color("iconBlue"),
                         action: {
                             delegate?.performSegue(withIdentifier: "segueShowCreateAnnouncementHostingController", sender: nil)
                         }
@@ -115,7 +115,7 @@ struct DashboardView: View {
                         title: "Reports",
                         subtitle: "View analytics",
                         icon: "chart.bar.fill",
-                        color: .orange,
+                        color: Color("iconBlue"),
                         action: {
                             delegate?.showReports()
                         }
@@ -300,7 +300,8 @@ struct ActivityRow: View {
                 .frame(width: 40, height: 40)
                 .overlay(
                     Image(systemName: "stethoscope")
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color("iconBlue"))
+                    
                 )
 
             VStack(alignment: .leading, spacing: 4) {
@@ -340,7 +341,7 @@ struct QuickActionButton: View {
                     .overlay(
                         Image(systemName: icon)
                             .font(.title2)
-                            .foregroundColor(color)
+                            .foregroundColor(Color("iconBlue"))
                     )
 
                 VStack(spacing: 2) {

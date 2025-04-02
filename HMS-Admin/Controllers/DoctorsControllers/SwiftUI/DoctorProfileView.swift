@@ -21,7 +21,7 @@ struct DoctorProfileView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: sizeClass == .regular ? 140 : 120, height: sizeClass == .regular ? 140 : 120)
-                        .foregroundColor(Color(.systemGray4))
+                        .foregroundColor(Color("iconBlue"))
                         .clipShape(Circle())
 
                     // Name with "Dr." prefix
@@ -33,7 +33,7 @@ struct DoctorProfileView: View {
                         .font(.system(size: 13, weight: .semibold))
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-                        .background(doctor.onLeave ? Color.orange : Color.green)
+                        .background(doctor.onLeave ? Color("uselectedBlue") : Color("successBlue"))
                         .foregroundColor(.white)
                         .clipShape(Capsule())
                 }
@@ -46,6 +46,7 @@ struct DoctorProfileView: View {
                     InfoSectionCard(title: "Personal Information") {
                         InfoRow(icon: "person.fill", label: "Full Name", value: doctor.fullName)
                         Divider().padding(.leading, 40)
+                         
                         InfoRow(icon: "calendar", label: "Date of Birth", value: formatDate(doctor.dateOfBirth))
                         Divider().padding(.leading, 40)
                         InfoRow(icon: "person.2.fill", label: "Gender", value: "Other")
@@ -159,7 +160,7 @@ struct InfoRow: View {
             Image(systemName: icon)
                 .font(.system(size: 18))
                 .frame(width: 24)
-                .foregroundColor(.gray)
+                .foregroundColor(Color("iconBlue"))
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(label)
