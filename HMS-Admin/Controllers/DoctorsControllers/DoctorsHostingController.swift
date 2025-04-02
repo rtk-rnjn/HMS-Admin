@@ -30,11 +30,19 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
         searchController.searchBar.searchTextField.clearButtonMode = .never
         prepareSearchController()
 
-        // Add notification observer for refreshing doctors list
+        // Add notification observers for refreshing doctors list
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleRefreshNotification),
             name: NSNotification.Name("RefreshDoctorsList"),
+            object: nil
+        )
+        
+        // Add observer for doctor addition
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDoctorAdded),
+            name: NSNotification.Name("DoctorAdded"),
             object: nil
         )
     }
@@ -180,6 +188,11 @@ class DoctorsHostingController: UIHostingController<DoctorListView> {
     }
 
     @objc private func handleRefreshNotification() {
+        refreshDoctorsList()
+    }
+
+    @objc private func handleDoctorAdded() {
+        // Refresh the doctors list when a new doctor is added
         refreshDoctorsList()
     }
 }
