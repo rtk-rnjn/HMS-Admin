@@ -1168,8 +1168,6 @@ struct AddDoctorView: View {
                 }
 
                 printEmail(to: email, name: "\(firstName) \(lastName)", password: password)
-                // Post notification that a doctor was added
-                NotificationCenter.default.post(name: NSNotification.Name("DoctorAdded"), object: nil)
                 dismiss()
             }
         }
