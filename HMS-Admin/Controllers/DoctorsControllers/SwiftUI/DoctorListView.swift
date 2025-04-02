@@ -50,14 +50,32 @@ struct DoctorListView: View {
                     }
                     .padding(.horizontal)
                     VStack(spacing: 16) {
-                        ForEach(filteredDoctors, id: \.id) { doctor in
-                            DoctorCard(doctor: doctor)
-                        }
+                        if totalDoctors.isEmpty {
+                            VStack(spacing: 20) {
+                                Image(systemName: "person.2.slash")
+                                    .font(.system(size: 60))
+                                    .foregroundColor(.gray)
+                                Text("No Doctors Added")
+                                    .font(.title2)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.primary)
+                                Text("Add your first doctor to get started")
+                                    .font(.subheadline)
+                                    .foregroundColor(.secondary)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding(.top, 100)
+                        } else {
+                            ForEach(filteredDoctors, id: \.id) { doctor in
+                                DoctorCard(doctor: doctor)
+                            }
 
-                        if filteredDoctors.isEmpty && !searchQuery.isEmpty {
-                            Text("No doctors found matching '\(searchQuery)'")
-                                .foregroundColor(.secondary)
-                                .padding()
+                            if filteredDoctors.isEmpty && !searchQuery.isEmpty {
+                                Text("No doctors found matching '\(searchQuery)'")
+                                    .foregroundColor(.secondary)
+                                    .padding()
+                            }
                         }
 
                         Color.clear.frame(height: 20)

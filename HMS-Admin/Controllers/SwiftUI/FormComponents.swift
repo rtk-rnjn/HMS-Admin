@@ -16,6 +16,7 @@ struct ValidatedTextField: View {
     var keyboardType: UIKeyboardType = .default
     var autocapitalization: UITextAutocapitalizationType = .sentences
     var onChange: ((String) -> Void)?
+    @State private var hasInteracted = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -32,13 +33,21 @@ struct ValidatedTextField: View {
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(error.isEmpty ? Color.clear : Color.red, lineWidth: 1)
+                        .stroke(
+                            hasInteracted && !error.isEmpty ? Color.red : Color.gray.opacity(0.2),
+                            lineWidth: 1
+                        )
                 )
+
                 .onChange(of: text) { oldValue, newValue in
+
+                .onChange(of: text) { newValue in
+                    hasInteracted = true
+
                     onChange?(newValue)
                 }
 
-            if !error.isEmpty {
+            if hasInteracted && !error.isEmpty {
                 Text(error)
                     .font(.footnote)
                     .foregroundColor(.red)
@@ -55,11 +64,13 @@ struct DropdownSelector: View {
     var options: [String]
     var error: String
     @Binding var isExpanded: Bool
+    @State private var hasInteracted = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Button(action: {
                 withAnimation {
+                    hasInteracted = true
                     isExpanded.toggle()
                 }
             }) {
@@ -78,11 +89,14 @@ struct DropdownSelector: View {
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(error.isEmpty ? Color.clear : Color.red, lineWidth: 1)
+                        .stroke(
+                            hasInteracted && !error.isEmpty ? Color.red : Color.gray.opacity(0.2),
+                            lineWidth: 1
+                        )
                 )
             }
 
-            if !error.isEmpty {
+            if hasInteracted && !error.isEmpty {
                 Text(error)
                     .font(.footnote)
                     .foregroundColor(.red)
@@ -124,6 +138,7 @@ struct MultiSelectionDropdown: View {
     var error: String
     @Binding var isExpanded: Bool
     @State private var searchText = ""
+    @State private var hasInteracted = false
 
     var filteredOptions: [String] {
         if searchText.isEmpty {
@@ -137,6 +152,7 @@ struct MultiSelectionDropdown: View {
         VStack(alignment: .leading, spacing: 4) {
             Button(action: {
                 withAnimation {
+                    hasInteracted = true
                     isExpanded.toggle()
                 }
             }) {
@@ -161,7 +177,10 @@ struct MultiSelectionDropdown: View {
                 .cornerRadius(8)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
-                        .stroke(error.isEmpty ? Color.clear : Color.red, lineWidth: 1)
+                        .stroke(
+                            hasInteracted && !error.isEmpty ? Color.red : Color.gray.opacity(0.2),
+                            lineWidth: 1
+                        )
                 )
             }
 
@@ -192,7 +211,7 @@ struct MultiSelectionDropdown: View {
                 }
             }
 
-            if !error.isEmpty {
+            if hasInteracted && !error.isEmpty {
                 Text(error)
                     .font(.footnote)
                     .foregroundColor(.red)
