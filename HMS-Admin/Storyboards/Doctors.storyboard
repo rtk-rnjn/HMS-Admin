@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dfL-IP-CT5">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="dfL-IP-CT5">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,7 +13,7 @@
                     <tabBarItem key="tabBarItem" title="Doctors" image="stethoscope" catalog="system" id="QYp-vj-d4o"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="Ckj-gC-P4Q">
-                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -30,7 +30,7 @@
             <objects>
                 <hostingController id="SHA-il-Xob" customClass="DoctorsHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="Doctors" id="Sr0-09-JXl">
-                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="add" id="ndb-tj-Na3">
+                        <barButtonItem key="rightBarButtonItem" image="person.fill.badge.plus" catalog="system" style="done" id="ndb-tj-Na3">
                             <connections>
                                 <segue destination="okY-IY-0qM" kind="presentation" id="bnW-iV-wnD"/>
                             </connections>
@@ -51,6 +51,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="person.fill.badge.plus" catalog="system" width="128" height="126"/>
         <image name="stethoscope" catalog="system" width="128" height="101"/>
     </resources>
 </document>

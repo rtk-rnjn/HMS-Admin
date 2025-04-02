@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="DsS-au-bxH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="DsS-au-bxH">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,7 +13,7 @@
                     <tabBarItem key="tabBarItem" title="Billing" image="dollarsign.circle.fill" catalog="system" id="kwq-G9-kEg"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="01M-hU-6dl">
-                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -25,11 +25,11 @@
             </objects>
             <point key="canvasLocation" x="1055.7251908396945" y="-28.169014084507044"/>
         </scene>
-        <!--Billing & Finance-->
+        <!--Finance-->
         <scene sceneID="KSe-CU-L0I">
             <objects>
                 <hostingController id="X5l-u9-sQG" customClass="BillingHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" title="Billing &amp; Finance" id="4Py-i3-jq4"/>
+                    <navigationItem key="navigationItem" title="Finance" id="4Py-i3-jq4"/>
                 </hostingController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5m5-po-MuU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

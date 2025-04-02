@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rzw-UJ-JLp">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rzw-UJ-JLp">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,7 +13,7 @@
                     <tabBarItem key="tabBarItem" title="Dashboard" image="house.fill" catalog="system" id="09R-8H-hVa"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="cTh-bw-Mcg">
-                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
+                        <rect key="frame" x="0.0" y="118" width="393" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -42,7 +42,7 @@
                     <navigationItem key="navigationItem" title="Dashboard" id="XSi-DK-n5V">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="bell.fill" catalog="system" style="done" id="cbb-M1-rnU">
                             <connections>
-                                <segue destination="CkN-36-fGa" kind="presentation" id="jO0-3G-TL0"/>
+                                <segue destination="CkN-36-fGa" kind="show" id="lhx-Rr-YPV"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -63,10 +63,12 @@
             </objects>
             <point key="canvasLocation" x="3353" y="-28"/>
         </scene>
-        <!--Announcement Hosting Controller-->
+        <!--Notifications-->
         <scene sceneID="wqq-MK-13o">
             <objects>
-                <hostingController id="CkN-36-fGa" customClass="AnnouncementHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController"/>
+                <hostingController id="CkN-36-fGa" customClass="AnnouncementHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" title="Notifications" largeTitleDisplayMode="never" id="jPP-Pv-afp"/>
+                </hostingController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cOY-lt-B60" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1949" y="679"/>
