@@ -207,3 +207,57 @@ extension DataController {
 
     }
 }
+
+extension DataController {
+    func fetchLeaveRequests() async -> [LeaveRequest]? {
+        if admin == nil {
+            guard await autoLogin() else { fatalError("Auth failed") }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        return await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/leave-requests")
+    }
+    
+    func approveLeaveRequest(_ request: LeaveRequest) async -> Bool {
+        if admin == nil {
+            guard await autoLogin() else { fatalError("Auth failed") }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        // Create an empty JSON object as the request body
+        let emptyBody = try? JSONSerialization.data(withJSONObject: [:], options: [])
+
+        let serverResponse: ServerResponse? = await MiddlewareManager.shared.post(
+            url: "/hospital/\(admin.id)/leave-requests/\(request.id)/approve",
+            body: emptyBody ?? Data()
+        )
+
+        return serverResponse?.success ?? false
+    }
+    
+    func rejectLeaveRequest(_ request: LeaveRequest) async -> Bool {
+        if admin == nil {
+            guard await autoLogin() else { fatalError("Auth failed") }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        // Create an empty JSON object as the request body
+        let emptyBody = try? JSONSerialization.data(withJSONObject: [:], options: [])
+
+        let serverResponse: ServerResponse? = await MiddlewareManager.shared.post(
+            url: "/hospital/\(admin.id)/leave-requests/\(request.id)/reject",
+            body: emptyBody ?? Data()
+        )
+
+        return serverResponse?.success ?? false
+    }
+}
