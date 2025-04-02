@@ -15,6 +15,14 @@ struct DoctorListView: View {
 
     var totalDoctors: [Staff] = []
 
+<<<<<<< Updated upstream
+=======
+    // This will be set from the hosting controller
+    var searchQuery: String = ""
+    var filterDepartment: String? = nil
+    var filterSpecialization: String? = nil
+
+>>>>>>> Stashed changes
     var body: some View {
 
         ZStack {
@@ -72,6 +80,35 @@ struct DoctorListView: View {
         return totalDoctors.filter { $0.onLeave }
     }
 
+<<<<<<< Updated upstream
+=======
+    private var filteredDoctors: [Staff] {
+        var doctors = totalDoctors
+
+        // Apply search filter if query exists
+        if !searchQuery.isEmpty {
+            let query = searchQuery.lowercased()
+            doctors = doctors.filter { doctor in
+                doctor.fullName.lowercased().contains(query) ||
+                doctor.specialization.lowercased().contains(query) ||
+                doctor.department.lowercased().contains(query)
+            }
+        }
+
+        // Apply department filter if selected
+        if let department = filterDepartment {
+            doctors = doctors.filter { $0.department == department }
+        }
+
+        // Apply specialization filter if selected
+        if let specialization = filterSpecialization {
+            doctors = doctors.filter { $0.specialization.contains(specialization) }
+        }
+
+        return doctors
+    }
+
+>>>>>>> Stashed changes
 }
 
 struct DoctorCard: View {
