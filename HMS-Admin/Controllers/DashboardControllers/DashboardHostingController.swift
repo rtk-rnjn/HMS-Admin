@@ -60,6 +60,13 @@ class DashboardHostingController: UIHostingController<DashboardView> {
                 self.rootView.patientCount = patientCount
             }
         }
+
+        Task {
+            let logs = await fetchLogs()
+            DispatchQueue.main.async {
+                self.rootView.logs = logs
+            }
+        }
     }
 
     private func fetchActiveDoctorCount() async -> Int {
@@ -87,6 +94,15 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         }
 
         return patients.count
+    }
+
+    func fetchLogs() async -> [Log] {
+        let logs: [Log]? = await DataController.shared.fetchLogs()
+        guard let logs else {
+            return []
+        }
+
+        return logs
     }
 
 }

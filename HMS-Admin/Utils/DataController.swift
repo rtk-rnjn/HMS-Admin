@@ -19,6 +19,16 @@ struct Token: Codable {
     var user: Admin?
 }
 
+struct Log: Codable, Sendable, Hashable, Identifiable {
+    enum CodingKeys: String, CodingKey {
+        case message
+        case createdAt = "created_at"
+    }
+    var id: String = UUID().uuidString
+    var message: String
+    var createdAt: Date
+}
+
 struct UserLogin: Codable {
     enum CodingKeys: String, CodingKey {
         case emailAddress = "email_address"
@@ -194,6 +204,18 @@ extension DataController {
         let serverResponse: ServerResponse? = await MiddlewareManager.shared.post(url: "/hospital", body: hospitalData)
 
         return serverResponse?.success ?? false
+    }
+
+    func fetchLogs() async -> [Log]? {
+        if admin == nil {
+            guard await autoLogin() else { fatalError() }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        return await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/logs")
     }
 }
 

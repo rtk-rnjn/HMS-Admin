@@ -10,6 +10,7 @@ import SwiftUI
 struct DashboardView: View {
     weak var delegate: DashboardHostingController?
 
+    var logs: [Log] = []
     @State private var searchText = ""
     @State private var showNotifications = false
     @State private var selectedTimeRange = "Today"
@@ -147,8 +148,8 @@ struct DashboardView: View {
                         .foregroundColor(.blue)
                     }
 
-                    ForEach(1...4, id: \.self) { _ in
-                        ActivityRow()
+                    ForEach(logs, id: \.self) { log in
+                        ActivityRow(log: log)
                     }
                 }
                 .padding()
@@ -293,6 +294,8 @@ struct QuickStatCard: View {
 }
 
 struct ActivityRow: View {
+    var log: Log
+
     var body: some View {
         HStack(spacing: 12) {
             Circle()
@@ -305,11 +308,11 @@ struct ActivityRow: View {
                 )
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Dr. Smith added a new patient")
+                Text(log.message)
                     .font(.subheadline)
                     .fontWeight(.medium)
 
-                Text("2 hours ago")
+                Text(log.createdAt.humanReadableString())
                     .font(.caption)
                     .foregroundColor(.gray)
             }
