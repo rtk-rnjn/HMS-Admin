@@ -51,6 +51,8 @@ struct DashboardView: View {
 
     var activeDoctorCount: Int = 0
     var patientCount: Int = 0
+    var doctorTrend: String = "+0%"
+    var patientTrend: String = "+0%"
 
     let timeRanges = ["Today", "Week", "Month"]
 
@@ -73,7 +75,7 @@ struct DashboardView: View {
                             value: "\(activeDoctorCount)",
                             icon: "stethoscope",
                             color: Color("iconBlue"),
-                            trend: "+5%"
+                            trend: doctorTrend
                         )
 
                         QuickStatCard(
@@ -81,7 +83,7 @@ struct DashboardView: View {
                             value: "\(patientCount)",
                             icon: "person.2.fill",
                             color: Color("iconBlue"),
-                            trend: "+12%"
+                            trend: patientTrend
                         )
                     }
                     .padding(.horizontal)

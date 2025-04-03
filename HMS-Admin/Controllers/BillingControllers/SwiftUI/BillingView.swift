@@ -79,8 +79,8 @@ struct BillingView: View {
             SummaryCardView(
                 title: "Total Revenue",
                 amount: totalRevenue,
-                icon: "indianrupee.circle.fill",
-                color: .blue
+                icon: "circle.fill",
+                color: Color(UIColor(red: 0.85, green: 0.9, blue: 1.0, alpha: 1.0))
             )
 
             // Total Refunds Card
@@ -107,20 +107,34 @@ struct SummaryCardView: View {
         VStack(alignment: .leading, spacing: 12) {
             // Card Header with icon
             HStack {
-                Image(systemName: icon)
-                    .font(.title2)
-                    .foregroundColor(color)
-
+                if icon == "circle.fill" {
+                    // Use text-based rupee symbol for revenue card
+                    Text("₹")
+                        .font(.title)
+                        .foregroundColor(.blue)
+                        .frame(width: 40, height: 40)
+                        .background(Color.blue.opacity(0.1))
+                        .clipShape(Circle())
+                } else {
+                    // Use system image for other icons
+                    Image(systemName: icon)
+                        .font(.title)
+                        .foregroundColor(color)
+                        .frame(width: 40, height: 40)
+                        .background(color.opacity(0.1))
+                        .clipShape(Circle())
+                }
+                
                 Spacer()
             }
-
+            
             Spacer()
-
+            
             // Amount
             Text(String(format: "₹%.2f", amount))
                 .font(.title2)
                 .fontWeight(.bold)
-
+            
             // Title
             Text(title)
                 .font(.subheadline)
