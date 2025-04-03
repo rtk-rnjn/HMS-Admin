@@ -137,19 +137,22 @@ struct DoctorCard: View {
                         .font(.body)
                         .foregroundColor(.primary)
 
-                    // Department and specialization
+                    // Department
                     Text(doctor.department)
                         .font(.subheadline)
+
                         .foregroundColor(.secondary)
 
+                    // Specialization
                     Text(doctor.specialization)
                         .font(.subheadline)
+
                         .foregroundColor(.secondary)
+                        .lineLimit(2)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                // Status indicator - small dot instead of badge for cleaner list
+                // Status indicator
                 Circle()
                     .fill(doctor.onLeave ? Color.orange : Color.green)
                     .frame(width: 10, height: 10)
