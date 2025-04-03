@@ -145,7 +145,7 @@ struct LeaveRequestCard: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
-                    .background(Color("airleBlue"))
+                    .background(Color("errorBlue"))
                     .cornerRadius(8)
                 }
                 .disabled(isProcessing)
@@ -307,7 +307,7 @@ struct LeaveRequestListView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(Color("airleBlue"))
+                        .background(Color("errorBlue"))
                         .cornerRadius(8)
                     }
                     .disabled(processingRequests.contains(request.id))
