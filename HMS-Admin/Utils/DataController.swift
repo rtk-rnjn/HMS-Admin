@@ -253,26 +253,27 @@ extension DataController {
             fatalError("Admin is nil")
         }
 
-        return await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/leave-requests")
+        let leaveRequests: [LeaveRequest]? = await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/leave-requests")
+        guard var leaveRequests else { return [] }
+
+        for i in leaveRequests.indices {
+            leaveRequests[i].doctor = await MiddlewareManager.shared.get(url: "/staff/\(leaveRequests[i].doctorId)")
+        }
+
+        return leaveRequests
+
     }
 
-    func approveLeaveRequest(_ request: LeaveRequest) async -> Bool {
+    func approveLeaveRequest(_ leaveRequest: LeaveRequest) async -> Bool {
         if admin == nil {
             guard await autoLogin() else { fatalError("Auth failed") }
         }
 
-        guard let admin else {
-            fatalError("Admin is nil")
+        guard let leaveRequestData = leaveRequest.toData() else {
+            fatalError()
         }
 
-        // Create an empty JSON object as the request body
-        let emptyBody = try? JSONSerialization.data(withJSONObject: [:], options: [])
-
-        let serverResponse: ServerResponse? = await MiddlewareManager.shared.post(
-            url: "/hospital/\(admin.id)/leave-requests/\(request.id)/approve",
-            body: emptyBody ?? Data()
-        )
-
+        let serverResponse: ServerResponse? = await MiddlewareManager.shared.patch(url: "/staff/leave-request", body: leaveRequestData)
         return serverResponse?.success ?? false
     }
 

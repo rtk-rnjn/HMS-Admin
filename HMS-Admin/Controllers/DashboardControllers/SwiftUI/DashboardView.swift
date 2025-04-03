@@ -15,39 +15,7 @@ struct DashboardView: View {
     @State private var showNotifications = false
     @State private var selectedTimeRange = "Today"
     @State private var showProfile = false
-    @State private var leaveRequests: [LeaveRequest] = [
-        // Sample leave request data
-        LeaveRequest(
-            doctorId: "1",
-            doctorName: "Dr. John Smith",
-            department: "Cardiology",
-            startDate: Calendar.current.date(byAdding: .day, value: 5, to: Date()) ?? Date(),
-            endDate: Calendar.current.date(byAdding: .day, value: 10, to: Date()) ?? Date(),
-            reason: "Annual family vacation",
-            status: .pending,
-            createdAt: Date()
-        ),
-        LeaveRequest(
-            doctorId: "2",
-            doctorName: "Dr. Sarah Johnson",
-            department: "Pediatrics",
-            startDate: Calendar.current.date(byAdding: .day, value: 3, to: Date()) ?? Date(),
-            endDate: Calendar.current.date(byAdding: .day, value: 4, to: Date()) ?? Date(),
-            reason: "Medical conference attendance",
-            status: .pending,
-            createdAt: Calendar.current.date(byAdding: .hour, value: -2, to: Date()) ?? Date()
-        ),
-        LeaveRequest(
-            doctorId: "3",
-            doctorName: "Dr. Michael Chen",
-            department: "Neurology",
-            startDate: Calendar.current.date(byAdding: .day, value: 7, to: Date()) ?? Date(),
-            endDate: Calendar.current.date(byAdding: .day, value: 9, to: Date()) ?? Date(),
-            reason: "Personal emergency",
-            status: .pending,
-            createdAt: Calendar.current.date(byAdding: .hour, value: -5, to: Date()) ?? Date()
-        )
-    ]
+    @State private var leaveRequests: [LeaveRequest] = []
 
     var activeDoctorCount: Int = 0
     var patientCount: Int = 0
@@ -126,7 +94,7 @@ struct DashboardView: View {
 
                 // Leave Requests Section
                 PendingLeaveRequestsView(
-                    leaveRequests: leaveRequests.filter { $0.status == .pending },
+                    leaveRequests: leaveRequests.filter { !$0.approved },
                     onApprove: handleLeaveApproval,
                     onReject: handleLeaveRejection,
                     processingRequests: processingRequests
@@ -183,7 +151,6 @@ struct DashboardView: View {
         // Optimistically update local state
         if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
             var updatedRequest = request
-            updatedRequest.status = .approved
             leaveRequests[index] = updatedRequest
         }
 
@@ -199,7 +166,6 @@ struct DashboardView: View {
                     // Revert local state if API call failed
                     if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
                         var revertedRequest = request
-                        revertedRequest.status = .pending
                         leaveRequests[index] = revertedRequest
                     }
                     // Show error message
@@ -219,7 +185,6 @@ struct DashboardView: View {
         // Optimistically update local state
         if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
             var updatedRequest = request
-            updatedRequest.status = .rejected
             leaveRequests[index] = updatedRequest
         }
 
@@ -235,7 +200,6 @@ struct DashboardView: View {
                     // Revert local state if API call failed
                     if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
                         var revertedRequest = request
-                        revertedRequest.status = .pending
                         leaveRequests[index] = revertedRequest
                     }
                     // Show error message

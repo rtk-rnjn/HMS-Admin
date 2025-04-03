@@ -7,7 +7,7 @@
 
 import Foundation
 
-private let endpoint = "http://13.233.139.216:8080"
+private let endpoint = "http://localhost:8080"
 
 actor MiddlewareManager {
 
@@ -21,7 +21,7 @@ actor MiddlewareManager {
         return await request(url: url, method: "GET", queryParameters: queryParameters)
     }
 
-    func post<T: Codable>(url: String, body: Data) async -> T? {
+    func post<T: Codable>(url: String, body: Data?) async -> T? {
         return await request(url: url, method: "POST", body: body)
     }
 
@@ -50,7 +50,7 @@ actor MiddlewareManager {
         }
 
         guard let url = URL(string: urlString) else {
-            print("Error: Could not create URL from \(urlString)")
+            Utils.logger.error("Error: Could not create URL from \(urlString)")
             return nil
         }
 
@@ -60,7 +60,7 @@ actor MiddlewareManager {
             request.httpBody = body
             // Print the request body for debugging
             if let jsonString = String(data: body, encoding: .utf8) {
-                print("Request Body: \(jsonString)")
+                Utils.logger.debug("Request Data: \(jsonString)")
             }
         }
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -73,19 +73,19 @@ actor MiddlewareManager {
             let (data, response) = try await URLSession.shared.data(for: request)
 
             if let jsonString = String(data: data, encoding: .utf8) {
-                print("Response Data: \(jsonString)")
+                Utils.logger.debug("Response Data: \(jsonString)")
             }
 
             guard let httpResponse = response as? HTTPURLResponse else {
-                print("Error: Not an HTTP response")
+                Utils.logger.error("Error: Could not get HTTP response")
                 return nil
             }
 
-            print("Status code: \(httpResponse.statusCode)")
+            Utils.logger.debug("HTTP Status Code: \(httpResponse.statusCode): \(httpResponse.url?.absoluteString ?? "")")
 
             if httpResponse.statusCode != 200 {
                 if let errorJson = try? JSONSerialization.jsonObject(with: data) as? [String: Any] {
-                    print("Error response: \(errorJson)")
+                    Utils.logger.error("Error: \(errorJson)")
                 }
                 return nil
             }
@@ -95,7 +95,7 @@ actor MiddlewareManager {
             return try decoder.decode(T.self, from: data)
 
         } catch {
-            print("Network error: \(error)")
+            Utils.logger.critical("Error: \(error)")
             return nil
         }
     }

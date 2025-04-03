@@ -104,8 +104,6 @@ struct ReportsView: View {
                 metricsGridView
                 appointmentsOverviewSection
                 doctorPerformanceSection
-                staffPerformanceSection
-                revenueAnalyticsSection
             }
             .padding(.vertical)
         }

@@ -64,7 +64,7 @@ struct PendingLeaveRequestsView: View {
 
     // Define a consistent card size
     private let cardWidth: CGFloat = 300
-    private let cardHeight: CGFloat = 280
+    private let cardHeight: CGFloat = 180
 
 }
 
@@ -94,10 +94,10 @@ struct LeaveRequestCard: View {
                     )
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(request.doctorName)
+                    Text(request.doctor?.fullName ?? "Unknown Doctor")
                         .font(.headline)
                         .lineLimit(1)
-                    Text(request.department)
+                    Text(request.doctor?.department ?? "Unknown Department")
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         .lineLimit(1)
@@ -105,30 +105,13 @@ struct LeaveRequestCard: View {
 
                 Spacer()
 
-                // Leave duration badge
-                Text("\(calculateLeaveDays()) days")
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.blue)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.blue.opacity(0.1))
-                    .cornerRadius(8)
             }
             .padding(.bottom, 12)
 
-            Divider()
-
-            // Leave details
             VStack(alignment: .leading, spacing: 8) {
-                LeaveDetailRow(icon: "calendar", label: "From", value: formatDate(request.startDate))
-                LeaveDetailRow(icon: "calendar", label: "To", value: formatDate(request.endDate))
                 LeaveDetailRow(icon: "text.alignleft", label: "Reason", value: request.reason, maxLines: 2)
             }
             .padding(.vertical, 12)
-            .frame(maxHeight: .infinity) // This will ensure this section expands to fill available space
-
-            Divider()
 
             // Action buttons
             HStack(spacing: 12) {
@@ -189,7 +172,6 @@ struct LeaveRequestCard: View {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color.gray.opacity(0.3), lineWidth: 1)
         )
-        .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
         // Apply the consistent size provided as parameters
         .frame(width: cardWidth, height: cardHeight)
         .opacity(isProcessing ? 0.7 : 1.0)
@@ -203,11 +185,6 @@ struct LeaveRequestCard: View {
         return formatter.string(from: date)
     }
 
-    private func calculateLeaveDays() -> Int {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: request.startDate, to: request.endDate)
-        return max(1, (components.day ?? 0) + 1) // Add 1 to include both start and end dates
-    }
 }
 
 struct LeaveDetailRow: View {
@@ -259,36 +236,16 @@ struct LeaveRequestListView: View {
                         )
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(request.doctorName)
+                        Text(request.doctor?.fullName ?? "Unknown Doctor")
                             .font(.headline)
-                        Text(request.department)
+                        Text(request.doctor?.department ?? "Unknown Department")
                             .font(.subheadline)
-                            .foregroundColor(.gray)
-                    }
-
-                    Spacer()
-
-                    VStack(alignment: .trailing, spacing: 4) {
-                        // Leave duration badge
-                        Text("\(calculateLeaveDays(for: request)) days")
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .foregroundColor(.blue)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.blue.opacity(0.1))
-                            .cornerRadius(8)
-
-                        Text(formatDate(request.createdAt))
-                            .font(.caption)
                             .foregroundColor(.gray)
                     }
                 }
 
                 // Leave details
                 VStack(alignment: .leading, spacing: 8) {
-                    LeaveDetailRow(icon: "calendar", label: "From", value: formatDate(request.startDate))
-                    LeaveDetailRow(icon: "calendar", label: "To", value: formatDate(request.endDate))
                     LeaveDetailRow(icon: "text.alignleft", label: "Reason", value: request.reason)
                 }
 
@@ -358,9 +315,5 @@ struct LeaveRequestListView: View {
         return formatter.string(from: date)
     }
 
-    private func calculateLeaveDays(for request: LeaveRequest) -> Int {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day], from: request.startDate, to: request.endDate)
-        return max(1, (components.day ?? 0) + 1) // Add 1 to include both start and end dates
-    }
+
 }
