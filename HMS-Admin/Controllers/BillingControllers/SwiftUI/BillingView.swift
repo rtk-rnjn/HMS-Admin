@@ -12,6 +12,10 @@ struct BillingView: View {
     // MARK: Internal
 
     @State var invoices: [RazorpayPaymentlinkResponse]
+    @State private var selectedInvoice: RazorpayPaymentlinkResponse?
+    
+    // Haptic feedback generator
+    @State private var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
     
     init(invoices: [RazorpayPaymentlinkResponse] = []) {
         _invoices = State(initialValue: invoices)
@@ -38,6 +42,12 @@ struct BillingView: View {
                     ForEach(invoices) { invoice in
                         InvoiceCard(invoice: invoice)
                             .padding(.horizontal)
+                            .onTapGesture {
+                                // Trigger haptic feedback
+                                impactFeedback.prepare()
+                                impactFeedback.impactOccurred(intensity: 0.5)
+                                selectedInvoice = invoice
+                            }
                     }
                 }
                 .padding(.bottom)
@@ -46,6 +56,11 @@ struct BillingView: View {
         .background(Color(.systemGroupedBackground))
         .navigationTitle("Billing")
         .navigationBarTitleDisplayMode(.large)
+        .sheet(item: $selectedInvoice) { invoice in
+            NavigationView {
+                PaymentDetailView(invoice: invoice)
+            }
+        }
     }
 
     // MARK: Private
@@ -163,7 +178,6 @@ struct InvoiceCard: View {
         .cornerRadius(12)
     }
 }
-
 
 // MARK: - Sample Data
 extension BillingView {
