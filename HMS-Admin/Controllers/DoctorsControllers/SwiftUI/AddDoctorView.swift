@@ -181,9 +181,9 @@ struct AddDoctorView: View {
                                     HStack {
                                         Image(systemName: "calendar")
                                             .foregroundColor(Color("iconBlue"))
-                                        Text("Date of Birth")
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                    Text("Date of Birth")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
                                     }
 
                                     Button(action: {
@@ -227,9 +227,9 @@ struct AddDoctorView: View {
                                     HStack {
                                         Image(systemName: "person.2.fill")
                                             .foregroundColor(Color("iconBlue"))
-                                        Text("Gender")
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                    Text("Gender")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
                                     }
 
                                     Menu {
@@ -248,7 +248,7 @@ struct AddDoctorView: View {
                                         }
                                         .padding()
                                         .frame(maxWidth: .infinity)
-                                        .background(Color.white)
+                                    .background(Color.white)
                                         .cornerRadius(10)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 10)
@@ -282,9 +282,9 @@ struct AddDoctorView: View {
                                     HStack {
                                         Image(systemName: "clock.fill")
                                             .foregroundColor(Color("iconBlue"))
-                                        Text("Years of Experience")
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                    Text("Years of Experience")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
                                     }
 
                                     Menu {
@@ -347,9 +347,9 @@ struct AddDoctorView: View {
                                     HStack {
                                         Image(systemName: "building.2.fill")
                                             .foregroundColor(Color("iconBlue"))
-                                        Text("Department")
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                    Text("Department")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
                                     }
 
                                     Menu {
@@ -403,15 +403,15 @@ struct AddDoctorView: View {
                                     HStack {
                                         Image(systemName: "cross.case.fill")
                                             .foregroundColor(Color("iconBlue"))
-                                        Text("Specializations")
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                    Text("Specializations")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
                                     }
 
                                     Button(action: {
                                         if !department.isEmpty {
                                             specializationHasInteracted = true
-                                            showingSpecializationDropdown = true
+                                        showingSpecializationDropdown = true
                                         }
                                     }) {
                                         HStack {
@@ -499,9 +499,9 @@ struct AddDoctorView: View {
                                     HStack {
                                         Image(systemName: "clock.badge.checkmark")
                                             .foregroundColor(Color("iconBlue"))
-                                        Text("Working Hours")
-                                            .font(.subheadline)
-                                            .foregroundColor(.gray)
+                                    Text("Working Hours")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
                                     }
 
                                     HStack(spacing: 16) {
@@ -511,9 +511,9 @@ struct AddDoctorView: View {
                                             showingTimePickerSheet = true
                                         }) {
                                             VStack(alignment: .leading, spacing: 4) {
-                                                Text("Start Time")
+                                            Text("Start Time")
                                                     .font(.caption)
-                                                    .foregroundColor(.gray)
+                                                .foregroundColor(.gray)
                                                 HStack {
                                                     Text(startTime.formatted(date: .omitted, time: .shortened))
                                                         .font(.title3)
@@ -539,9 +539,9 @@ struct AddDoctorView: View {
                                             showingTimePickerSheet = true
                                         }) {
                                             VStack(alignment: .leading, spacing: 4) {
-                                                Text("End Time")
+                                            Text("End Time")
                                                     .font(.caption)
-                                                    .foregroundColor(.gray)
+                                                .foregroundColor(.gray)
                                                 HStack {
                                                     Text(endTime.formatted(date: .omitted, time: .shortened))
                                                         .font(.title3)
@@ -549,11 +549,11 @@ struct AddDoctorView: View {
                                                     Image(systemName: "chevron.down")
                                                         .foregroundColor(.gray)
                                                         .font(.caption)
-                                                }
-                                            }
-                                            .padding()
+                                        }
+                                    }
+                                    .padding()
                                             .frame(maxWidth: .infinity)
-                                            .background(Color.white)
+                                    .background(Color.white)
                                             .cornerRadius(10)
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 10)
@@ -990,7 +990,7 @@ struct AddDoctorView: View {
         if !lastName.isEmpty {
             if lastName.count < 2 {
                 lastNameError = "Last name must be at least 2 characters"
-                isValid = false
+            isValid = false
             } else if lastName.count > 50 {
                 lastNameError = "Last name must be less than 50 characters"
                 isValid = false
@@ -1037,20 +1037,20 @@ struct AddDoctorView: View {
         // Consultation Fee Validation
         if consultationFee.isEmpty {
             consultationFeeError = "Consultation fee is required"
-            isValid = false
-        } else if let fee = Double(consultationFee) {
+                isValid = false
+            } else if let fee = Double(consultationFee) {
             if fee <= 0 {
                 consultationFeeError = "Consultation fee must be greater than 0"
-                isValid = false
+                    isValid = false
             } else if fee > 10000 {
                 consultationFeeError = "Consultation fee must be less than 10,000"
                 isValid = false
             } else {
                 consultationFeeError = ""
-            }
-        } else {
+                }
+            } else {
             consultationFeeError = "Please enter a valid amount"
-            isValid = false
+                isValid = false
         }
 
         // Department Validation

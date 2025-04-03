@@ -38,6 +38,10 @@ class SignInViewController: UIViewController {
 
         navigationItem.hidesBackButton = true
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
 
     @IBAction func emailFieldChanged(_ sender: UITextField) {
         signInButton.isEnabled = isValidInputs
@@ -57,6 +61,8 @@ class SignInViewController: UIViewController {
             eyeButton.tintColor = .tintColor
         }
     }
+    
+    
 
     @IBAction func signInButtonTapped(_ sender: UIButton) {
         Task {

@@ -13,6 +13,11 @@ struct CreateAnnouncementView: View {
     @State private var category: AnnouncementCategory = .general
     @State private var broadcastTo: [String] = []
     @Environment(\.dismiss) private var dismiss
+    
+    // Haptic feedback generators
+    @State private var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+    @State private var notificationFeedback = UINotificationFeedbackGenerator()
+    @State private var selectionFeedback = UISelectionFeedbackGenerator()
 
     var onSave: ((Announcement) -> Void)?
 
@@ -23,11 +28,21 @@ struct CreateAnnouncementView: View {
             Form {
                 Section(header: Text("Title")) {
                     TextField("Enter title", text: $title)
+                        .onChange(of: title) { _ in
+                            // Light haptic when typing title
+                            impactFeedback.prepare()
+                            impactFeedback.impactOccurred(intensity: 0.4)
+                        }
                 }
 
                 Section(header: Text("Body")) {
                     TextEditor(text: $message)
                         .frame(minHeight: 100)
+                        .onChange(of: message) { _ in
+                            // Very light haptic when typing message
+                            impactFeedback.prepare()
+                            impactFeedback.impactOccurred(intensity: 0.3)
+                        }
                 }
 
                 Section(header: Text("Category")) {
@@ -37,6 +52,11 @@ struct CreateAnnouncementView: View {
                         }
                     }
                     .pickerStyle(MenuPickerStyle())
+                    .onChange(of: category) { _ in
+                        // Selection haptic when changing category
+                        selectionFeedback.prepare()
+                        selectionFeedback.selectionChanged()
+                    }
                 }
 
                 Section(header: Text("Broadcast To")) {
@@ -44,6 +64,10 @@ struct CreateAnnouncementView: View {
                         Toggle(recipient, isOn: Binding(
                             get: { broadcastTo.contains(recipient) },
                             set: { isSelected in
+                                // Medium impact when toggling recipients
+                                impactFeedback.prepare()
+                                impactFeedback.impactOccurred(intensity: 0.7)
+                                
                                 if isSelected {
                                     broadcastTo.append(recipient)
                                 } else {
@@ -58,12 +82,19 @@ struct CreateAnnouncementView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
+                        // Error haptic when canceling
+                        notificationFeedback.prepare()
+                        notificationFeedback.notificationOccurred(.error)
                         dismiss()
                     }
                 }
 
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
+                    Button("Send") {
+                        // Success haptic when sending
+                        notificationFeedback.prepare()
+                        notificationFeedback.notificationOccurred(.success)
+                        
                         let newAnnouncement = Announcement(title: title, body: message, broadcastTo: broadcastTo, category: category)
                         onSave?(newAnnouncement)
                         dismiss()
