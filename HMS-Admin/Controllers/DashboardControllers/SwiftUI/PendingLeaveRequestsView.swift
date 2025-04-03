@@ -5,6 +5,10 @@ struct PendingLeaveRequestsView: View {
     var onApprove: (LeaveRequest) -> Void
     var onReject: (LeaveRequest) -> Void
     var processingRequests: Set<String> = []
+    
+    // Define a consistent card size
+    private let cardWidth: CGFloat = 300
+    private let cardHeight: CGFloat = 280
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -44,16 +48,17 @@ struct PendingLeaveRequestsView: View {
                                 request: request,
                                 onApprove: onApprove,
                                 onReject: onReject,
-                                isProcessing: processingRequests.contains(request.id)
+                                isProcessing: processingRequests.contains(request.id),
+                                cardWidth: cardWidth,
+                                cardHeight: cardHeight
                             )
                         }
                     }
+                    .padding(.leading, 0)
+                    .padding(.trailing)
                 }
             }
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
     }
 }
 
@@ -65,6 +70,10 @@ struct LeaveRequestCard: View {
     let onApprove: (LeaveRequest) -> Void
     let onReject: (LeaveRequest) -> Void
     let isProcessing: Bool
+    
+    // Add parameters for card size
+    let cardWidth: CGFloat
+    let cardHeight: CGFloat
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -111,6 +120,7 @@ struct LeaveRequestCard: View {
                 LeaveDetailRow(icon: "text.alignleft", label: "Reason", value: request.reason, maxLines: 2)
             }
             .padding(.vertical, 12)
+            .frame(maxHeight: .infinity) // This will ensure this section expands to fill available space
 
             Divider()
 
@@ -124,7 +134,7 @@ struct LeaveRequestCard: View {
                     HStack {
                         if isProcessing {
                             ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .red))
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                 .scaleEffect(0.8)
                         } else {
                             Text("Reject")
@@ -169,8 +179,13 @@ struct LeaveRequestCard: View {
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+        )
         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-        .frame(width: 300, height: 280)
+        // Apply the consistent size provided as parameters
+        .frame(width: cardWidth, height: cardHeight)
         .opacity(isProcessing ? 0.7 : 1.0)
     }
 
@@ -289,10 +304,10 @@ struct LeaveRequestListView: View {
                         }
                         .font(.subheadline)
                         .fontWeight(.medium)
-                        .foregroundColor(.red)
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(Color("disableBlue"))
+                        .background(Color("airleBlue"))
                         .cornerRadius(8)
                     }
                     .disabled(processingRequests.contains(request.id))
@@ -316,7 +331,7 @@ struct LeaveRequestListView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(Color.blue)
+                        .background(Color("successBlue"))
                         .cornerRadius(8)
                     }
                     .disabled(processingRequests.contains(request.id))
