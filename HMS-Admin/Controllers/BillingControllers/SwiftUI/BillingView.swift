@@ -2,7 +2,7 @@
 //  BillingView.swift
 //  HMS-Admin
 //
-//  Created by RITIK RANJAN on 27/03/25.
+
 //
 
 import SwiftUI
@@ -11,8 +11,11 @@ struct BillingView: View {
 
     // MARK: Internal
 
-    // Sample data - would be replaced with real data from your database
-    var invoices: [RazorpayPaymentlinkResponse] = []
+    @State var invoices: [RazorpayPaymentlinkResponse]
+    
+    init(invoices: [RazorpayPaymentlinkResponse] = []) {
+        _invoices = State(initialValue: invoices)
+    }
 
     var body: some View {
         ScrollView {
@@ -27,21 +30,14 @@ struct BillingView: View {
                         .fontWeight(.semibold)
 
                     Spacer()
-
-                    Button(action: {
-                        // Action to view all invoices
-                    }) {
-                        Text("View All")
-                            .font(.subheadline)
-                            .foregroundColor(.blue)
-                    }
                 }
                 .padding(.horizontal)
 
                 // Invoice List
                 LazyVStack(spacing: 12) {
-                    ForEach(invoices) { _ in
-
+                    ForEach(invoices) { invoice in
+                        InvoiceCard(invoice: invoice)
+                            .padding(.horizontal)
                     }
                 }
                 .padding(.bottom)
@@ -54,9 +50,15 @@ struct BillingView: View {
 
     // MARK: Private
 
-    private var totalRevenue: Double = 0
+    private var totalRevenue: Double {
+        invoices.filter { $0.payments.first?.status == "captured" }
+            .reduce(0) { $0 + Double($1.amountPaid) / 100.0 }
+    }
 
-    private var totalRefunds: Double = 0
+    private var totalRefunds: Double {
+        abs(invoices.filter { $0.payments.first?.status == "refunded" }
+            .reduce(0) { $0 + Double($1.amountPaid) / 100.0 })
+    }
 
     // Summary Cards View
     private var summaryCardsView: some View {
@@ -65,7 +67,7 @@ struct BillingView: View {
             SummaryCardView(
                 title: "Total Revenue",
                 amount: totalRevenue,
-                icon: "dollarsign.circle.fill",
+                icon: "indianrupee.circle.fill",
                 color: .blue
             )
 
@@ -103,7 +105,7 @@ struct SummaryCardView: View {
             Spacer()
 
             // Amount
-            Text(String(format: "$%.2f", amount))
+            Text(String(format: "₹%.2f", amount))
                 .font(.title2)
                 .fontWeight(.bold)
 
@@ -122,71 +124,106 @@ struct SummaryCardView: View {
 }
 
 struct InvoiceCard: View {
-    let invoice: Invoice
+    let invoice: RazorpayPaymentlinkResponse
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(invoice.patientName)
-                        .font(.headline)
-                    Text(invoice.date.formatted(date: .abbreviated, time: .shortened))
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                }
-
-                Spacer()
-
-                Text(String(format: "$%.2f", invoice.amount))
-                    .font(.title3)
-                    .fontWeight(.semibold)
-                    .foregroundColor(invoice.status == "Completed" ? .blue :
-                                   invoice.status == "Cancelled" ? .red : .orange)
-            }
-
-            HStack {
-                // Payment method
-                Label("Credit Card", systemImage: "creditcard")
-                    .font(.caption)
+        HStack(spacing: 16) {
+            // Wallet Icon
+            Image(systemName: "wallet.pass.fill")
+                .font(.title2)
+                .foregroundColor(.blue)
+                .frame(width: 40, height: 40)
+                .background(Color.blue.opacity(0.1))
+                .clipShape(Circle())
+            
+            // Content
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Appointment Done #\(invoice.id)")
+                    .font(.system(size: 17, weight: .semibold))
+                
+                Text(invoice.createdAt.formatted(date: .omitted, time: .shortened))
+                    .font(.subheadline)
                     .foregroundColor(.secondary)
-
-                Spacer()
-
-                InvoiceStatusBadge(status: invoice.status)
+            }
+            
+            Spacer()
+            
+            // Amount and Status
+            VStack(alignment: .trailing, spacing: 4) {
+                Text(String(format: "₹%.2f", Double(invoice.amountPaid) / 100.0))
+                    .font(.system(size: 17, weight: .semibold))
+                
+                Text(invoice.payments.first?.status == "captured" ? "Completed" : "Refunded")
+                    .font(.subheadline)
+                    .foregroundColor(invoice.payments.first?.status == "captured" ? .green : .red)
             }
         }
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.03), radius: 3, x: 0, y: 1)
     }
 }
 
-struct InvoiceStatusBadge: View {
-    let status: String
 
-    var backgroundColor: Color {
-        switch status {
-        case "Completed": return .blue
-        case "Pending": return .orange
-        case "Cancelled": return .red
-        default: return .gray
-        }
-    }
-
-    var body: some View {
-        Text(status)
-            .font(.caption)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(backgroundColor.opacity(0.15))
-            .foregroundColor(backgroundColor)
-            .cornerRadius(6)
-    }
-}
-
-#Preview {
-    NavigationView {
-        BillingView()
-    }
+// MARK: - Sample Data
+extension BillingView {
+    static let sampleInvoices: [RazorpayPaymentlinkResponse] = [
+        RazorpayPaymentlinkResponse(
+            id: "pay_123456",
+            amountPaid: 45800, // ₹458.00
+            notes: RazorpayNotes(
+                doctorId: "doc_1",
+                patientId: "pat_1",
+                endDate: Date(),
+                startDate: Date()
+            ),
+            payments: [
+                RazorpayPayment(
+                    amount: 45800,
+                    createdAt: Date().timeIntervalSince1970,
+                    method: "card",
+                    status: "captured"
+                )
+            ],
+            _createdAt: Date().timeIntervalSince1970
+        ),
+        RazorpayPaymentlinkResponse(
+            id: "pay_123458",
+            amountPaid: 8900, // ₹89.00
+            notes: RazorpayNotes(
+                doctorId: "doc_3",
+                patientId: "pat_3",
+                endDate: Date(),
+                startDate: Date()
+            ),
+            payments: [
+                RazorpayPayment(
+                    amount: 8900,
+                    createdAt: Date().timeIntervalSince1970,
+                    method: "card",
+                    status: "refunded"
+                )
+            ],
+            _createdAt: Date().timeIntervalSince1970 - 7200 // 2 hours ago
+        ),
+        RazorpayPaymentlinkResponse(
+            id: "pay_123459",
+            amountPaid: 6500, // ₹65.00
+            notes: RazorpayNotes(
+                doctorId: "doc_4",
+                patientId: "pat_4",
+                endDate: Date(),
+                startDate: Date()
+            ),
+            payments: [
+                RazorpayPayment(
+                    amount: 6500,
+                    createdAt: Date().timeIntervalSince1970,
+                    method: "card",
+                    status: "captured"
+                )
+            ],
+            _createdAt: Date().timeIntervalSince1970 - 10800 // 3 hours ago
+        )
+    ]
 }
