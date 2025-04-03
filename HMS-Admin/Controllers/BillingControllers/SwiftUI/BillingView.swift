@@ -42,8 +42,7 @@ struct BillingView: View {
                 // Invoice List
                 LazyVStack(spacing: 12) {
                     ForEach(invoices) { invoice in
-                        InvoiceCard(invoice: invoice)
-                            .padding(.horizontal)
+                        
                     }
                 }
                 .padding(.bottom)
