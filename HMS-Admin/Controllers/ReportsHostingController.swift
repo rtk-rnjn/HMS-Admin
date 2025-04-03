@@ -10,8 +10,6 @@ import SwiftUI
 
 class ReportsHostingController: UIHostingController<ReportsView> {
 
-    // MARK: Lifecycle
-
     init() {
         let reportsView = ReportsView()
         super.init(rootView: reportsView)

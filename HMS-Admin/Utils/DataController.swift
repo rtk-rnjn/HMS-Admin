@@ -24,6 +24,7 @@ struct Log: Codable, Sendable, Hashable, Identifiable {
         case message
         case createdAt = "created_at"
     }
+
     var id: String = UUID().uuidString
     var message: String
     var createdAt: Date

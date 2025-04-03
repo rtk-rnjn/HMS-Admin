@@ -44,6 +44,15 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         navigationController?.present(reportsController, animated: true)
     }
 
+    func fetchLogs() async -> [Log] {
+        let logs: [Log]? = await DataController.shared.fetchLogs()
+        guard let logs else {
+            return []
+        }
+
+        return logs
+    }
+
     // MARK: Private
 
     private func updateUI() {
@@ -94,15 +103,6 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         }
 
         return patients.count
-    }
-
-    func fetchLogs() async -> [Log] {
-        let logs: [Log]? = await DataController.shared.fetchLogs()
-        guard let logs else {
-            return []
-        }
-
-        return logs
     }
 
 }
