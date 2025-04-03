@@ -332,7 +332,7 @@ struct MetricCardView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: metric.icon)
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.headline)
                     .foregroundColor(metric.color)
                     .frame(width: 30, height: 30)
                     .background(metric.color.opacity(0.1))
@@ -433,7 +433,7 @@ struct DoctorCardView: View {
                 HStack(spacing: 4) {
                     ForEach(1...5, id: \.self) { index in
                         Image(systemName: index <= Int(doctor.rating) ? "star.fill" : "star")
-                            .font(.system(size: 16))
+                            .font(.callout)
                             .foregroundColor(index <= Int(doctor.rating) ? .yellow : Color(UIColor.systemGray4))
                     }
                 }
@@ -449,7 +449,7 @@ struct DoctorCardView: View {
                 HStack(spacing: 6) {
                     Image(systemName: "person.fill")
                         .foregroundColor(Color("iconBlue"))
-                        .font(.system(size: 16))
+                        .font(.callout)
 
                     Text("\(doctor.patients)")
                         .font(.headline)

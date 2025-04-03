@@ -154,7 +154,7 @@ struct InvoiceCard: View {
             // Content
             VStack(alignment: .leading, spacing: 4) {
                 Text("Appointment Done #\(invoice.id)")
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.body)
                 
                 Text(invoice.createdAt.formatted(date: .omitted, time: .shortened))
                     .font(.subheadline)
@@ -166,7 +166,7 @@ struct InvoiceCard: View {
             // Amount and Status
             VStack(alignment: .trailing, spacing: 4) {
                 Text(String(format: "₹%.2f", Double(invoice.amountPaid) / 100.0))
-                    .font(.system(size: 17, weight: .semibold))
+                    .font(.body)
                 
                 Text(invoice.payments.first?.status == "captured" ? "Completed" : "Refunded")
                     .font(.subheadline)
