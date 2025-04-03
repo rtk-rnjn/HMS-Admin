@@ -9,23 +9,11 @@ import SwiftUI
 
 struct BillingView: View {
     // Sample data - would be replaced with real data from your database
-    var invoices: [Invoice] = [
-        Invoice(patientName: "John Smith", amount: 450.00, status: "Completed"),
-        Invoice(patientName: "Sarah Johnson", amount: 275.50, status: "Completed"),
-        Invoice(patientName: "Mike Williams", amount: 850.00, status: "Pending"),
-        Invoice(patientName: "Emily Davis", amount: 125.00, status: "Completed"),
-        Invoice(patientName: "Robert Brown", amount: 350.75, status: "Cancelled"),
-        Invoice(patientName: "Jennifer Wilson", amount: 590.25, status: "Completed")
-    ]
+    var invoices: [RazorpayPaymentlinkResponse] = []
     
-    // Computed properties for summary cards
-    private var totalRevenue: Double {
-        invoices.filter { $0.status == "Completed" }.reduce(0) { $0 + $1.amount }
-    }
-    
-    private var totalRefunds: Double {
-        invoices.filter { $0.status == "Cancelled" }.reduce(0) { $0 + $1.amount }
-    }
+    private var totalRevenue: Double = 0
+
+    private var totalRefunds: Double = 0
 
     var body: some View {
         ScrollView {

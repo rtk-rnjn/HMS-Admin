@@ -21,8 +21,12 @@ class BillingHostingController: UIHostingController<BillingView> {
         super.viewDidLoad()
 
         Task {
-            // TODO: Fetch Invoice
-            self.rootView.invoices = []
+            guard let bills = await DataController.shared.fetchBills() else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.rootView.invoices = bills
+            }
         }
     }
 }

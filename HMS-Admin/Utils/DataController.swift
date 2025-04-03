@@ -218,6 +218,18 @@ extension DataController {
 
         return await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/logs")
     }
+
+    func fetchBills() async -> [RazorpayPaymentlinkResponse]? {
+        if admin == nil {
+            guard await autoLogin() else { fatalError() }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        return await MiddlewareManager.shared.get(url: "/razorpay-gateway/bills/\(admin.id)")
+    }
 }
 
 extension DataController {
