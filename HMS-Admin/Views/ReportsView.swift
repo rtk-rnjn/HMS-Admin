@@ -27,30 +27,6 @@ struct ReportsView: View {
     @State private var selectedTimeRange = 0 // Only monthly view now
 
     private let timeRanges = ["Month"]
-    
-    private var dateRangeText: String {
-        let now = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d"
-        
-        let calendar = Calendar.current
-        let currentMonth = calendar.component(.month, from: now)
-        let currentYear = calendar.component(.year, from: now)
-        
-        // Get the first day of current month
-        var components = DateComponents()
-        components.year = currentYear
-        components.month = currentMonth
-        components.day = 1
-        let startDate = calendar.date(from: components)!
-        
-        // Get the last day of current month
-        components.month = currentMonth + 1
-        components.day = 0
-        let endDate = calendar.date(from: components)!
-        
-        return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate)), \(currentYear)"
-    }
 
     // Metrics data (sample)
     private let metrics: [MetricData] = [
@@ -94,6 +70,30 @@ struct ReportsView: View {
         RevenueData(month: "May", revenue: 42350),
         RevenueData(month: "Jun", revenue: 45230)
     ]
+
+    private var dateRangeText: String {
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d"
+
+        let calendar = Calendar.current
+        let currentMonth = calendar.component(.month, from: now)
+        let currentYear = calendar.component(.year, from: now)
+
+        // Get the first day of current month
+        var components = DateComponents()
+        components.year = currentYear
+        components.month = currentMonth
+        components.day = 1
+        let startDate = calendar.date(from: components)!
+
+        // Get the last day of current month
+        components.month = currentMonth + 1
+        components.day = 0
+        let endDate = calendar.date(from: components)!
+
+        return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate)), \(currentYear)"
+    }
 
     // MARK: - Content Views
 

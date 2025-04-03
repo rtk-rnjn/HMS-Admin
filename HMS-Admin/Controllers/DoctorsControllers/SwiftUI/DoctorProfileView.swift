@@ -12,11 +12,11 @@ struct DoctorProfileView: View {
     @Environment(\.presentationMode) var presentationMode
     @Environment(\.horizontalSizeClass) var sizeClass
     @State private var showingDeleteConfirmation = false
-    
+
     // Initialize haptic feedback generators
-    private let impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-    private let notificationFeedback = UINotificationFeedbackGenerator()
-    
+    private let impactFeedback: UIImpactFeedbackGenerator = .init(style: .medium)
+    private let notificationFeedback: UINotificationFeedbackGenerator = .init()
+
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {

@@ -45,18 +45,18 @@ struct AnnouncementView: View {
     // MARK: Private
 
     @Environment(\.dismiss) private var dismiss
-    
+
     private var groupedAnnouncements: [Date: [Announcement]] {
         let calendar = Calendar.current
         return Dictionary(grouping: announcements) { announcement in
             calendar.startOfDay(for: announcement.createdAt)
         }
     }
-    
+
     private func formatSectionDate(_ date: Date) -> String {
         let calendar = Calendar.current
         let now = Date()
-        
+
         if calendar.isDateInToday(date) {
             return "Today"
         } else if calendar.isDateInYesterday(date) {

@@ -13,11 +13,11 @@ struct CreateAnnouncementView: View {
     @State private var category: AnnouncementCategory = .general
     @State private var broadcastTo: [String] = []
     @Environment(\.dismiss) private var dismiss
-    
+
     // Haptic feedback generators
-    @State private var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-    @State private var notificationFeedback = UINotificationFeedbackGenerator()
-    @State private var selectionFeedback = UISelectionFeedbackGenerator()
+    @State private var impactFeedback: UIImpactFeedbackGenerator = .init(style: .medium)
+    @State private var notificationFeedback: UINotificationFeedbackGenerator = .init()
+    @State private var selectionFeedback: UISelectionFeedbackGenerator = .init()
 
     var onSave: ((Announcement) -> Void)?
 
@@ -67,7 +67,7 @@ struct CreateAnnouncementView: View {
                                 // Medium impact when toggling recipients
                                 impactFeedback.prepare()
                                 impactFeedback.impactOccurred(intensity: 0.7)
-                                
+
                                 if isSelected {
                                     broadcastTo.append(recipient)
                                 } else {
@@ -94,7 +94,7 @@ struct CreateAnnouncementView: View {
                         // Success haptic when sending
                         notificationFeedback.prepare()
                         notificationFeedback.notificationOccurred(.success)
-                        
+
                         let newAnnouncement = Announcement(title: title, body: message, broadcastTo: broadcastTo, category: category)
                         onSave?(newAnnouncement)
                         dismiss()

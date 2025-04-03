@@ -12,8 +12,8 @@ struct AdminProfileView: View {
 
    @Environment(\.horizontalSizeClass) var sizeClass
     @State private var showLogoutAlert = false
-    @State private var impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
-    @State private var notificationFeedback = UINotificationFeedbackGenerator()
+    @State private var impactFeedback: UIImpactFeedbackGenerator = .init(style: .heavy)
+    @State private var notificationFeedback: UINotificationFeedbackGenerator = .init()
 
     var body: some View {
         ScrollView {

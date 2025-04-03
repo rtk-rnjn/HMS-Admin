@@ -1,12 +1,11 @@
 import SwiftUI
 
 struct AllActivitiesView: View {
+
+    // MARK: Internal
+
     let logs: [Log]
-    @Environment(\.dismiss) private var dismiss
-    
-    // Haptic feedback generator
-    @State private var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-    
+
     var body: some View {
         List(logs, id: \.self) { log in
             ActivityRow(log: log)
@@ -19,4 +18,12 @@ struct AllActivitiesView: View {
         .navigationTitle("Recent Activity")
         .navigationBarTitleDisplayMode(.large)
     }
-} 
+
+    // MARK: Private
+
+    @Environment(\.dismiss) private var dismiss
+
+    // Haptic feedback generator
+    @State private var impactFeedback: UIImpactFeedbackGenerator = .init(style: .medium)
+
+}

@@ -9,17 +9,15 @@ import SwiftUI
 
 struct BillingView: View {
 
-    // MARK: Internal
+    // MARK: Lifecycle
 
-    @State var invoices: [RazorpayPaymentlinkResponse]
-    @State private var selectedInvoice: RazorpayPaymentlinkResponse?
-    
-    // Haptic feedback generator
-    @State private var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
-    
     init(invoices: [RazorpayPaymentlinkResponse] = []) {
         _invoices = State(initialValue: invoices)
     }
+
+    // MARK: Internal
+
+    @State var invoices: [RazorpayPaymentlinkResponse]
 
     var body: some View {
         ScrollView {
@@ -64,6 +62,11 @@ struct BillingView: View {
     }
 
     // MARK: Private
+
+    @State private var selectedInvoice: RazorpayPaymentlinkResponse?
+
+    // Haptic feedback generator
+    @State private var impactFeedback: UIImpactFeedbackGenerator = .init(style: .medium)
 
     private var totalRevenue: Double {
         invoices.filter { $0.payments.first?.status == "captured" }
@@ -150,24 +153,24 @@ struct InvoiceCard: View {
                 .frame(width: 40, height: 40)
                 .background(Color.blue.opacity(0.1))
                 .clipShape(Circle())
-            
+
             // Content
             VStack(alignment: .leading, spacing: 4) {
                 Text("Appointment Done #\(invoice.id)")
                     .font(.body)
-                
+
                 Text(invoice.createdAt.formatted(date: .omitted, time: .shortened))
                     .font(.subheadline)
                     .foregroundColor(.secondary)
             }
-            
+
             Spacer()
-            
+
             // Amount and Status
             VStack(alignment: .trailing, spacing: 4) {
                 Text(String(format: "₹%.2f", Double(invoice.amountPaid) / 100.0))
                     .font(.body)
-                
+
                 Text(invoice.payments.first?.status == "captured" ? "Completed" : "Refunded")
                     .font(.subheadline)
                     .foregroundColor(invoice.payments.first?.status == "captured" ? .green : .red)
