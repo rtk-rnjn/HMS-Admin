@@ -9,6 +9,9 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
+// Import DoctorSuccessView
+@_spi(HMS) import HMS_Admin
+
 struct AddDoctorView: View {
 
     // MARK: Lifecycle
@@ -688,6 +691,20 @@ struct AddDoctorView: View {
                 }
                 .presentationDetents([.height(300)])
             }
+            .fullScreenCover(isPresented: $showingSuccessView) {
+                if let doctor = savedDoctor {
+                    DoctorSuccessView(
+                        doctor: doctor,
+                        onGoToHome: {
+                            dismiss()
+                        },
+                        onAddAnotherDoctor: {
+                            showingSuccessView = false
+                            resetForm()
+                        }
+                    )
+                }
+            }
             .navigationTitle(doctor == nil ? "Add Doctor" : "Edit Doctor")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
@@ -1082,8 +1099,10 @@ struct AddDoctorView: View {
         isFormValid = validateForm()
     }
 
-    private func saveDoctor() {
+    @State private var showingSuccessView = false
+    @State private var savedDoctor: Staff?
 
+    private func saveDoctor() {
         // Parse specializations correctly - they're already comma-separated from the multi-selection
         let specializations = specialization.trimmingCharacters(in: .whitespacesAndNewlines)
         let fee = Double(consultationFee) ?? 0.0
@@ -1100,21 +1119,6 @@ struct AddDoctorView: View {
         }
 
         isLoading = true
-
-        _ = Staff(
-            firstName: firstName,
-            lastName: lastName.isEmpty ? nil : lastName,
-            gender: selectedGender,
-            emailAddress: email,
-            dateOfBirth: dateOfBirth ?? Date(), // Provide a default, though this shouldn't happen due to validation
-            password: "default123",
-            contactNumber: contactNumber,
-            specialization: specialization,
-            department: department,
-            licenseId: medicalLicenseNumber,
-            yearOfExperience: yearsOfExperience,
-            role: .doctor
-        )
 
         if let existingDoctor = doctor {
             // Update existing doctor
@@ -1164,12 +1168,20 @@ struct AddDoctorView: View {
             newDoctor.workingHours = workingHours
 
             Task {
-                guard (await DataController.shared.addDoctor(newDoctor)) != nil else {
+                guard let savedDoctor = await DataController.shared.addDoctor(newDoctor) else {
+                    isLoading = false
                     return
                 }
 
+                // Store the saved doctor before resetting the form
+                self.savedDoctor = savedDoctor
+                
+                // Send welcome email
                 printEmail(to: email, name: "\(firstName) \(lastName)", password: password)
-                dismiss()
+                
+                // Show success view
+                showingSuccessView = true
+                isLoading = false
             }
         }
     }
@@ -1214,6 +1226,45 @@ struct AddDoctorView: View {
         print("")
         print("Best regards,")
         print("The HMS Team")
+    }
+
+    private func resetForm() {
+        // Reset all form fields
+        firstName = ""
+        lastName = ""
+        contactNumber = ""
+        email = ""
+        dateOfBirth = nil
+        selectedGender = .male
+        medicalLicenseNumber = ""
+        yearsOfExperience = 0
+        consultationFee = ""
+        department = ""
+        specialization = ""
+        selectedSpecializations = []
+        startTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? Date()
+        endTime = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
+        selectedDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        
+        // Reset validation states
+        firstNameError = ""
+        lastNameError = ""
+        contactNumberError = ""
+        emailError = ""
+        dateOfBirthError = ""
+        medicalLicenseError = ""
+        yearsOfExperienceError = ""
+        consultationFeeError = ""
+        departmentError = ""
+        specializationError = ""
+        
+        // Reset interaction states
+        dateOfBirthHasInteracted = false
+        departmentHasInteracted = false
+        specializationHasInteracted = false
+        
+        // Reset form validity
+        checkFormValidity()
     }
 }
 
@@ -1269,5 +1320,195 @@ struct GenderButton: View {
                 )
         }
         .buttonStyle(PlainButtonStyle())
+    }
+}
+
+// Success View
+struct DoctorSuccessView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var showCheckmark = false
+    @State private var showContent = false
+    @State private var showButtons = false
+    
+    let doctor: Staff
+    var onGoToHome: (() -> Void)?
+    var onAddAnotherDoctor: (() -> Void)?
+    
+    // MARK: - Haptics
+    private func successHaptic() {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
+    
+    private func buttonHaptic() {
+        let generator = UIImpactFeedbackGenerator(style: .medium)
+        generator.impactOccurred()
+    }
+    
+    var body: some View {
+        VStack(spacing: 32) {
+            Spacer()
+            
+            // Success checkmark
+            ZStack {
+                Circle()
+                    .fill(Color.green)
+                    .frame(width: 100, height: 100)
+                    .shadow(color: .green.opacity(0.3), radius: 10, x: 0, y: 5)
+                
+                Image(systemName: "checkmark")
+                    .font(.system(size: 50, weight: .bold))
+                    .foregroundColor(.white)
+            }
+            .scaleEffect(showCheckmark ? 1 : 0.5)
+            .opacity(showCheckmark ? 1 : 0)
+            .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.2), value: showCheckmark)
+            
+            // Success text and Doctor card
+            VStack(spacing: 24) {
+                VStack(spacing: 8) {
+                    Text("Doctor Added Successfully!")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                        .multilineTextAlignment(.center)
+                    
+                    Text("The doctor has been added to the hospital system")
+                        .font(.headline)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                
+                SuccessDoctorCard(doctor: doctor)
+            }
+            .opacity(showContent ? 1 : 0)
+            .offset(y: showContent ? 0 : 20)
+            .animation(.easeOut(duration: 0.4).delay(0.3), value: showContent)
+            
+            Spacer()
+            
+            // Buttons
+            VStack(spacing: 16) {
+                Button {
+                    buttonHaptic()
+                    onGoToHome?()
+                } label: {
+                    HStack {
+                        Image(systemName: "house.fill")
+                        Text("Go to Home")
+                    }
+                    .fontWeight(.semibold)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 54)
+                    .background(Color.blue)
+                    .cornerRadius(14)
+                    .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
+                }
+                
+                Button {
+                    buttonHaptic()
+                    onAddAnotherDoctor?()
+                } label: {
+                    HStack {
+                        Image(systemName: "plus.circle.fill")
+                        Text("Add Another Doctor")
+                    }
+                    .fontWeight(.semibold)
+                    .foregroundColor(.blue)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 54)
+                    .background(Color.white)
+                    .cornerRadius(14)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.blue, lineWidth: 1)
+                    )
+                }
+            }
+            .padding(.bottom, 16)
+            .opacity(showButtons ? 1 : 0)
+            .offset(y: showButtons ? 0 : 30)
+            .animation(.easeOut(duration: 0.4).delay(0.5), value: showButtons)
+        }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color(.systemBackground))
+        .onAppear {
+            Task { @MainActor in
+                successHaptic()
+                withAnimation {
+                    showCheckmark = true
+                }
+                try? await Task.sleep(for: .milliseconds(300))
+                withAnimation {
+                    showContent = true
+                }
+                try? await Task.sleep(for: .milliseconds(300))
+                withAnimation {
+                    showButtons = true
+                }
+            }
+        }
+    }
+}
+
+struct SuccessDoctorCard: View {
+    let doctor: Staff
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            // Doctor info header
+            HStack(spacing: 12) {
+                Image(systemName: "person.circle.fill")
+                    .resizable()
+                    .frame(width: 60, height: 60)
+                    .foregroundColor(.gray)
+                    .background(Color.white)
+                    .clipShape(Circle())
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(doctor.fullName)
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    
+                    Text(doctor.specialization)
+                        .foregroundColor(.secondary)
+                }
+            }
+            
+            // Department
+            HStack(spacing: 12) {
+                Image(systemName: "building.2.fill")
+                    .foregroundColor(.gray)
+                Text(doctor.department)
+                    .foregroundColor(.secondary)
+            }
+            
+            // Email
+            HStack(spacing: 12) {
+                Image(systemName: "envelope.fill")
+                    .foregroundColor(.gray)
+                Text(doctor.emailAddress)
+                    .foregroundColor(.secondary)
+            }
+            
+            // Phone
+            HStack(spacing: 12) {
+                Image(systemName: "phone.fill")
+                    .foregroundColor(.gray)
+                Text(doctor.contactNumber)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.systemBackground))
+        .cornerRadius(16)
+        .overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(Color(.systemGray5), lineWidth: 1)
+        )
     }
 }
