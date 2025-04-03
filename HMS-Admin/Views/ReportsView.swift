@@ -24,9 +24,33 @@ struct ReportsView: View {
     @Environment(\.colorScheme) private var colorScheme
 
     // Time filter selection
-    @State private var selectedTimeRange = 1 // 0: Day, 1: Week, 2: Month, 3: Year
+    @State private var selectedTimeRange = 0 // Only monthly view now
 
-    private let timeRanges = ["Day", "Week", "Month", "Year"]
+    private let timeRanges = ["Month"]
+    
+    private var dateRangeText: String {
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d"
+        
+        let calendar = Calendar.current
+        let currentMonth = calendar.component(.month, from: now)
+        let currentYear = calendar.component(.year, from: now)
+        
+        // Get the first day of current month
+        var components = DateComponents()
+        components.year = currentYear
+        components.month = currentMonth
+        components.day = 1
+        let startDate = calendar.date(from: components)!
+        
+        // Get the last day of current month
+        components.month = currentMonth + 1
+        components.day = 0
+        let endDate = calendar.date(from: components)!
+        
+        return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate)), \(currentYear)"
+    }
 
     // Metrics data (sample)
     private let metrics: [MetricData] = [
@@ -45,14 +69,12 @@ struct ReportsView: View {
 
     // MARK: - Sample Data
 
-    // Appointment data (sample)
+    // Appointment data (sample) - Monthly breakdown by weeks
     private let appointmentData = [
-        MonthlyData(month: "Jan", count: 65),
-        MonthlyData(month: "Feb", count: 78),
-        MonthlyData(month: "Mar", count: 95),
-        MonthlyData(month: "Apr", count: 82),
-        MonthlyData(month: "May", count: 90),
-        MonthlyData(month: "Jun", count: 105)
+        MonthlyData(month: "Week 1", count: 28),
+        MonthlyData(month: "Week 2", count: 32),
+        MonthlyData(month: "Week 3", count: 35),
+        MonthlyData(month: "Week 4", count: 29)
     ]
 
     // Staff performance data (sample)
@@ -96,24 +118,15 @@ struct ReportsView: View {
                     dismiss()
                 }
             }
-
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    // Filter options
-                }) {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                }
-            }
         }
     }
 
     private var timeSelectionView: some View {
-        Picker("Time Range", selection: $selectedTimeRange) {
-            ForEach(0..<timeRanges.count, id: \.self) { index in
-                Text(timeRanges[index]).tag(index)
-            }
+        VStack(spacing: 8) {
+            Text(dateRangeText)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
         }
-        .pickerStyle(SegmentedPickerStyle())
         .padding(.horizontal)
     }
 
@@ -141,7 +154,7 @@ struct ReportsView: View {
                 Chart {
                     ForEach(appointmentData, id: \.month) { item in
                         LineMark(
-                            x: .value("Month", item.month),
+                            x: .value("Week", item.month),
                             y: .value("Count", item.count)
                         )
                         .foregroundStyle(Color.blue.gradient)
@@ -149,7 +162,7 @@ struct ReportsView: View {
                     }
                 }
                 .frame(height: 200)
-                .chartYScale(domain: 0...150)
+                .chartYScale(domain: 0...40)
             } else {
                 // Fallback for iOS 15
                 SimpleLineChartView(data: appointmentData.map { Double($0.count) }, labels: appointmentData.map { $0.month })
