@@ -4,8 +4,9 @@ import CoreLocation
 
 // Main wrapper for MKMapItem to make it identifiable
 struct MapItemWrapper: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let mapItem: MKMapItem
+
     var coordinate: CLLocationCoordinate2D {
         mapItem.placemark.coordinate
     }
@@ -13,7 +14,7 @@ struct MapItemWrapper: Identifiable {
 
 // Simple location with coordinate for map annotations
 struct MapCoordinate: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let coordinate: CLLocationCoordinate2D
 }
 
@@ -26,7 +27,37 @@ struct HospitalOnboardingView: View {
     var body: some View {
         buildNavigationView()
     }
-    
+
+    // MARK: Private
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var shouldNavigateToDashboard = false
+    @State private var hospitalName = ""
+    @State private var contactNumber = ""
+    @State private var hospitalAddress = ""
+    @State private var licenseNumber = ""
+    @State private var licenseValidUntil: Date = .init()
+    @State private var departments: [String] = []
+    @State private var showingAddDepartment = false
+    @State private var newDepartment = ""
+    @State private var showingMapPicker = false
+    @State private var selectedLocation: CLLocationCoordinate2D?
+    @State private var showingAlert = false
+    @State private var alertMessage = ""
+    @State private var selectedMapItem: MapItemWrapper?
+
+    // Location manager for getting user's current location
+    @StateObject private var locationManager: LocationManager = .init()
+
+    @State private var region: MKCoordinateRegion = .init(
+        center: CLLocationCoordinate2D(latitude: 37.3361, longitude: -122.0380),
+        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+    )
+    @State private var searchText = ""
+    @State private var searchResults: [MapItemWrapper] = []
+    @State private var showingSearchResults = false
+    @State private var isLoadingAddress = false
+
     @ViewBuilder
     private func buildNavigationView() -> some View {
         NavigationView {
@@ -66,7 +97,7 @@ struct HospitalOnboardingView: View {
             }
             .scrollContentBackground(.hidden)
             .background(Color(.systemGroupedBackground))
-            .onChange(of: shouldNavigateToDashboard) { oldValue, newValue in
+            .onChange(of: shouldNavigateToDashboard) { _, newValue in
                 if newValue {
                     // Navigate to dashboard
                     delegate?.navigateToDashboard()
@@ -74,7 +105,7 @@ struct HospitalOnboardingView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     private func buildHospitalDetailsSection() -> some View {
         Section {
@@ -104,7 +135,7 @@ struct HospitalOnboardingView: View {
         .listRowBackground(Color(.systemBackground))
         .listSectionSeparator(.hidden)
     }
-    
+
     @ViewBuilder
     private func buildLocationSelectionButton() -> some View {
         VStack(alignment: .leading, spacing: 4) {
@@ -148,7 +179,7 @@ struct HospitalOnboardingView: View {
         .listRowSeparator(.hidden)
         .padding(.vertical, 4)
     }
-    
+
     @ViewBuilder
     private func buildMapPreview() -> some View {
         if let _ = selectedLocation?.latitude,
@@ -166,7 +197,7 @@ struct HospitalOnboardingView: View {
             )
         }
     }
-    
+
     @ViewBuilder
     private func buildLicenseDetailsSection() -> some View {
         Section(header: Text("License Details")) {
@@ -181,7 +212,7 @@ struct HospitalOnboardingView: View {
                 .datePickerStyle(.compact)
         }
     }
-    
+
     @ViewBuilder
     private func buildDepartmentsSection() -> some View {
         Section(header: Text("Departments")) {
@@ -208,7 +239,7 @@ struct HospitalOnboardingView: View {
             }
         }
     }
-    
+
     @ViewBuilder
     private func buildSubmitButtonSection() -> some View {
         Section {
@@ -224,7 +255,7 @@ struct HospitalOnboardingView: View {
             .listRowBackground(Color.clear)
         }
     }
-    
+
     @ViewBuilder
     private func buildAddDepartmentSheet() -> some View {
         NavigationView {
@@ -257,36 +288,6 @@ struct HospitalOnboardingView: View {
         }
         .presentationDetents([.height(200)])
     }
-
-    // MARK: Private
-
-    @Environment(\.dismiss) private var dismiss
-    @State private var shouldNavigateToDashboard = false
-    @State private var hospitalName = ""
-    @State private var contactNumber = ""
-    @State private var hospitalAddress = ""
-    @State private var licenseNumber = ""
-    @State private var licenseValidUntil: Date = .init()
-    @State private var departments: [String] = []
-    @State private var showingAddDepartment = false
-    @State private var newDepartment = ""
-    @State private var showingMapPicker = false
-    @State private var selectedLocation: CLLocationCoordinate2D?
-    @State private var showingAlert = false
-    @State private var alertMessage = ""
-    @State private var selectedMapItem: MapItemWrapper?
-
-    // Location manager for getting user's current location
-    @StateObject private var locationManager: LocationManager = .init()
-
-    @State private var region: MKCoordinateRegion = .init(
-        center: CLLocationCoordinate2D(latitude: 37.3361, longitude: -122.0380),
-        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-    )
-    @State private var searchText = ""
-    @State private var searchResults: [MapItemWrapper] = []
-    @State private var showingSearchResults = false
-    @State private var isLoadingAddress = false
 
     private func submitForm() {
         // Validate Hospital Name
@@ -400,7 +401,7 @@ struct HospitalOnboardingView: View {
                 return
             }
 
-            self.searchResults = response.mapItems.map { MapItemWrapper(mapItem: $0) }
+            searchResults = response.mapItems.map { MapItemWrapper(mapItem: $0) }
         }
     }
 
@@ -463,7 +464,7 @@ struct MapLocationPicker: View {
         ZStack(alignment: .top) {
             // Map View
             Map {
-                if let selectedMapItem = selectedMapItem {
+                if let selectedMapItem {
                     Marker(selectedMapItem.mapItem.name ?? "Location", coordinate: selectedMapItem.coordinate)
                 }
             }
@@ -575,7 +576,7 @@ struct MapLocationPicker: View {
                 }
             }
         }
-        .onChange(of: searchText) { oldValue, newValue in
+        .onChange(of: searchText) { _, newValue in
             if !newValue.isEmpty {
                 performSearch()
                 showingSearchResults = true
@@ -632,7 +633,7 @@ struct MapLocationPicker: View {
                 return
             }
 
-            self.searchResults = response.mapItems.map { MapItemWrapper(mapItem: $0) }
+            searchResults = response.mapItems.map { MapItemWrapper(mapItem: $0) }
         }
     }
 
@@ -941,7 +942,7 @@ private struct LocationMapView: View {
                 .cornerRadius(12)
                 .padding(.horizontal)
                 .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 4)
-                .onChange(of: isVisible) { oldValue, newValue in
+                .onChange(of: isVisible) { _, newValue in
                     if newValue {
                         withAnimation(.easeOut.delay(0.3)) {
                             showOverlay = true

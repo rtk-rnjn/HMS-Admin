@@ -66,7 +66,7 @@ struct Staff: Codable, Equatable {
     var role: Role = .doctor
 
     var hospitalId: String = ""
-    
+
     var workingHours: WorkingHours?
 
     var fullName: String {

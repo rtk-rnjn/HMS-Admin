@@ -36,6 +36,14 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         updateUI()
     }
 
+    // MARK: - Navigation
+
+    func showReports() {
+        let reportsController = ReportsHostingController()
+        reportsController.modalPresentationStyle = .formSheet
+        navigationController?.present(reportsController, animated: true)
+    }
+
     // MARK: Private
 
     private func updateUI() {
@@ -81,11 +89,4 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         return patients.count
     }
 
-    // MARK: - Navigation
-    
-    func showReports() {
-        let reportsController = ReportsHostingController()
-        reportsController.modalPresentationStyle = .formSheet
-        navigationController?.present(reportsController, animated: true)
-    }
 }

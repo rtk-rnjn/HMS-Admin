@@ -9,19 +9,31 @@ import SwiftUI
 import Charts
 
 struct ReportsView: View {
+
+    // MARK: Internal
+
+    var body: some View {
+        NavigationView {
+            mainContentView
+        }
+    }
+
+    // MARK: Private
+
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
-    
+
     // Time filter selection
     @State private var selectedTimeRange = 1 // 0: Day, 1: Week, 2: Month, 3: Year
+
     private let timeRanges = ["Day", "Week", "Month", "Year"]
-    
+
     // Metrics data (sample)
     private let metrics: [MetricData] = [
         MetricData(title: "Appointments", value: "124", icon: "calendar", growth: "+12%", isPositive: true, color: Color("iconBlue")),
         MetricData(title: "Revenue", value: "$12,450", icon: "dollarsign.circle", growth: "+8%", isPositive: true, color: Color("iconBlue"))
     ]
-    
+
     // Top doctors data (sample)
     private let topDoctors: [DoctorPerformance] = [
         DoctorPerformance(name: "Dr. Smith", specialty: "Cardiology", rating: 4.9, patients: 124, image: "person.crop.circle.fill"),
@@ -30,15 +42,39 @@ struct ReportsView: View {
         DoctorPerformance(name: "Dr. Jones", specialty: "Orthopedics", rating: 4.6, patients: 86, image: "person.crop.circle.fill"),
         DoctorPerformance(name: "Dr. Brown", specialty: "Oncology", rating: 4.5, patients: 74, image: "person.crop.circle.fill")
     ]
-    
-    var body: some View {
-        NavigationView {
-            mainContentView
-        }
-    }
-    
+
+    // MARK: - Sample Data
+
+    // Appointment data (sample)
+    private let appointmentData = [
+        MonthlyData(month: "Jan", count: 65),
+        MonthlyData(month: "Feb", count: 78),
+        MonthlyData(month: "Mar", count: 95),
+        MonthlyData(month: "Apr", count: 82),
+        MonthlyData(month: "May", count: 90),
+        MonthlyData(month: "Jun", count: 105)
+    ]
+
+    // Staff performance data (sample)
+    private let staffPerformance = [
+        StaffPerformance(department: "Ortho", efficiency: 92, icon: "figure.walk"),
+        StaffPerformance(department: "Cardiology", efficiency: 85, icon: "heart"),
+        StaffPerformance(department: "Neurology", efficiency: 88, icon: "brain.head.profile"),
+        StaffPerformance(department: "Pediatrics", efficiency: 91, icon: "figure.child")
+    ]
+
+    // Revenue data (sample)
+    private let revenueData = [
+        RevenueData(month: "Jan", revenue: 32450),
+        RevenueData(month: "Feb", revenue: 35780),
+        RevenueData(month: "Mar", revenue: 41200),
+        RevenueData(month: "Apr", revenue: 38900),
+        RevenueData(month: "May", revenue: 42350),
+        RevenueData(month: "Jun", revenue: 45230)
+    ]
+
     // MARK: - Content Views
-    
+
     private var mainContentView: some View {
         ScrollView {
             VStack(spacing: 25) {
@@ -60,7 +96,7 @@ struct ReportsView: View {
                     dismiss()
                 }
             }
-            
+
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
                     // Filter options
@@ -70,7 +106,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var timeSelectionView: some View {
         Picker("Time Range", selection: $selectedTimeRange) {
             ForEach(0..<timeRanges.count, id: \.self) { index in
@@ -80,7 +116,7 @@ struct ReportsView: View {
         .pickerStyle(SegmentedPickerStyle())
         .padding(.horizontal)
     }
-    
+
     private var metricsGridView: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
             ForEach(metrics) { metric in
@@ -89,7 +125,7 @@ struct ReportsView: View {
         }
         .padding(.horizontal)
     }
-    
+
     private var appointmentsOverviewSection: some View {
         ReportSectionView(title: "Appointments Overview") {
             VStack(spacing: 20) {
@@ -98,7 +134,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var appointmentsChartView: some View {
         Group {
             if #available(iOS 16.0, *) {
@@ -121,7 +157,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var appointmentsMetricsView: some View {
         LazyVGrid(columns: [
             GridItem(.flexible()),
@@ -133,14 +169,14 @@ struct ReportsView: View {
             AppointmentMetricView(title: "Cancelled", value: "18", color: Color(red: 0.4, green: 0.6, blue: 0.9))
         }
     }
-    
+
     private var doctorPerformanceSection: some View {
         ReportSectionView(title: "Doctor Performance") {
             VStack(alignment: .leading, spacing: 15) {
                 Text("Top Performing Doctors")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                
+
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 15) {
                         ForEach(topDoctors) { doctor in
@@ -152,7 +188,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var staffPerformanceSection: some View {
         ReportSectionView(title: "Staff Performance") {
             VStack(spacing: 15) {
@@ -161,7 +197,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var staffPerformanceChartView: some View {
         Group {
             if #available(iOS 16.0, *) {
@@ -187,7 +223,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var staffPerformanceMetricsView: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
             ForEach(staffPerformance) { staff in
@@ -195,7 +231,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var revenueAnalyticsSection: some View {
         ReportSectionView(title: "Revenue Analytics") {
             VStack(spacing: 15) {
@@ -204,14 +240,14 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var revenueMetricsView: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
             RevenueMetricView(title: "Total Revenue", value: "$45,230", icon: "dollarsign.circle", color: .blue)
             RevenueMetricView(title: "Net Profit", value: "$17,380", icon: "chart.line.uptrend.xyaxis", color: Color(red: 0.2, green: 0.5, blue: 0.8))
         }
     }
-    
+
     private var revenueChartView: some View {
         Group {
             if #available(iOS 16.0, *) {
@@ -223,7 +259,7 @@ struct ReportsView: View {
                         )
                         .foregroundStyle(Color.blue.gradient)
                         .symbol(Circle().strokeBorder(lineWidth: 2))
-                        
+
                         AreaMark(
                             x: .value("Month", item.month),
                             y: .value("Revenue", item.revenue)
@@ -249,57 +285,33 @@ struct ReportsView: View {
             }
         }
     }
-    
-    // MARK: - Sample Data
-    
-    // Appointment data (sample)
-    private let appointmentData = [
-        MonthlyData(month: "Jan", count: 65),
-        MonthlyData(month: "Feb", count: 78),
-        MonthlyData(month: "Mar", count: 95),
-        MonthlyData(month: "Apr", count: 82),
-        MonthlyData(month: "May", count: 90),
-        MonthlyData(month: "Jun", count: 105)
-    ]
-    
-    // Staff performance data (sample)
-    private let staffPerformance = [
-        StaffPerformance(department: "Ortho", efficiency: 92, icon: "figure.walk"),
-        StaffPerformance(department: "Cardiology", efficiency: 85, icon: "heart"),
-        StaffPerformance(department: "Neurology", efficiency: 88, icon: "brain.head.profile"),
-        StaffPerformance(department: "Pediatrics", efficiency: 91, icon: "figure.child")
-    ]
-    
-    // Revenue data (sample)
-    private let revenueData = [
-        RevenueData(month: "Jan", revenue: 32450),
-        RevenueData(month: "Feb", revenue: 35780),
-        RevenueData(month: "Mar", revenue: 41200),
-        RevenueData(month: "Apr", revenue: 38900),
-        RevenueData(month: "May", revenue: 42350),
-        RevenueData(month: "Jun", revenue: 45230)
-    ]
+
 }
 
 // MARK: - Supporting Views
 
 // Section Container
 struct ReportSectionView<Content: View>: View {
-    let title: String
-    let content: Content
-    
+
+    // MARK: Lifecycle
+
     init(title: String, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
-    
+
+    // MARK: Internal
+
+    let title: String
+    let content: Content
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
                 .font(.headline)
                 .fontWeight(.semibold)
                 .padding(.horizontal)
-            
+
             VStack(alignment: .leading, spacing: 15) {
                 content
             }
@@ -315,7 +327,7 @@ struct ReportSectionView<Content: View>: View {
 // Metric Card
 struct MetricCardView: View {
     let metric: MetricData
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
@@ -325,9 +337,9 @@ struct MetricCardView: View {
                     .frame(width: 30, height: 30)
                     .background(metric.color.opacity(0.1))
                     .cornerRadius(8)
-                
+
                 Spacer()
-                
+
                 Text(metric.growth)
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -340,11 +352,11 @@ struct MetricCardView: View {
                     )
                     .cornerRadius(12)
             }
-            
+
             Text(metric.value)
                 .font(.title2)
                 .fontWeight(.bold)
-            
+
             Text(metric.title)
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -361,14 +373,14 @@ struct AppointmentMetricView: View {
     let title: String
     let value: String
     let color: Color
-    
+
     var body: some View {
         VStack(spacing: 6) {
             Text(value)
                 .font(.title3)
                 .fontWeight(.bold)
                 .foregroundColor(color)
-            
+
             Text(title)
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -383,7 +395,7 @@ struct AppointmentMetricView: View {
 // Doctor Card View
 struct DoctorCardView: View {
     let doctor: DoctorPerformance
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Doctor info section
@@ -395,26 +407,26 @@ struct DoctorCardView: View {
                     .foregroundColor(Color("iconBlue"))
                     .background(Color.blue.opacity(0.1))
                     .clipShape(Circle())
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(doctor.name)
                         .font(.title3)
                         .fontWeight(.bold)
                         .lineLimit(1)
-                    
+
                     Text(doctor.specialty)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         .lineLimit(1)
                 }
                 .padding(.leading, 12)
-                
+
                 Spacer()
             }
-            
+
             Divider()
                 .padding(.top, 8)
-            
+
             // Ratings & Patients section
             HStack(alignment: .center) {
                 // Star rating
@@ -425,20 +437,20 @@ struct DoctorCardView: View {
                             .foregroundColor(index <= Int(doctor.rating) ? .yellow : Color(UIColor.systemGray4))
                     }
                 }
-                
+
                 Text(String(format: "%.1f", doctor.rating))
                     .font(.headline)
                     .foregroundColor(.black)
                     .padding(.leading, 8)
-                
+
                 Spacer()
-                
+
                 // Patient count
                 HStack(spacing: 6) {
                     Image(systemName: "person.fill")
                         .foregroundColor(Color("iconBlue"))
                         .font(.system(size: 16))
-                    
+
                     Text("\(doctor.patients)")
                         .font(.headline)
                         .foregroundColor(.black)
@@ -462,7 +474,7 @@ struct StaffMetricView: View {
     let title: String
     let value: String
     let icon: String
-    
+
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: icon)
@@ -471,12 +483,12 @@ struct StaffMetricView: View {
                 .frame(width: 24, height: 24)
                 .background(Color.blue.opacity(0.1))
                 .cornerRadius(6)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Text(value)
                     .font(.subheadline)
                     .fontWeight(.semibold)
@@ -493,7 +505,7 @@ struct RevenueMetricView: View {
     let value: String
     let icon: String
     let color: Color
-    
+
     var body: some View {
         VStack(spacing: 10) {
             Image(systemName: icon)
@@ -502,11 +514,11 @@ struct RevenueMetricView: View {
                 .frame(width: 36, height: 36)
                 .background(color.opacity(0.1))
                 .cornerRadius(18)
-            
+
             Text(value)
                 .font(.title3)
                 .fontWeight(.bold)
-            
+
             Text(title)
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -520,9 +532,12 @@ struct RevenueMetricView: View {
 
 // Simple Line Chart (iOS 15 Fallback)
 struct SimpleLineChartView: View {
+
+    // MARK: Internal
+
     let data: [Double]
     let labels: [String]
-    
+
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -534,11 +549,11 @@ struct SimpleLineChartView: View {
                             Rectangle()
                                 .fill(Color.blue)
                                 .frame(width: 2, height: getHeight(for: data[index], in: geometry))
-                            
+
                             Circle()
                                 .fill(Color.blue)
                                 .frame(width: 8, height: 8)
-                            
+
                             Text(labels[index])
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
@@ -548,7 +563,7 @@ struct SimpleLineChartView: View {
                     }
                 }
                 .frame(height: geometry.size.height * 0.85)
-                
+
                 // Zero line
                 Rectangle()
                     .fill(Color.gray.opacity(0.2))
@@ -557,7 +572,9 @@ struct SimpleLineChartView: View {
             .padding(.top, 10)
         }
     }
-    
+
+    // MARK: Private
+
     private func getHeight(for value: Double, in geometry: GeometryProxy) -> CGFloat {
         let maxValue = data.max() ?? 1
         let availableHeight = geometry.size.height * 0.8
@@ -567,9 +584,12 @@ struct SimpleLineChartView: View {
 
 // Simple Bar Chart (iOS 15 Fallback)
 struct SimpleBarChartView: View {
+
+    // MARK: Internal
+
     let data: [Double]
     let labels: [String]
-    
+
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -581,7 +601,7 @@ struct SimpleBarChartView: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color.blue)
                                 .frame(width: min(40, (geometry.size.width - 80) / CGFloat(data.count)), height: getHeight(for: data[index], in: geometry))
-                            
+
                             Text(labels[index])
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
@@ -592,7 +612,7 @@ struct SimpleBarChartView: View {
                     }
                 }
                 .frame(height: geometry.size.height * 0.85)
-                
+
                 // Zero line
                 Rectangle()
                     .fill(Color.gray.opacity(0.2))
@@ -601,7 +621,9 @@ struct SimpleBarChartView: View {
             .padding(.top, 10)
         }
     }
-    
+
+    // MARK: Private
+
     private func getHeight(for value: Double, in geometry: GeometryProxy) -> CGFloat {
         let maxValue = data.max() ?? 1
         let availableHeight = geometry.size.height * 0.8
@@ -613,7 +635,7 @@ struct SimpleBarChartView: View {
 
 // Metric Data Model
 struct MetricData: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let title: String
     let value: String
     let icon: String
@@ -630,7 +652,7 @@ struct MonthlyData {
 
 // Doctor Performance Model
 struct DoctorPerformance: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let name: String
     let specialty: String
     let rating: Double
@@ -640,7 +662,7 @@ struct DoctorPerformance: Identifiable {
 
 // Staff Performance Model
 struct StaffPerformance: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let department: String
     let efficiency: Int
     let icon: String

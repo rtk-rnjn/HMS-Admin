@@ -46,7 +46,7 @@ struct DoctorProfileView: View {
                     InfoSectionCard(title: "Personal Information") {
                         InfoRow(icon: "person.fill", label: "Full Name", value: doctor.fullName)
                         Divider().padding(.leading, 40)
-                         
+
                         InfoRow(icon: "calendar", label: "Date of Birth", value: formatDate(doctor.dateOfBirth))
                         Divider().padding(.leading, 40)
                         InfoRow(icon: "person.2.fill", label: "Gender", value: "Other")

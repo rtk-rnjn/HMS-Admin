@@ -86,194 +86,6 @@ struct AddDoctorView: View {
 
     let genderOptions = ["Male", "Female", "Other"]
 
-    private var maxYearsOfExperience: Int {
-        guard let birthDate = dateOfBirth else {
-            return 0 // Return 0 if no date of birth is selected
-        }
-        let calendar = Calendar.current
-        let ageComponents = calendar.dateComponents([.year], from: birthDate, to: Date())
-        let age = ageComponents.year ?? 0
-        return max(0, age - 25) // Maximum experience is age minus 25 years (medical school)
-    }
-    
-    private var availableYearsOfExperience: [Int] {
-        Array(0...maxYearsOfExperience)
-    }
-
-    // Add department to specializations mapping
-    private let departmentSpecializations: [String: [String]] = [
-        "Cardiology": [
-            "General Cardiologist",
-            "Interventional Cardiologist",
-            "Pediatric Cardiologist",
-            "Electrophysiologist",
-            "Heart Failure Specialist",
-            "Cardiac Surgeon"
-        ],
-        "Neurology": [
-            "General Neurologist",
-            "Pediatric Neurologist",
-            "Neurosurgeon",
-            "Stroke Specialist",
-            "Epilepsy Specialist",
-            "Movement Disorders Specialist",
-            "Neuro-oncologist"
-        ],
-        "Orthopedics": [
-            "General Orthopedic Surgeon",
-            "Sports Medicine Specialist",
-            "Joint Replacement Surgeon",
-            "Spine Surgeon",
-            "Pediatric Orthopedist",
-            "Hand Surgeon",
-            "Foot & Ankle Specialist",
-            "Trauma Surgeon"
-        ],
-        "Pediatrics": [
-            "General Pediatrician",
-            "Neonatologist",
-            "Pediatric Cardiologist",
-            "Pediatric Neurologist",
-            "Pediatric Oncologist",
-            "Pediatric Endocrinologist",
-            "Pediatric Pulmonologist",
-            "Developmental Pediatrician"
-        ],
-        "Gynecology & Obstetrics": [
-            "General Obstetrician/Gynecologist",
-            "Maternal-Fetal Medicine Specialist",
-            "Reproductive Endocrinologist",
-            "Gynecologic Oncologist",
-            "Urogynecologist",
-            "High-Risk Pregnancy Specialist"
-        ],
-        "Oncology": [
-            "Medical Oncologist",
-            "Radiation Oncologist",
-            "Surgical Oncologist",
-            "Pediatric Oncologist",
-            "Hematologic Oncologist",
-            "Neuro-oncologist",
-            "Gynecologic Oncologist"
-        ],
-        "Radiology": [
-            "Diagnostic Radiologist",
-            "Interventional Radiologist",
-            "Neuroradiologist",
-            "Pediatric Radiologist",
-            "Nuclear Medicine Specialist",
-            "Musculoskeletal Radiologist",
-            "Breast Imaging Specialist"
-        ],
-        "Emergency & Trauma": [
-            "Emergency Medicine Physician",
-            "Trauma Surgeon",
-            "Pediatric Emergency Specialist",
-            "Emergency Critical Care Specialist",
-            "Toxicologist",
-            "Disaster Medicine Specialist"
-        ],
-        "Dermatology": [
-            "General Dermatologist",
-            "Pediatric Dermatologist",
-            "Dermatologic Surgeon",
-            "Cosmetic Dermatologist",
-            "Immunodermatologist",
-            "Dermatopathologist"
-        ],
-        "Psychiatry": [
-            "General Psychiatrist",
-            "Child & Adolescent Psychiatrist",
-            "Geriatric Psychiatrist",
-            "Addiction Psychiatrist",
-            "Forensic Psychiatrist",
-            "Neuropsychiatrist"
-        ],
-        "Gastroenterology": [
-            "General Gastroenterologist",
-            "Hepatologist",
-            "Pediatric Gastroenterologist",
-            "Therapeutic Endoscopist",
-            "Inflammatory Bowel Disease Specialist",
-            "Pancreaticobiliary Specialist"
-        ],
-        "Nephrology": [
-            "General Nephrologist",
-            "Pediatric Nephrologist",
-            "Transplant Nephrologist",
-            "Dialysis Specialist",
-            "Hypertension Specialist"
-        ],
-        "Endocrinology": [
-            "General Endocrinologist",
-            "Pediatric Endocrinologist",
-            "Thyroid Specialist",
-            "Diabetes Specialist",
-            "Reproductive Endocrinologist",
-            "Metabolic Disorders Specialist"
-        ],
-        "Pulmonology": [
-            "General Pulmonologist",
-            "Pediatric Pulmonologist",
-            "Critical Care Pulmonologist",
-            "Sleep Medicine Specialist",
-            "Interventional Pulmonologist",
-            "Cystic Fibrosis Specialist"
-        ],
-        "Ophthalmology": [
-            "General Ophthalmologist",
-            "Pediatric Ophthalmologist",
-            "Retina Specialist",
-            "Glaucoma Specialist",
-            "Cornea Specialist",
-            "Oculoplastic Surgeon",
-            "Neuro-ophthalmologist"
-        ],
-        "ENT (Ear, Nose, Throat)": [
-            "General ENT Specialist",
-            "Pediatric ENT Specialist",
-            "Otologist/Neurotologist",
-            "Head & Neck Surgeon",
-            "Laryngologist",
-            "Rhinologist",
-            "Facial Plastic Surgeon"
-        ],
-        "Urology": [
-            "General Urologist",
-            "Pediatric Urologist",
-            "Urologic Oncologist",
-            "Female Urologist",
-            "Neurourologist",
-            "Endourologist",
-            "Reconstructive Urologist"
-        ],
-        "Anesthesiology": [
-            "General Anesthesiologist",
-            "Pediatric Anesthesiologist",
-            "Cardiac Anesthesiologist",
-            "Obstetric Anesthesiologist",
-            "Pain Management Specialist",
-            "Critical Care Anesthesiologist",
-            "Regional Anesthesia Specialist"
-        ],
-        "Pathology & Lab Medicine": [
-            "Anatomic Pathologist",
-            "Clinical Pathologist",
-            "Hematopathologist",
-            "Dermatopathologist",
-            "Cytopathologist",
-            "Molecular Pathologist",
-            "Forensic Pathologist",
-            "Blood Bank/Transfusion Medicine Specialist"
-        ]
-    ]
-
-    // Add computed property for available specializations
-    private var availableSpecializations: [String] {
-        guard !department.isEmpty else { return [] }
-        return departmentSpecializations[department] ?? []
-    }
-
     var body: some View {
         NavigationView {
             ZStack {
@@ -286,14 +98,14 @@ struct AddDoctorView: View {
                             Image(systemName: "person.fill.badge.plus")
                                 .font(.system(size: 60))
                                 .foregroundColor(Color("iconBlue"))
-                                
+
                                 .padding(.top, 20)
-                            
+
                             Text(doctor == nil ? "Add New Doctor" : "Edit Doctor")
                                 .font(.title2)
                                 .fontWeight(.bold)
                                 .foregroundColor(.primary)
-                            
+
                             Text("Fill in the doctor's information below")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
@@ -305,8 +117,7 @@ struct AddDoctorView: View {
                         GroupBox {
                             VStack(alignment: .leading, spacing: 20) {
                                 SectionHeader(title: "Personal Information", icon: "person.fill")
-                                  
-                                
+
                                 // First Name
                                 ValidatedTextField(
                                     title: "First Name",
@@ -399,10 +210,9 @@ struct AddDoctorView: View {
 
                                     }
 
-                                        .onChange(of: dateOfBirth) { oldState, newState in
+                                        .onChange(of: dateOfBirth) { _, _ in
                                             dateOfBirthError = ""
                                         }
-
 
                                     if dateOfBirthHasInteracted && !dateOfBirthError.isEmpty {
                                         Text(dateOfBirthError)
@@ -454,7 +264,7 @@ struct AddDoctorView: View {
                         GroupBox {
                             VStack(alignment: .leading, spacing: 20) {
                                 SectionHeader(title: "Professional Information", icon: "stethoscope")
-                                
+
                                 // Medical License Number
                                 ValidatedTextField(
                                     title: "Medical License Number",
@@ -531,7 +341,7 @@ struct AddDoctorView: View {
                         GroupBox {
                             VStack(alignment: .leading, spacing: 20) {
                                 SectionHeader(title: "Department & Specializations", icon: "building.2")
-                                
+
                                 // Department
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
@@ -644,7 +454,7 @@ struct AddDoctorView: View {
                         GroupBox {
                             VStack(alignment: .leading, spacing: 20) {
                                 SectionHeader(title: "Availability", icon: "clock.fill")
-                                
+
                                 // Working Days
                                 VStack(alignment: .leading, spacing: 8) {
                                     HStack {
@@ -827,8 +637,8 @@ struct AddDoctorView: View {
                     DatePicker(
                         "Select Date of Birth",
                         selection: Binding(
-                            get: { self.dateOfBirth ?? Date() },
-                            set: { self.dateOfBirth = $0 }
+                            get: { dateOfBirth ?? Date() },
+                            set: { dateOfBirth = $0 }
                         ),
                         in: ...Date(),
                         displayedComponents: .date
@@ -900,15 +710,15 @@ struct AddDoctorView: View {
             checkFormValidity()
         }
 
-        .onChange(of: firstName) { oldState, newState in checkFormValidity() }
-        .onChange(of: lastName) { oldState, newState in checkFormValidity() }
-        .onChange(of: contactNumber) { oldState, newState in checkFormValidity() }
-        .onChange(of: email) { oldState, newState in checkFormValidity() }
-        .onChange(of: medicalLicenseNumber) { oldState, newState in checkFormValidity() }
-        .onChange(of: consultationFee) { oldState, newState in checkFormValidity() }
-        .onChange(of: department) { oldState, newState in checkFormValidity() }
-        .onChange(of: specialization) { oldState, newState in checkFormValidity() }
-        .onChange(of: yearsOfExperience) { oldState, newState in checkFormValidity() }
+        .onChange(of: firstName) { _, _ in checkFormValidity() }
+        .onChange(of: lastName) { _, _ in checkFormValidity() }
+        .onChange(of: contactNumber) { _, _ in checkFormValidity() }
+        .onChange(of: email) { _, _ in checkFormValidity() }
+        .onChange(of: medicalLicenseNumber) { _, _ in checkFormValidity() }
+        .onChange(of: consultationFee) { _, _ in checkFormValidity() }
+        .onChange(of: department) { _, _ in checkFormValidity() }
+        .onChange(of: specialization) { _, _ in checkFormValidity() }
+        .onChange(of: yearsOfExperience) { _, _ in checkFormValidity() }
     }
 
     // MARK: Private
@@ -925,7 +735,7 @@ struct AddDoctorView: View {
     @State private var lastName = ""
     @State private var contactNumber = ""
     @State private var email = ""
-    @State private var dateOfBirth: Date? = nil
+    @State private var dateOfBirth: Date?
     @State private var selectedGender: Gender = .male
 
     // Professional Information
@@ -966,13 +776,202 @@ struct AddDoctorView: View {
 
     // Add to properties section
     @State private var selectedDays: Set<String> = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-    private let weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     @State private var showingTimePickerSheet = false
     @State private var isEditingStartTime = true
 
+    // Add department to specializations mapping
+    private let departmentSpecializations: [String: [String]] = [
+        "Cardiology": [
+            "General Cardiologist",
+            "Interventional Cardiologist",
+            "Pediatric Cardiologist",
+            "Electrophysiologist",
+            "Heart Failure Specialist",
+            "Cardiac Surgeon"
+        ],
+        "Neurology": [
+            "General Neurologist",
+            "Pediatric Neurologist",
+            "Neurosurgeon",
+            "Stroke Specialist",
+            "Epilepsy Specialist",
+            "Movement Disorders Specialist",
+            "Neuro-oncologist"
+        ],
+        "Orthopedics": [
+            "General Orthopedic Surgeon",
+            "Sports Medicine Specialist",
+            "Joint Replacement Surgeon",
+            "Spine Surgeon",
+            "Pediatric Orthopedist",
+            "Hand Surgeon",
+            "Foot & Ankle Specialist",
+            "Trauma Surgeon"
+        ],
+        "Pediatrics": [
+            "General Pediatrician",
+            "Neonatologist",
+            "Pediatric Cardiologist",
+            "Pediatric Neurologist",
+            "Pediatric Oncologist",
+            "Pediatric Endocrinologist",
+            "Pediatric Pulmonologist",
+            "Developmental Pediatrician"
+        ],
+        "Gynecology & Obstetrics": [
+            "General Obstetrician/Gynecologist",
+            "Maternal-Fetal Medicine Specialist",
+            "Reproductive Endocrinologist",
+            "Gynecologic Oncologist",
+            "Urogynecologist",
+            "High-Risk Pregnancy Specialist"
+        ],
+        "Oncology": [
+            "Medical Oncologist",
+            "Radiation Oncologist",
+            "Surgical Oncologist",
+            "Pediatric Oncologist",
+            "Hematologic Oncologist",
+            "Neuro-oncologist",
+            "Gynecologic Oncologist"
+        ],
+        "Radiology": [
+            "Diagnostic Radiologist",
+            "Interventional Radiologist",
+            "Neuroradiologist",
+            "Pediatric Radiologist",
+            "Nuclear Medicine Specialist",
+            "Musculoskeletal Radiologist",
+            "Breast Imaging Specialist"
+        ],
+        "Emergency & Trauma": [
+            "Emergency Medicine Physician",
+            "Trauma Surgeon",
+            "Pediatric Emergency Specialist",
+            "Emergency Critical Care Specialist",
+            "Toxicologist",
+            "Disaster Medicine Specialist"
+        ],
+        "Dermatology": [
+            "General Dermatologist",
+            "Pediatric Dermatologist",
+            "Dermatologic Surgeon",
+            "Cosmetic Dermatologist",
+            "Immunodermatologist",
+            "Dermatopathologist"
+        ],
+        "Psychiatry": [
+            "General Psychiatrist",
+            "Child & Adolescent Psychiatrist",
+            "Geriatric Psychiatrist",
+            "Addiction Psychiatrist",
+            "Forensic Psychiatrist",
+            "Neuropsychiatrist"
+        ],
+        "Gastroenterology": [
+            "General Gastroenterologist",
+            "Hepatologist",
+            "Pediatric Gastroenterologist",
+            "Therapeutic Endoscopist",
+            "Inflammatory Bowel Disease Specialist",
+            "Pancreaticobiliary Specialist"
+        ],
+        "Nephrology": [
+            "General Nephrologist",
+            "Pediatric Nephrologist",
+            "Transplant Nephrologist",
+            "Dialysis Specialist",
+            "Hypertension Specialist"
+        ],
+        "Endocrinology": [
+            "General Endocrinologist",
+            "Pediatric Endocrinologist",
+            "Thyroid Specialist",
+            "Diabetes Specialist",
+            "Reproductive Endocrinologist",
+            "Metabolic Disorders Specialist"
+        ],
+        "Pulmonology": [
+            "General Pulmonologist",
+            "Pediatric Pulmonologist",
+            "Critical Care Pulmonologist",
+            "Sleep Medicine Specialist",
+            "Interventional Pulmonologist",
+            "Cystic Fibrosis Specialist"
+        ],
+        "Ophthalmology": [
+            "General Ophthalmologist",
+            "Pediatric Ophthalmologist",
+            "Retina Specialist",
+            "Glaucoma Specialist",
+            "Cornea Specialist",
+            "Oculoplastic Surgeon",
+            "Neuro-ophthalmologist"
+        ],
+        "ENT (Ear, Nose, Throat)": [
+            "General ENT Specialist",
+            "Pediatric ENT Specialist",
+            "Otologist/Neurotologist",
+            "Head & Neck Surgeon",
+            "Laryngologist",
+            "Rhinologist",
+            "Facial Plastic Surgeon"
+        ],
+        "Urology": [
+            "General Urologist",
+            "Pediatric Urologist",
+            "Urologic Oncologist",
+            "Female Urologist",
+            "Neurourologist",
+            "Endourologist",
+            "Reconstructive Urologist"
+        ],
+        "Anesthesiology": [
+            "General Anesthesiologist",
+            "Pediatric Anesthesiologist",
+            "Cardiac Anesthesiologist",
+            "Obstetric Anesthesiologist",
+            "Pain Management Specialist",
+            "Critical Care Anesthesiologist",
+            "Regional Anesthesia Specialist"
+        ],
+        "Pathology & Lab Medicine": [
+            "Anatomic Pathologist",
+            "Clinical Pathologist",
+            "Hematopathologist",
+            "Dermatopathologist",
+            "Cytopathologist",
+            "Molecular Pathologist",
+            "Forensic Pathologist",
+            "Blood Bank/Transfusion Medicine Specialist"
+        ]
+    ]
+
+    private let weekDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+    private var maxYearsOfExperience: Int {
+        guard let birthDate = dateOfBirth else {
+            return 0 // Return 0 if no date of birth is selected
+        }
+        let calendar = Calendar.current
+        let ageComponents = calendar.dateComponents([.year], from: birthDate, to: Date())
+        let age = ageComponents.year ?? 0
+        return max(0, age - 25) // Maximum experience is age minus 25 years (medical school)
+    }
+
+    private var availableYearsOfExperience: [Int] {
+        Array(0...maxYearsOfExperience)
+    }
+
+    // Add computed property for available specializations
+    private var availableSpecializations: [String] {
+        guard !department.isEmpty else { return [] }
+        return departmentSpecializations[department] ?? []
+    }
+
     private func validateForm() -> Bool {
         var isValid = true
-        
+
         // First Name Validation
         if firstName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             firstNameError = "First name is required"
@@ -986,7 +985,7 @@ struct AddDoctorView: View {
         } else {
             firstNameError = ""
         }
-        
+
         // Last Name Validation (optional but if provided, must be valid)
         if !lastName.isEmpty {
             if lastName.count < 2 {
@@ -999,7 +998,7 @@ struct AddDoctorView: View {
                 lastNameError = ""
             }
         }
-        
+
         // Contact Number Validation
         if contactNumber.isEmpty {
             contactNumberError = "Contact number is required"
@@ -1010,7 +1009,7 @@ struct AddDoctorView: View {
         } else {
             contactNumberError = ""
         }
-        
+
         // Email Validation
         if email.isEmpty {
             emailError = "Email is required"
@@ -1021,12 +1020,12 @@ struct AddDoctorView: View {
         } else {
             emailError = ""
         }
-        
+
         // Date of Birth Validation
         if dateOfBirth == nil {
-            isValid = false  // Form is invalid if date not selected
+            isValid = false // Form is invalid if date not selected
         }
-        
+
         // Medical License Number Validation
         if medicalLicenseNumber.isEmpty {
             medicalLicenseError = "Medical license number is required"
@@ -1034,7 +1033,7 @@ struct AddDoctorView: View {
         } else {
             medicalLicenseError = ""
         }
-        
+
         // Consultation Fee Validation
         if consultationFee.isEmpty {
             consultationFeeError = "Consultation fee is required"
@@ -1053,32 +1052,32 @@ struct AddDoctorView: View {
             consultationFeeError = "Please enter a valid amount"
             isValid = false
         }
-        
+
         // Department Validation
         if department.isEmpty {
             isValid = false
         }
-        
+
         // Specialization Validation
         if specialization.isEmpty {
             isValid = false
         }
-        
+
         return isValid
     }
-    
+
     private func isValidPhoneNumber(_ phone: String) -> Bool {
         let phoneRegex = "^[0-9]{10}$"
         let phonePredicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
         return phonePredicate.evaluate(with: phone)
     }
-    
+
     private func isValidEmail(_ email: String) -> Bool {
         let emailRegex = "^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
         let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
         return emailPredicate.evaluate(with: email)
     }
-    
+
     private func checkFormValidity() {
         isFormValid = validateForm()
     }
@@ -1088,7 +1087,7 @@ struct AddDoctorView: View {
         // Parse specializations correctly - they're already comma-separated from the multi-selection
         let specializations = specialization.trimmingCharacters(in: .whitespacesAndNewlines)
         let fee = Double(consultationFee) ?? 0.0
-        
+
         // Create working hours object
         let workingHours = WorkingHours(
             startTime: startTime,
@@ -1161,7 +1160,7 @@ struct AddDoctorView: View {
                 role: .doctor,
                 hospitalId: DataController.shared.hospital?.id ?? ""
             )
-            
+
             // Add working hours separately
             newDoctor.workingHours = workingHours
 
@@ -1236,7 +1235,7 @@ struct CustomGroupBoxStyle: GroupBoxStyle {
 struct SectionHeader: View {
     let title: String
     let icon: String
-    
+
     var body: some View {
         HStack {
             Image(systemName: icon)

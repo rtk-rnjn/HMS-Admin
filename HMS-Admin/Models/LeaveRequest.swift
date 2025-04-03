@@ -18,7 +18,7 @@ struct LeaveRequest: Codable, Identifiable, Equatable {
         case doctorName = "doctor_name"
         case department
     }
-    
+
     var id: String = UUID().uuidString
     var doctorId: String
     var doctorName: String
@@ -28,4 +28,4 @@ struct LeaveRequest: Codable, Identifiable, Equatable {
     var reason: String
     var status: LeaveStatus = .pending
     var createdAt: Date = .init()
-} 
+}

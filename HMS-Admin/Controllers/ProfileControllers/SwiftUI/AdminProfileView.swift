@@ -7,9 +7,6 @@
 
 import SwiftUI
 
-
-
-
 struct AdminProfileView: View {
     weak var delegate: ProfileHostingController?
 
@@ -45,19 +42,19 @@ struct AdminProfileView: View {
 
                 // Information Sections with adaptive layout
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: sizeClass == .regular ? 500 : 300))], spacing: 20) {
-                    
+
                     // Contact Information Section
                     InfoSectionCard(title: "Contact Information") {
-                        InfoRow(icon: "envelope.fill",label: "Email", value: "admin@hms.local")
+                        InfoRow(icon: "envelope.fill", label: "Email", value: "admin@hms.local")
                         Divider().padding(.leading, 40)
                         InfoRow(icon: "building.2.fill", label: "Department", value: "Administrator")
                     }
                 }
 
                                  // Logout Button
-               
+
                                 Button(action: {
-                                    showLogoutAlert = true  // Show confirmation popup
+                                    showLogoutAlert = true // Show confirmation popup
                                 }) {
                                     Text("Logout")
                                         .font(.headline)
@@ -83,7 +80,7 @@ struct AdminProfileView: View {
             .padding(.horizontal)
         }
         .background(Color(.systemGroupedBackground).edgesIgnoringSafeArea(.all))
-        //.navigationTitle("Profile")
+        // .navigationTitle("Profile")
         .navigationBarTitleDisplayMode(.inline)
     }
 }
