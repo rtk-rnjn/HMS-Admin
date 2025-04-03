@@ -48,6 +48,7 @@ struct RazorpayPaymentlinkResponse: Codable, Sendable, Identifiable, Hashable {
         case payments
         case _createdAt = "created_at"
     }
+
     var id: String
     var amountPaid: Int
     var notes: RazorpayNotes

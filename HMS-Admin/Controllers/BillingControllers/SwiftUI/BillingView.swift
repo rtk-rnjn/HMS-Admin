@@ -8,27 +8,26 @@
 import SwiftUI
 
 struct BillingView: View {
+
+    // MARK: Internal
+
     // Sample data - would be replaced with real data from your database
     var invoices: [RazorpayPaymentlinkResponse] = []
-    
-    private var totalRevenue: Double = 0
-
-    private var totalRefunds: Double = 0
 
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
                 // Summary Cards
                 summaryCardsView
-                
+
                 // Invoice List Header
                 HStack {
                     Text("Recent Payments")
                         .font(.headline)
                         .fontWeight(.semibold)
-                    
+
                     Spacer()
-                    
+
                     Button(action: {
                         // Action to view all invoices
                     }) {
@@ -38,11 +37,11 @@ struct BillingView: View {
                     }
                 }
                 .padding(.horizontal)
-                
+
                 // Invoice List
                 LazyVStack(spacing: 12) {
-                    ForEach(invoices) { invoice in
-                        
+                    ForEach(invoices) { _ in
+
                     }
                 }
                 .padding(.bottom)
@@ -52,7 +51,13 @@ struct BillingView: View {
         .navigationTitle("Billing")
         .navigationBarTitleDisplayMode(.large)
     }
-    
+
+    // MARK: Private
+
+    private var totalRevenue: Double = 0
+
+    private var totalRefunds: Double = 0
+
     // Summary Cards View
     private var summaryCardsView: some View {
         HStack(spacing: 15) {
@@ -63,7 +68,7 @@ struct BillingView: View {
                 icon: "dollarsign.circle.fill",
                 color: .blue
             )
-            
+
             // Total Refunds Card
             SummaryCardView(
                 title: "Total Refunds",
@@ -83,7 +88,7 @@ struct SummaryCardView: View {
     let amount: Double
     let icon: String
     let color: Color
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Card Header with icon
@@ -91,17 +96,17 @@ struct SummaryCardView: View {
                 Image(systemName: icon)
                     .font(.title2)
                     .foregroundColor(color)
-                
+
                 Spacer()
             }
-            
+
             Spacer()
-            
+
             // Amount
             Text(String(format: "$%.2f", amount))
                 .font(.title2)
                 .fontWeight(.bold)
-            
+
             // Title
             Text(title)
                 .font(.subheadline)
@@ -135,18 +140,18 @@ struct InvoiceCard: View {
                 Text(String(format: "$%.2f", invoice.amount))
                     .font(.title3)
                     .fontWeight(.semibold)
-                    .foregroundColor(invoice.status == "Completed" ? .blue : 
+                    .foregroundColor(invoice.status == "Completed" ? .blue :
                                    invoice.status == "Cancelled" ? .red : .orange)
             }
-            
+
             HStack {
                 // Payment method
                 Label("Credit Card", systemImage: "creditcard")
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Spacer()
-                
+
                 InvoiceStatusBadge(status: invoice.status)
             }
         }

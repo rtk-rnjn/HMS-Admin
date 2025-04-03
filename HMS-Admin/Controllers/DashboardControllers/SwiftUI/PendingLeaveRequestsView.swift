@@ -1,14 +1,13 @@
 import SwiftUI
 
 struct PendingLeaveRequestsView: View {
+
+    // MARK: Internal
+
     var leaveRequests: [LeaveRequest]
     var onApprove: (LeaveRequest) -> Void
     var onReject: (LeaveRequest) -> Void
     var processingRequests: Set<String> = []
-    
-    // Define a consistent card size
-    private let cardWidth: CGFloat = 300
-    private let cardHeight: CGFloat = 280
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -60,6 +59,13 @@ struct PendingLeaveRequestsView: View {
             }
         }
     }
+
+    // MARK: Private
+
+    // Define a consistent card size
+    private let cardWidth: CGFloat = 300
+    private let cardHeight: CGFloat = 280
+
 }
 
 struct LeaveRequestCard: View {
@@ -70,7 +76,7 @@ struct LeaveRequestCard: View {
     let onApprove: (LeaveRequest) -> Void
     let onReject: (LeaveRequest) -> Void
     let isProcessing: Bool
-    
+
     // Add parameters for card size
     let cardWidth: CGFloat
     let cardHeight: CGFloat
