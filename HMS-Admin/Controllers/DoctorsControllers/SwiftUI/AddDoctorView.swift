@@ -1154,7 +1154,6 @@ struct AddDoctorView: View {
                 department: department,
                 onLeave: false,
                 consultationFee: Int(fee),
-                unavailabilityPeriods: [],
                 licenseId: medicalLicenseNumber,
                 yearOfExperience: yearsOfExperience,
                 role: .doctor,
