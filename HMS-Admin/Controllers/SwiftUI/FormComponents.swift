@@ -17,13 +17,13 @@ struct ValidatedTextField: View {
     var autocapitalization: UITextAutocapitalizationType = .sentences
     var onChange: ((String) -> Void)?
     @State private var hasInteracted = false
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             Text(title)
                 .font(.subheadline)
                 .foregroundColor(.gray)
-            
+
             TextField("", text: $text)
                 .textContentType(textContentType)
                 .keyboardType(keyboardType)
@@ -38,11 +38,11 @@ struct ValidatedTextField: View {
                             lineWidth: 1
                         )
                 )
-                .onChange(of: text) { oldValue, newValue in
+                .onChange(of: text) { _, newValue in
                     hasInteracted = true
                     onChange?(newValue)
                 }
-                
+
             if hasInteracted && !error.isEmpty {
                 Text(error)
                     .font(.footnote)
@@ -51,7 +51,7 @@ struct ValidatedTextField: View {
             }
         }
     }
-    
+
     // Dropdown selector with validation
     struct DropdownSelector: View {
         var title: String
@@ -60,7 +60,7 @@ struct ValidatedTextField: View {
         var error: String
         @Binding var isExpanded: Bool
         @State private var hasInteracted = false
-        
+
         var body: some View {
             VStack(alignment: .leading, spacing: 4) {
                 Button(action: {
@@ -73,9 +73,9 @@ struct ValidatedTextField: View {
                         Text(selection.isEmpty ? title : selection)
                             .foregroundColor(selection.isEmpty ? .gray : .black)
                             .padding()
-                        
+
                         Spacer()
-                        
+
                         Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                             .foregroundColor(.gray)
                             .padding(.trailing)
@@ -90,14 +90,14 @@ struct ValidatedTextField: View {
                             )
                     )
                 }
-                
+
                 if hasInteracted && !error.isEmpty {
                     Text(error)
                         .font(.footnote)
                         .foregroundColor(.red)
                         .padding(.horizontal, 4)
                 }
-                
+
                 if isExpanded {
                     ScrollView {
                         VStack(alignment: .leading, spacing: 0) {
@@ -124,7 +124,7 @@ struct ValidatedTextField: View {
             }
         }
     }
-    
+
     // Multi-selection dropdown with chips
     struct MultiSelectionDropdown: View {
         var title: String
@@ -134,7 +134,7 @@ struct ValidatedTextField: View {
         @Binding var isExpanded: Bool
         @State private var searchText = ""
         @State private var hasInteracted = false
-        
+
         var filteredOptions: [String] {
             if searchText.isEmpty {
                 return options
@@ -142,7 +142,7 @@ struct ValidatedTextField: View {
                 return options.filter { $0.lowercased().contains(searchText.lowercased()) }
             }
         }
-        
+
         var body: some View {
             VStack(alignment: .leading, spacing: 4) {
                 Button(action: {
@@ -161,9 +161,9 @@ struct ValidatedTextField: View {
                                 .foregroundColor(.black)
                                 .padding()
                         }
-                        
+
                         Spacer()
-                        
+
                         Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                             .foregroundColor(.gray)
                             .padding(.trailing)
@@ -178,7 +178,7 @@ struct ValidatedTextField: View {
                             )
                     )
                 }
-                
+
                 if !selectedItems.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
@@ -187,7 +187,7 @@ struct ValidatedTextField: View {
                                     Text(item)
                                         .font(.footnote)
                                         .padding(.leading, 8)
-                                    
+
                                     Button(action: {
                                         if let index = selectedItems.firstIndex(of: item) {
                                             selectedItems.remove(at: index)
@@ -205,14 +205,14 @@ struct ValidatedTextField: View {
                         .padding(.vertical, 4)
                     }
                 }
-                
+
                 if hasInteracted && !error.isEmpty {
                     Text(error)
                         .font(.footnote)
                         .foregroundColor(.red)
                         .padding(.horizontal, 4)
                 }
-                
+
                 if isExpanded {
                     VStack {
                         TextField("Search", text: $searchText)
@@ -220,7 +220,7 @@ struct ValidatedTextField: View {
                             .background(Color.gray.opacity(0.1))
                             .cornerRadius(8)
                             .padding(.horizontal)
-                        
+
                         ScrollView {
                             VStack(alignment: .leading, spacing: 0) {
                                 ForEach(filteredOptions, id: \.self) { option in
@@ -234,9 +234,9 @@ struct ValidatedTextField: View {
                                         HStack {
                                             Text(option)
                                                 .foregroundColor(.black)
-                                            
+
                                             Spacer()
-                                            
+
                                             if selectedItems.contains(option) {
                                                 Image(systemName: "checkmark")
                                                     .foregroundColor(.blue)

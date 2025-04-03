@@ -13,6 +13,10 @@ struct DoctorProfileView: View {
     @Environment(\.horizontalSizeClass) var sizeClass
     @State private var showingDeleteConfirmation = false
 
+    // Initialize haptic feedback generators
+    private let impactFeedback: UIImpactFeedbackGenerator = .init(style: .medium)
+    private let notificationFeedback: UINotificationFeedbackGenerator = .init()
+
     var body: some View {
         ScrollView {
             VStack(spacing: 24) {
@@ -21,21 +25,28 @@ struct DoctorProfileView: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: sizeClass == .regular ? 140 : 120, height: sizeClass == .regular ? 140 : 120)
-                        .foregroundColor(Color(.systemGray4))
+                        .foregroundColor(Color("iconBlue"))
                         .clipShape(Circle())
+                        .onTapGesture {
+                            impactFeedback.impactOccurred(intensity: 0.5)
+                        }
 
                     // Name with "Dr." prefix
                     Text("Dr. \(doctor.fullName)")
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.title2)
 
                     // Redesigned smaller status badge
-                    Text(doctor.onLeave ? "Inactive" : "Active")
-                        .font(.system(size: 13, weight: .semibold))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(doctor.onLeave ? Color.orange : Color.green)
-                        .foregroundColor(.white)
-                        .clipShape(Capsule())
+                    Button(action: {
+                        impactFeedback.impactOccurred(intensity: 0.7)
+                    }) {
+                        Text(doctor.onLeave ? "Inactive" : "Active")
+                            .font(.footnote)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(doctor.onLeave ? Color("uselectedBlue") : Color("successBlue"))
+                            .foregroundColor(.white)
+                            .clipShape(Capsule())
+                    }
                 }
                 .padding(.top, 16)
                 .padding(.bottom, 8)
@@ -45,30 +56,40 @@ struct DoctorProfileView: View {
                     // Personal Information Section
                     InfoSectionCard(title: "Personal Information") {
                         InfoRow(icon: "person.fill", label: "Full Name", value: doctor.fullName)
+                            .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                         Divider().padding(.leading, 40)
+
                         InfoRow(icon: "calendar", label: "Date of Birth", value: formatDate(doctor.dateOfBirth))
+                            .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                         Divider().padding(.leading, 40)
                         InfoRow(icon: "person.2.fill", label: "Gender", value: "Other")
+                            .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                         Divider().padding(.leading, 40)
                         InfoRow(icon: "phone.fill", label: "Contact Number", value: doctor.contactNumber)
+                            .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                         Divider().padding(.leading, 40)
                         InfoRow(icon: "envelope.fill", label: "Email Address", value: doctor.emailAddress)
+                            .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                     }
 
                     // Professional Information Section
                     InfoSectionCard(title: "Professional Information") {
                         InfoRow(icon: "creditcard.fill", label: "Medical License Number", value: doctor.licenseId)
+                            .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                         Divider().padding(.leading, 40)
                         InfoRow(icon: "cross.case.fill", label: "Specialization", value: doctor.specialization)
+                            .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                         if doctor.yearOfExperience > 0 {
                             Divider().padding(.leading, 40)
                             InfoRow(icon: "clock.fill", label: "Years of Experience", value: "\(doctor.yearOfExperience) Years")
+                                .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                         }
                     }
 
                     // Department Section
                     InfoSectionCard(title: "Department & Schedule") {
                         InfoRow(icon: "building.2.fill", label: "Department", value: doctor.department)
+                            .onTapGesture { impactFeedback.impactOccurred(intensity: 0.5) }
                     }
                 }
 
@@ -83,6 +104,10 @@ struct DoctorProfileView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: {
+                    // Prepare and trigger haptics for delete confirmation
+                    impactFeedback.prepare()
+                    notificationFeedback.prepare()
+                    impactFeedback.impactOccurred(intensity: 1.0)
                     showingDeleteConfirmation = true
                 }) {
                     Image(systemName: "trash")
@@ -95,10 +120,29 @@ struct DoctorProfileView: View {
                 title: Text("Delete Doctor"),
                 message: Text("Are you sure you want to delete Dr. \(doctor.fullName)? This action cannot be undone."),
                 primaryButton: .destructive(Text("Delete")) {
-                    deleteDoctor()
+                    notificationFeedback.prepare()
+                    notificationFeedback.notificationOccurred(.error)
+                    Task {
+                        if await DataController.shared.deleteDoctor(doctor) {
+                            notificationFeedback.prepare()
+                            notificationFeedback.notificationOccurred(.success)
+                            presentationMode.wrappedValue.dismiss()
+                        } else {
+                            notificationFeedback.prepare()
+                            notificationFeedback.notificationOccurred(.error)
+                        }
+                    }
                 },
-                secondaryButton: .cancel()
+                secondaryButton: .cancel {
+                    impactFeedback.prepare()
+                    impactFeedback.impactOccurred(intensity: 0.5)
+                }
             )
+        }
+        .onAppear {
+            // Prepare haptic generators when view appears
+            impactFeedback.prepare()
+            notificationFeedback.prepare()
         }
     }
 
@@ -106,15 +150,6 @@ struct DoctorProfileView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMMM yyyy"
         return formatter.string(from: date)
-    }
-
-    private func deleteDoctor() {
-        Task {
-            let deleted = await DataController.shared.deleteDoctor(doctor)
-            if deleted {
-                presentationMode.wrappedValue.dismiss()
-            }
-        }
     }
 }
 
@@ -135,7 +170,7 @@ struct InfoSectionCard<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(title)
-                .font(.system(size: 20, weight: .bold))
+                .font(.title3)
                 .padding(.leading, 8)
 
             VStack(spacing: 0) {
@@ -157,17 +192,17 @@ struct InfoRow: View {
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.system(size: 18))
+                .font(.headline)
                 .frame(width: 24)
-                .foregroundColor(.gray)
+                .foregroundColor(Color("iconBlue"))
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(label)
-                    .font(.system(size: 14, weight: .regular))
+                    .font(.subheadline)
                     .foregroundColor(Color(.systemGray))
 
                 Text(value)
-                    .font(.system(size: 17, weight: .regular))
+                    .font(.body)
                     .foregroundColor(.primary)
             }
 

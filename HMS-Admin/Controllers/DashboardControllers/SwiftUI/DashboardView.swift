@@ -10,6 +10,7 @@ import SwiftUI
 struct DashboardView: View {
     weak var delegate: DashboardHostingController?
 
+    var logs: [Log] = []
     @State private var searchText = ""
     @State private var showNotifications = false
     @State private var selectedTimeRange = "Today"
@@ -71,7 +72,7 @@ struct DashboardView: View {
                             title: "Active Doctors",
                             value: "\(activeDoctorCount)",
                             icon: "stethoscope",
-                            color: .blue,
+                            color: Color("iconBlue"),
                             trend: "+5%"
                         )
 
@@ -79,7 +80,7 @@ struct DashboardView: View {
                             title: "Today's Patients",
                             value: "\(patientCount)",
                             icon: "person.2.fill",
-                            color: .green,
+                            color: Color("iconBlue"),
                             trend: "+12%"
                         )
                     }
@@ -95,7 +96,7 @@ struct DashboardView: View {
                         title: "Add Doctor",
                         subtitle: "New registration",
                         icon: "person.badge.plus",
-                        color: .blue,
+                        color: Color("iconBlue"),
                         action: {
                             delegate?.performSegue(withIdentifier: "segueShowAddDoctorHostingController", sender: nil)
                         }
@@ -105,7 +106,7 @@ struct DashboardView: View {
                         title: "Announcement",
                         subtitle: "New message",
                         icon: "megaphone.fill",
-                        color: .purple,
+                        color: Color("iconBlue"),
                         action: {
                             delegate?.performSegue(withIdentifier: "segueShowCreateAnnouncementHostingController", sender: nil)
                         }
@@ -115,7 +116,7 @@ struct DashboardView: View {
                         title: "Reports",
                         subtitle: "View analytics",
                         icon: "chart.bar.fill",
-                        color: .orange,
+                        color: Color("iconBlue"),
                         action: {
                             delegate?.showReports()
                         }
@@ -141,14 +142,14 @@ struct DashboardView: View {
 
                         Spacer()
 
-                        Button("See All") {
-                            // Handle see all
+                        NavigationLink("See All") {
+                            AllActivitiesView(logs: logs)
                         }
                         .foregroundColor(.blue)
                     }
 
-                    ForEach(1...4, id: \.self) { _ in
-                        ActivityRow()
+                    ForEach(Array(logs.prefix(5)), id: \.self) { log in
+                        ActivityRow(log: log)
                     }
                 }
                 .padding()
@@ -164,36 +165,36 @@ struct DashboardView: View {
             fetchLeaveRequests()
         }
     }
-    
+
     private func fetchLeaveRequests() {
         Task {
             if let requests = await DataController.shared.fetchLeaveRequests() {
                 DispatchQueue.main.async {
-                    self.leaveRequests = requests
+                    leaveRequests = requests
                 }
             }
         }
     }
-    
+
     private func handleLeaveApproval(_ request: LeaveRequest) {
         // Add request to processing set
         processingRequests.insert(request.id)
-        
+
         // Optimistically update local state
         if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
             var updatedRequest = request
             updatedRequest.status = .approved
             leaveRequests[index] = updatedRequest
         }
-        
+
         Task {
             // Make API call
             let success = await DataController.shared.approveLeaveRequest(request)
-            
+
             DispatchQueue.main.async {
                 // Remove from processing set
                 processingRequests.remove(request.id)
-                
+
                 if !success {
                     // Revert local state if API call failed
                     if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
@@ -204,32 +205,32 @@ struct DashboardView: View {
                     // Show error message
                     // Note: You might want to add an @State property for showing alerts
                 }
-                
+
                 // Refresh the list to get the latest state
                 fetchLeaveRequests()
             }
         }
     }
-    
+
     private func handleLeaveRejection(_ request: LeaveRequest) {
         // Add request to processing set
         processingRequests.insert(request.id)
-        
+
         // Optimistically update local state
         if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
             var updatedRequest = request
             updatedRequest.status = .rejected
             leaveRequests[index] = updatedRequest
         }
-        
+
         Task {
             // Make API call
             let success = await DataController.shared.rejectLeaveRequest(request)
-            
+
             DispatchQueue.main.async {
                 // Remove from processing set
                 processingRequests.remove(request.id)
-                
+
                 if !success {
                     // Revert local state if API call failed
                     if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
@@ -240,7 +241,7 @@ struct DashboardView: View {
                     // Show error message
                     // Note: You might want to add an @State property for showing alerts
                 }
-                
+
                 // Refresh the list to get the latest state
                 fetchLeaveRequests()
             }
@@ -293,6 +294,8 @@ struct QuickStatCard: View {
 }
 
 struct ActivityRow: View {
+    var log: Log
+
     var body: some View {
         HStack(spacing: 12) {
             Circle()
@@ -300,23 +303,20 @@ struct ActivityRow: View {
                 .frame(width: 40, height: 40)
                 .overlay(
                     Image(systemName: "stethoscope")
-                        .foregroundColor(.blue)
+                        .foregroundColor(Color("iconBlue"))
                 )
 
             VStack(alignment: .leading, spacing: 4) {
-                Text("Dr. Smith added a new patient")
+                Text(log.message)
                     .font(.subheadline)
                     .fontWeight(.medium)
 
-                Text("2 hours ago")
+                Text(log.createdAt.humanReadableString())
                     .font(.caption)
                     .foregroundColor(.gray)
             }
 
             Spacer()
-
-            Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
         }
         .padding(.vertical, 8)
     }
@@ -340,7 +340,7 @@ struct QuickActionButton: View {
                     .overlay(
                         Image(systemName: icon)
                             .font(.title2)
-                            .foregroundColor(color)
+                            .foregroundColor(Color("iconBlue"))
                     )
 
                 VStack(spacing: 2) {

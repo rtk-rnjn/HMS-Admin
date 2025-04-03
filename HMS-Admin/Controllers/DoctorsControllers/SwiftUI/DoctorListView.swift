@@ -31,21 +31,21 @@ struct DoctorListView: View {
                             title: "Total Doctors",
                             value: "\(totalDoctors.count)",
                             icon: "stethoscope",
-                            color: .blue
+                            color: Color("iconBlue")
                         )
 
                         DoctorStatCard(
                             title: "Active",
                             value: "\(activeDoctors.count)",
                             icon: "checkmark.circle",
-                            color: .green
+                            color: Color("iconBlue")
                         )
 
                         DoctorStatCard(
                             title: "On Leave",
                             value: "\(onLeaveDoctors.count)",
                             icon: "moon.fill",
-                            color: .orange
+                            color: Color("iconBlue")
                         )
                     }
                     .padding(.horizontal)
@@ -53,8 +53,8 @@ struct DoctorListView: View {
                         if totalDoctors.isEmpty {
                             VStack(spacing: 20) {
                                 Image(systemName: "person.2.slash")
-                                    .font(.system(size: 60))
-                                    .foregroundColor(.gray)
+                                    .font(.largeTitle)
+                                    .foregroundColor(Color("iconBlue"))
                                 Text("No Doctors Added")
                                     .font(.title2)
                                     .fontWeight(.semibold)
@@ -124,7 +124,7 @@ struct DoctorCard: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 60, height: 60)
-                    .foregroundColor(Color(.systemGray3))
+                    .foregroundColor(Color("iconBlue"))
                     .clipShape(Circle())
                     .overlay(
                         Circle()
@@ -134,22 +134,25 @@ struct DoctorCard: View {
                 VStack(alignment: .leading, spacing: 4) {
                     // Name
                     Text(doctor.fullName)
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(.body)
                         .foregroundColor(.primary)
 
-                    // Department and specialization
+                    // Department
                     Text(doctor.department)
-                        .font(.system(size: 14, weight: .regular))
+                        .font(.subheadline)
+
                         .foregroundColor(.secondary)
 
+                    // Specialization
                     Text(doctor.specialization)
-                        .font(.system(size: 14, weight: .regular))
+                        .font(.subheadline)
+
                         .foregroundColor(.secondary)
+                        .lineLimit(2)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                // Status indicator - small dot instead of badge for cleaner list
+                // Status indicator
                 Circle()
                     .fill(doctor.onLeave ? Color.orange : Color.green)
                     .frame(width: 10, height: 10)

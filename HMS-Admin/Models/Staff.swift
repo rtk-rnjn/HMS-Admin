@@ -13,17 +13,12 @@ enum Gender: String, Codable {
     case other = "Other"
 }
 
-struct UnavailablePeriod: Codable, Equatable {
+struct WorkingHours: Codable, Equatable {
     enum CodingKeys: String, CodingKey {
-        case startDate = "start_date"
-        case endDate = "end_date"
+        case startTime = "start_time"
+        case endTime = "end_time"
     }
 
-    let startDate: Date
-    let endDate: Date
-}
-
-struct WorkingHours: Codable, Equatable {
     var startTime: Date
     var endTime: Date
 }
@@ -42,7 +37,6 @@ struct Staff: Codable, Equatable {
         case department = "department"
         case onLeave = "on_leave"
         case consultationFee = "consultation_fee"
-        case unavailabilityPeriods = "unavailability_periods"
         case joiningDate = "joining_date"
         case licenseId = "license_id"
         case yearOfExperience = "year_of_experience"
@@ -66,7 +60,6 @@ struct Staff: Codable, Equatable {
     var onLeave: Bool = false
     var consultationFee: Int = 0
 
-    var unavailabilityPeriods: [UnavailablePeriod] = []
     var joiningDate: Date = .init()
     var licenseId: String
     var yearOfExperience: Int = 0
@@ -74,9 +67,6 @@ struct Staff: Codable, Equatable {
 
     var hospitalId: String = ""
 
-    var shiftStartTime: Int = 9
-    var shiftEndTime: Int = 17
-    
     var workingHours: WorkingHours?
 
     var fullName: String {

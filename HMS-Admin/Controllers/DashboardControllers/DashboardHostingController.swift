@@ -36,6 +36,23 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         updateUI()
     }
 
+    // MARK: - Navigation
+
+    func showReports() {
+        let reportsController = ReportsHostingController()
+        reportsController.modalPresentationStyle = .formSheet
+        navigationController?.present(reportsController, animated: true)
+    }
+
+    func fetchLogs() async -> [Log] {
+        let logs: [Log]? = await DataController.shared.fetchLogs()
+        guard let logs else {
+            return []
+        }
+
+        return logs
+    }
+
     // MARK: Private
 
     private func updateUI() {
@@ -50,6 +67,13 @@ class DashboardHostingController: UIHostingController<DashboardView> {
             let patientCount = await fetchPatientCount()
             DispatchQueue.main.async {
                 self.rootView.patientCount = patientCount
+            }
+        }
+
+        Task {
+            let logs = await fetchLogs()
+            DispatchQueue.main.async {
+                self.rootView.logs = logs
             }
         }
     }
@@ -81,11 +105,4 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         return patients.count
     }
 
-    // MARK: - Navigation
-    
-    func showReports() {
-        let reportsController = ReportsHostingController()
-        reportsController.modalPresentationStyle = .formSheet
-        navigationController?.present(reportsController, animated: true)
-    }
 }

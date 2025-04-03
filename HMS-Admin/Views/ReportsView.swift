@@ -2,26 +2,38 @@
 //  ReportsView.swift
 //  HMS-Admin
 //
-//  Created by Claude on 28/04/25.
+
 //
 
 import SwiftUI
 import Charts
 
 struct ReportsView: View {
+
+    // MARK: Internal
+
+    var body: some View {
+        NavigationView {
+            mainContentView
+        }
+    }
+
+    // MARK: Private
+
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
-    
+
     // Time filter selection
-    @State private var selectedTimeRange = 1 // 0: Day, 1: Week, 2: Month, 3: Year
-    private let timeRanges = ["Day", "Week", "Month", "Year"]
-    
+    @State private var selectedTimeRange = 0 // Only monthly view now
+
+    private let timeRanges = ["Month"]
+
     // Metrics data (sample)
     private let metrics: [MetricData] = [
-        MetricData(title: "Appointments", value: "124", icon: "calendar", growth: "+12%", isPositive: true, color: .blue),
-        MetricData(title: "Revenue", value: "$12,450", icon: "dollarsign.circle", growth: "+8%", isPositive: true, color: Color(red: 0.2, green: 0.5, blue: 0.8))
+        MetricData(title: "Appointments", value: "124", icon: "calendar", growth: "+12%", isPositive: true, color: Color("iconBlue")),
+        MetricData(title: "Revenue", value: "$12,450", icon: "dollarsign.circle", growth: "+8%", isPositive: true, color: Color("iconBlue"))
     ]
-    
+
     // Top doctors data (sample)
     private let topDoctors: [DoctorPerformance] = [
         DoctorPerformance(name: "Dr. Smith", specialty: "Cardiology", rating: 4.9, patients: 124, image: "person.crop.circle.fill"),
@@ -30,15 +42,61 @@ struct ReportsView: View {
         DoctorPerformance(name: "Dr. Jones", specialty: "Orthopedics", rating: 4.6, patients: 86, image: "person.crop.circle.fill"),
         DoctorPerformance(name: "Dr. Brown", specialty: "Oncology", rating: 4.5, patients: 74, image: "person.crop.circle.fill")
     ]
-    
-    var body: some View {
-        NavigationView {
-            mainContentView
-        }
+
+    // MARK: - Sample Data
+
+    // Appointment data (sample) - Monthly breakdown by weeks
+    private let appointmentData = [
+        MonthlyData(month: "Week 1", count: 28),
+        MonthlyData(month: "Week 2", count: 32),
+        MonthlyData(month: "Week 3", count: 35),
+        MonthlyData(month: "Week 4", count: 29)
+    ]
+
+    // Staff performance data (sample)
+    private let staffPerformance = [
+        StaffPerformance(department: "Ortho", efficiency: 92, icon: "figure.walk"),
+        StaffPerformance(department: "Cardiology", efficiency: 85, icon: "heart"),
+        StaffPerformance(department: "Neurology", efficiency: 88, icon: "brain.head.profile"),
+        StaffPerformance(department: "Pediatrics", efficiency: 91, icon: "figure.child")
+    ]
+
+    // Revenue data (sample)
+    private let revenueData = [
+        RevenueData(month: "Jan", revenue: 32450),
+        RevenueData(month: "Feb", revenue: 35780),
+        RevenueData(month: "Mar", revenue: 41200),
+        RevenueData(month: "Apr", revenue: 38900),
+        RevenueData(month: "May", revenue: 42350),
+        RevenueData(month: "Jun", revenue: 45230)
+    ]
+
+    private var dateRangeText: String {
+        let now = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d"
+
+        let calendar = Calendar.current
+        let currentMonth = calendar.component(.month, from: now)
+        let currentYear = calendar.component(.year, from: now)
+
+        // Get the first day of current month
+        var components = DateComponents()
+        components.year = currentYear
+        components.month = currentMonth
+        components.day = 1
+        let startDate = calendar.date(from: components)!
+
+        // Get the last day of current month
+        components.month = currentMonth + 1
+        components.day = 0
+        let endDate = calendar.date(from: components)!
+
+        return "\(formatter.string(from: startDate)) - \(formatter.string(from: endDate)), \(currentYear)"
     }
-    
+
     // MARK: - Content Views
-    
+
     private var mainContentView: some View {
         ScrollView {
             VStack(spacing: 25) {
@@ -60,27 +118,18 @@ struct ReportsView: View {
                     dismiss()
                 }
             }
-            
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    // Filter options
-                }) {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                }
-            }
         }
     }
-    
+
     private var timeSelectionView: some View {
-        Picker("Time Range", selection: $selectedTimeRange) {
-            ForEach(0..<timeRanges.count, id: \.self) { index in
-                Text(timeRanges[index]).tag(index)
-            }
+        VStack(spacing: 8) {
+            Text(dateRangeText)
+                .font(.subheadline)
+                .foregroundColor(.secondary)
         }
-        .pickerStyle(SegmentedPickerStyle())
         .padding(.horizontal)
     }
-    
+
     private var metricsGridView: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
             ForEach(metrics) { metric in
@@ -89,7 +138,7 @@ struct ReportsView: View {
         }
         .padding(.horizontal)
     }
-    
+
     private var appointmentsOverviewSection: some View {
         ReportSectionView(title: "Appointments Overview") {
             VStack(spacing: 20) {
@@ -98,14 +147,14 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var appointmentsChartView: some View {
         Group {
             if #available(iOS 16.0, *) {
                 Chart {
                     ForEach(appointmentData, id: \.month) { item in
                         LineMark(
-                            x: .value("Month", item.month),
+                            x: .value("Week", item.month),
                             y: .value("Count", item.count)
                         )
                         .foregroundStyle(Color.blue.gradient)
@@ -113,7 +162,7 @@ struct ReportsView: View {
                     }
                 }
                 .frame(height: 200)
-                .chartYScale(domain: 0...150)
+                .chartYScale(domain: 0...40)
             } else {
                 // Fallback for iOS 15
                 SimpleLineChartView(data: appointmentData.map { Double($0.count) }, labels: appointmentData.map { $0.month })
@@ -121,7 +170,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var appointmentsMetricsView: some View {
         LazyVGrid(columns: [
             GridItem(.flexible()),
@@ -133,14 +182,14 @@ struct ReportsView: View {
             AppointmentMetricView(title: "Cancelled", value: "18", color: Color(red: 0.4, green: 0.6, blue: 0.9))
         }
     }
-    
+
     private var doctorPerformanceSection: some View {
         ReportSectionView(title: "Doctor Performance") {
             VStack(alignment: .leading, spacing: 15) {
                 Text("Top Performing Doctors")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
-                
+
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 15) {
                         ForEach(topDoctors) { doctor in
@@ -152,7 +201,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var staffPerformanceSection: some View {
         ReportSectionView(title: "Staff Performance") {
             VStack(spacing: 15) {
@@ -161,7 +210,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var staffPerformanceChartView: some View {
         Group {
             if #available(iOS 16.0, *) {
@@ -187,7 +236,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var staffPerformanceMetricsView: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
             ForEach(staffPerformance) { staff in
@@ -195,7 +244,7 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var revenueAnalyticsSection: some View {
         ReportSectionView(title: "Revenue Analytics") {
             VStack(spacing: 15) {
@@ -204,14 +253,14 @@ struct ReportsView: View {
             }
         }
     }
-    
+
     private var revenueMetricsView: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
             RevenueMetricView(title: "Total Revenue", value: "$45,230", icon: "dollarsign.circle", color: .blue)
             RevenueMetricView(title: "Net Profit", value: "$17,380", icon: "chart.line.uptrend.xyaxis", color: Color(red: 0.2, green: 0.5, blue: 0.8))
         }
     }
-    
+
     private var revenueChartView: some View {
         Group {
             if #available(iOS 16.0, *) {
@@ -223,7 +272,7 @@ struct ReportsView: View {
                         )
                         .foregroundStyle(Color.blue.gradient)
                         .symbol(Circle().strokeBorder(lineWidth: 2))
-                        
+
                         AreaMark(
                             x: .value("Month", item.month),
                             y: .value("Revenue", item.revenue)
@@ -249,57 +298,33 @@ struct ReportsView: View {
             }
         }
     }
-    
-    // MARK: - Sample Data
-    
-    // Appointment data (sample)
-    private let appointmentData = [
-        MonthlyData(month: "Jan", count: 65),
-        MonthlyData(month: "Feb", count: 78),
-        MonthlyData(month: "Mar", count: 95),
-        MonthlyData(month: "Apr", count: 82),
-        MonthlyData(month: "May", count: 90),
-        MonthlyData(month: "Jun", count: 105)
-    ]
-    
-    // Staff performance data (sample)
-    private let staffPerformance = [
-        StaffPerformance(department: "Ortho", efficiency: 92, icon: "figure.walk"),
-        StaffPerformance(department: "Cardiology", efficiency: 85, icon: "heart"),
-        StaffPerformance(department: "Neurology", efficiency: 88, icon: "brain.head.profile"),
-        StaffPerformance(department: "Pediatrics", efficiency: 91, icon: "figure.child")
-    ]
-    
-    // Revenue data (sample)
-    private let revenueData = [
-        RevenueData(month: "Jan", revenue: 32450),
-        RevenueData(month: "Feb", revenue: 35780),
-        RevenueData(month: "Mar", revenue: 41200),
-        RevenueData(month: "Apr", revenue: 38900),
-        RevenueData(month: "May", revenue: 42350),
-        RevenueData(month: "Jun", revenue: 45230)
-    ]
+
 }
 
 // MARK: - Supporting Views
 
 // Section Container
 struct ReportSectionView<Content: View>: View {
-    let title: String
-    let content: Content
-    
+
+    // MARK: Lifecycle
+
     init(title: String, @ViewBuilder content: () -> Content) {
         self.title = title
         self.content = content()
     }
-    
+
+    // MARK: Internal
+
+    let title: String
+    let content: Content
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(title)
                 .font(.headline)
                 .fontWeight(.semibold)
                 .padding(.horizontal)
-            
+
             VStack(alignment: .leading, spacing: 15) {
                 content
             }
@@ -315,19 +340,19 @@ struct ReportSectionView<Content: View>: View {
 // Metric Card
 struct MetricCardView: View {
     let metric: MetricData
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: metric.icon)
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(.headline)
                     .foregroundColor(metric.color)
                     .frame(width: 30, height: 30)
                     .background(metric.color.opacity(0.1))
                     .cornerRadius(8)
-                
+
                 Spacer()
-                
+
                 Text(metric.growth)
                     .font(.caption)
                     .fontWeight(.semibold)
@@ -340,11 +365,11 @@ struct MetricCardView: View {
                     )
                     .cornerRadius(12)
             }
-            
+
             Text(metric.value)
                 .font(.title2)
                 .fontWeight(.bold)
-            
+
             Text(metric.title)
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -361,14 +386,14 @@ struct AppointmentMetricView: View {
     let title: String
     let value: String
     let color: Color
-    
+
     var body: some View {
         VStack(spacing: 6) {
             Text(value)
                 .font(.title3)
                 .fontWeight(.bold)
                 .foregroundColor(color)
-            
+
             Text(title)
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -383,7 +408,7 @@ struct AppointmentMetricView: View {
 // Doctor Card View
 struct DoctorCardView: View {
     let doctor: DoctorPerformance
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             // Doctor info section
@@ -392,53 +417,53 @@ struct DoctorCardView: View {
                     .resizable()
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 60, height: 60)
-                    .foregroundColor(.blue)
+                    .foregroundColor(Color("iconBlue"))
                     .background(Color.blue.opacity(0.1))
                     .clipShape(Circle())
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(doctor.name)
                         .font(.title3)
                         .fontWeight(.bold)
                         .lineLimit(1)
-                    
+
                     Text(doctor.specialty)
                         .font(.subheadline)
                         .foregroundColor(.gray)
                         .lineLimit(1)
                 }
                 .padding(.leading, 12)
-                
+
                 Spacer()
             }
-            
+
             Divider()
                 .padding(.top, 8)
-            
+
             // Ratings & Patients section
             HStack(alignment: .center) {
                 // Star rating
                 HStack(spacing: 4) {
                     ForEach(1...5, id: \.self) { index in
                         Image(systemName: index <= Int(doctor.rating) ? "star.fill" : "star")
-                            .font(.system(size: 16))
+                            .font(.callout)
                             .foregroundColor(index <= Int(doctor.rating) ? .yellow : Color(UIColor.systemGray4))
                     }
                 }
-                
+
                 Text(String(format: "%.1f", doctor.rating))
                     .font(.headline)
                     .foregroundColor(.black)
                     .padding(.leading, 8)
-                
+
                 Spacer()
-                
+
                 // Patient count
                 HStack(spacing: 6) {
                     Image(systemName: "person.fill")
-                        .foregroundColor(.blue)
-                        .font(.system(size: 16))
-                    
+                        .foregroundColor(Color("iconBlue"))
+                        .font(.callout)
+
                     Text("\(doctor.patients)")
                         .font(.headline)
                         .foregroundColor(.black)
@@ -462,21 +487,21 @@ struct StaffMetricView: View {
     let title: String
     let value: String
     let icon: String
-    
+
     var body: some View {
         HStack(spacing: 10) {
             Image(systemName: icon)
                 .font(.subheadline)
-                .foregroundColor(.blue)
+                .foregroundColor(Color("iconBlue"))
                 .frame(width: 24, height: 24)
                 .background(Color.blue.opacity(0.1))
                 .cornerRadius(6)
-            
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
                     .font(.caption)
                     .foregroundColor(.secondary)
-                
+
                 Text(value)
                     .font(.subheadline)
                     .fontWeight(.semibold)
@@ -493,20 +518,20 @@ struct RevenueMetricView: View {
     let value: String
     let icon: String
     let color: Color
-    
+
     var body: some View {
         VStack(spacing: 10) {
             Image(systemName: icon)
                 .font(.title3)
-                .foregroundColor(color)
+                .foregroundColor(Color("iconBlue"))
                 .frame(width: 36, height: 36)
                 .background(color.opacity(0.1))
                 .cornerRadius(18)
-            
+
             Text(value)
                 .font(.title3)
                 .fontWeight(.bold)
-            
+
             Text(title)
                 .font(.caption)
                 .foregroundColor(.secondary)
@@ -520,9 +545,12 @@ struct RevenueMetricView: View {
 
 // Simple Line Chart (iOS 15 Fallback)
 struct SimpleLineChartView: View {
+
+    // MARK: Internal
+
     let data: [Double]
     let labels: [String]
-    
+
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -534,11 +562,11 @@ struct SimpleLineChartView: View {
                             Rectangle()
                                 .fill(Color.blue)
                                 .frame(width: 2, height: getHeight(for: data[index], in: geometry))
-                            
+
                             Circle()
                                 .fill(Color.blue)
                                 .frame(width: 8, height: 8)
-                            
+
                             Text(labels[index])
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
@@ -548,7 +576,7 @@ struct SimpleLineChartView: View {
                     }
                 }
                 .frame(height: geometry.size.height * 0.85)
-                
+
                 // Zero line
                 Rectangle()
                     .fill(Color.gray.opacity(0.2))
@@ -557,7 +585,9 @@ struct SimpleLineChartView: View {
             .padding(.top, 10)
         }
     }
-    
+
+    // MARK: Private
+
     private func getHeight(for value: Double, in geometry: GeometryProxy) -> CGFloat {
         let maxValue = data.max() ?? 1
         let availableHeight = geometry.size.height * 0.8
@@ -567,9 +597,12 @@ struct SimpleLineChartView: View {
 
 // Simple Bar Chart (iOS 15 Fallback)
 struct SimpleBarChartView: View {
+
+    // MARK: Internal
+
     let data: [Double]
     let labels: [String]
-    
+
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -581,7 +614,7 @@ struct SimpleBarChartView: View {
                             RoundedRectangle(cornerRadius: 8)
                                 .fill(Color.blue)
                                 .frame(width: min(40, (geometry.size.width - 80) / CGFloat(data.count)), height: getHeight(for: data[index], in: geometry))
-                            
+
                             Text(labels[index])
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
@@ -592,7 +625,7 @@ struct SimpleBarChartView: View {
                     }
                 }
                 .frame(height: geometry.size.height * 0.85)
-                
+
                 // Zero line
                 Rectangle()
                     .fill(Color.gray.opacity(0.2))
@@ -601,7 +634,9 @@ struct SimpleBarChartView: View {
             .padding(.top, 10)
         }
     }
-    
+
+    // MARK: Private
+
     private func getHeight(for value: Double, in geometry: GeometryProxy) -> CGFloat {
         let maxValue = data.max() ?? 1
         let availableHeight = geometry.size.height * 0.8
@@ -613,7 +648,7 @@ struct SimpleBarChartView: View {
 
 // Metric Data Model
 struct MetricData: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let title: String
     let value: String
     let icon: String
@@ -630,7 +665,7 @@ struct MonthlyData {
 
 // Doctor Performance Model
 struct DoctorPerformance: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let name: String
     let specialty: String
     let rating: Double
@@ -640,7 +675,7 @@ struct DoctorPerformance: Identifiable {
 
 // Staff Performance Model
 struct StaffPerformance: Identifiable {
-    let id = UUID()
+    let id: UUID = .init()
     let department: String
     let efficiency: Int
     let icon: String

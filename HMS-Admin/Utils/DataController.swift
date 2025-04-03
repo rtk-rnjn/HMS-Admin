@@ -19,6 +19,17 @@ struct Token: Codable {
     var user: Admin?
 }
 
+struct Log: Codable, Sendable, Hashable, Identifiable {
+    enum CodingKeys: String, CodingKey {
+        case message
+        case createdAt = "created_at"
+    }
+
+    var id: String = UUID().uuidString
+    var message: String
+    var createdAt: Date
+}
+
 struct UserLogin: Codable {
     enum CodingKeys: String, CodingKey {
         case emailAddress = "email_address"
@@ -136,12 +147,12 @@ extension DataController {
 
         return await MiddlewareManager.shared.post(url: "/staff/create", body: doctorData)
     }
-    
+
     func updateDoctor(_ doctor: Staff) async -> Bool {
         guard let doctorData = doctor.toData() else {
             fatalError("Could not update doctor: Invalid data")
         }
-        
+
         let response: ServerResponse? = await MiddlewareManager.shared.patch(url: "/staff/\(doctor.id)", body: doctorData)
         return response?.success ?? false
     }
@@ -195,6 +206,30 @@ extension DataController {
 
         return serverResponse?.success ?? false
     }
+
+    func fetchLogs() async -> [Log]? {
+        if admin == nil {
+            guard await autoLogin() else { fatalError() }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        return await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/logs")
+    }
+
+    func fetchBills() async -> [RazorpayPaymentlinkResponse]? {
+        if admin == nil {
+            guard await autoLogin() else { fatalError() }
+        }
+
+        guard let admin else {
+            fatalError("Admin is nil")
+        }
+
+        return await MiddlewareManager.shared.get(url: "/razorpay-gateway/bills/\(admin.id)")
+    }
 }
 
 extension DataController {
@@ -220,7 +255,7 @@ extension DataController {
 
         return await MiddlewareManager.shared.get(url: "/hospital/\(admin.id)/leave-requests")
     }
-    
+
     func approveLeaveRequest(_ request: LeaveRequest) async -> Bool {
         if admin == nil {
             guard await autoLogin() else { fatalError("Auth failed") }
@@ -240,7 +275,7 @@ extension DataController {
 
         return serverResponse?.success ?? false
     }
-    
+
     func rejectLeaveRequest(_ request: LeaveRequest) async -> Bool {
         if admin == nil {
             guard await autoLogin() else { fatalError("Auth failed") }

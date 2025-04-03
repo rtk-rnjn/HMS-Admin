@@ -1,20 +1,23 @@
 import SwiftUI
 
 struct PendingLeaveRequestsView: View {
+
+    // MARK: Internal
+
     var leaveRequests: [LeaveRequest]
     var onApprove: (LeaveRequest) -> Void
     var onReject: (LeaveRequest) -> Void
     var processingRequests: Set<String> = []
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Text("Leave Requests")
                     .font(.title3)
                     .fontWeight(.bold)
-                
+
                 Spacer()
-                
+
                 if !leaveRequests.isEmpty {
                     NavigationLink("See All") {
                         LeaveRequestListView(
@@ -27,7 +30,7 @@ struct PendingLeaveRequestsView: View {
                     .foregroundColor(.blue)
                 }
             }
-            
+
             if leaveRequests.isEmpty {
                 HStack {
                     Spacer()
@@ -44,25 +47,40 @@ struct PendingLeaveRequestsView: View {
                                 request: request,
                                 onApprove: onApprove,
                                 onReject: onReject,
-                                isProcessing: processingRequests.contains(request.id)
+                                isProcessing: processingRequests.contains(request.id),
+                                cardWidth: cardWidth,
+                                cardHeight: cardHeight
                             )
                         }
                     }
+                    .padding(.leading, 0)
+                    .padding(.trailing)
                 }
             }
         }
-        .padding()
-        .background(Color(.systemBackground))
-        .cornerRadius(12)
     }
+
+    // MARK: Private
+
+    // Define a consistent card size
+    private let cardWidth: CGFloat = 300
+    private let cardHeight: CGFloat = 280
+
 }
 
 struct LeaveRequestCard: View {
+
+    // MARK: Internal
+
     let request: LeaveRequest
     let onApprove: (LeaveRequest) -> Void
     let onReject: (LeaveRequest) -> Void
     let isProcessing: Bool
-    
+
+    // Add parameters for card size
+    let cardWidth: CGFloat
+    let cardHeight: CGFloat
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Doctor info
@@ -72,9 +90,9 @@ struct LeaveRequestCard: View {
                     .frame(width: 40, height: 40)
                     .overlay(
                         Image(systemName: "person.fill")
-                            .foregroundColor(.blue)
+                            .foregroundColor(Color("iconBlue"))
                     )
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(request.doctorName)
                         .font(.headline)
@@ -84,9 +102,9 @@ struct LeaveRequestCard: View {
                         .foregroundColor(.gray)
                         .lineLimit(1)
                 }
-                
+
                 Spacer()
-                
+
                 // Leave duration badge
                 Text("\(calculateLeaveDays()) days")
                     .font(.caption)
@@ -98,9 +116,9 @@ struct LeaveRequestCard: View {
                     .cornerRadius(8)
             }
             .padding(.bottom, 12)
-            
+
             Divider()
-            
+
             // Leave details
             VStack(alignment: .leading, spacing: 8) {
                 LeaveDetailRow(icon: "calendar", label: "From", value: formatDate(request.startDate))
@@ -108,12 +126,13 @@ struct LeaveRequestCard: View {
                 LeaveDetailRow(icon: "text.alignleft", label: "Reason", value: request.reason, maxLines: 2)
             }
             .padding(.vertical, 12)
-            
+            .frame(maxHeight: .infinity) // This will ensure this section expands to fill available space
+
             Divider()
-            
+
             // Action buttons
             HStack(spacing: 12) {
-                Button(action: { 
+                Button(action: {
                     if !isProcessing {
                         onReject(request)
                     }
@@ -121,7 +140,7 @@ struct LeaveRequestCard: View {
                     HStack {
                         if isProcessing {
                             ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .red))
+                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
                                 .scaleEffect(0.8)
                         } else {
                             Text("Reject")
@@ -129,15 +148,15 @@ struct LeaveRequestCard: View {
                     }
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundColor(.red)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
-                    .background(Color.red.opacity(0.1))
+                    .background(Color("errorBlue"))
                     .cornerRadius(8)
                 }
                 .disabled(isProcessing)
-                
-                Button(action: { 
+
+                Button(action: {
                     if !isProcessing {
                         onApprove(request)
                     }
@@ -156,7 +175,7 @@ struct LeaveRequestCard: View {
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
-                    .background(Color.blue)
+                    .background(Color("successBlue"))
                     .cornerRadius(8)
                 }
                 .disabled(isProcessing)
@@ -166,17 +185,24 @@ struct LeaveRequestCard: View {
         .padding()
         .background(Color(.systemBackground))
         .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+        )
         .shadow(color: Color.black.opacity(0.05), radius: 5, x: 0, y: 2)
-        .frame(width: 300, height: 280)
+        // Apply the consistent size provided as parameters
+        .frame(width: cardWidth, height: cardHeight)
         .opacity(isProcessing ? 0.7 : 1.0)
     }
-    
+
+    // MARK: Private
+
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, yyyy"
         return formatter.string(from: date)
     }
-    
+
     private func calculateLeaveDays() -> Int {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.day], from: request.startDate, to: request.endDate)
@@ -188,20 +214,20 @@ struct LeaveDetailRow: View {
     let icon: String
     let label: String
     let value: String
-    var maxLines: Int? = nil
-    
+    var maxLines: Int?
+
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: icon)
-                .foregroundColor(.gray)
+                .foregroundColor(Color("iconBlue"))
                 .frame(width: 16)
-            
+
             Text(label)
                 .foregroundColor(.gray)
                 .font(.subheadline)
-            
+
             Spacer()
-            
+
             Text(value)
                 .font(.subheadline)
                 .lineLimit(maxLines)
@@ -211,11 +237,14 @@ struct LeaveDetailRow: View {
 }
 
 struct LeaveRequestListView: View {
+
+    // MARK: Internal
+
     var leaveRequests: [LeaveRequest]
     var onApprove: (LeaveRequest) -> Void
     var onReject: (LeaveRequest) -> Void
     var processingRequests: Set<String> = []
-    
+
     var body: some View {
         List(leaveRequests) { request in
             VStack(alignment: .leading, spacing: 12) {
@@ -226,9 +255,9 @@ struct LeaveRequestListView: View {
                         .frame(width: 40, height: 40)
                         .overlay(
                             Image(systemName: "person.fill")
-                                .foregroundColor(.blue)
+                                .foregroundColor(Color("iconBlue"))
                         )
-                    
+
                     VStack(alignment: .leading, spacing: 4) {
                         Text(request.doctorName)
                             .font(.headline)
@@ -236,9 +265,9 @@ struct LeaveRequestListView: View {
                             .font(.subheadline)
                             .foregroundColor(.gray)
                     }
-                    
+
                     Spacer()
-                    
+
                     VStack(alignment: .trailing, spacing: 4) {
                         // Leave duration badge
                         Text("\(calculateLeaveDays(for: request)) days")
@@ -249,23 +278,23 @@ struct LeaveRequestListView: View {
                             .padding(.vertical, 4)
                             .background(Color.blue.opacity(0.1))
                             .cornerRadius(8)
-                        
+
                         Text(formatDate(request.createdAt))
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
                 }
-                
+
                 // Leave details
                 VStack(alignment: .leading, spacing: 8) {
                     LeaveDetailRow(icon: "calendar", label: "From", value: formatDate(request.startDate))
                     LeaveDetailRow(icon: "calendar", label: "To", value: formatDate(request.endDate))
                     LeaveDetailRow(icon: "text.alignleft", label: "Reason", value: request.reason)
                 }
-                
+
                 // Action buttons
                 HStack(spacing: 12) {
-                    Button(action: { 
+                    Button(action: {
                         if !processingRequests.contains(request.id) {
                             onReject(request)
                         }
@@ -281,15 +310,15 @@ struct LeaveRequestListView: View {
                         }
                         .font(.subheadline)
                         .fontWeight(.medium)
-                        .foregroundColor(.red)
+                        .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(Color.red.opacity(0.1))
+                        .background(Color("errorBlue"))
                         .cornerRadius(8)
                     }
                     .disabled(processingRequests.contains(request.id))
-                    
-                    Button(action: { 
+
+                    Button(action: {
                         if !processingRequests.contains(request.id) {
                             onApprove(request)
                         }
@@ -308,7 +337,7 @@ struct LeaveRequestListView: View {
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 8)
-                        .background(Color.blue)
+                        .background(Color("successBlue"))
                         .cornerRadius(8)
                     }
                     .disabled(processingRequests.contains(request.id))
@@ -320,16 +349,18 @@ struct LeaveRequestListView: View {
         .navigationTitle("Leave Requests")
         .listStyle(InsetGroupedListStyle())
     }
-    
+
+    // MARK: Private
+
     private func formatDate(_ date: Date) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, yyyy"
         return formatter.string(from: date)
     }
-    
+
     private func calculateLeaveDays(for request: LeaveRequest) -> Int {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.day], from: request.startDate, to: request.endDate)
         return max(1, (components.day ?? 0) + 1) // Add 1 to include both start and end dates
     }
-} 
+}

@@ -39,6 +39,10 @@ class SignInViewController: UIViewController {
         navigationItem.hidesBackButton = true
     }
 
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+
     @IBAction func emailFieldChanged(_ sender: UITextField) {
         signInButton.isEnabled = isValidInputs
     }
