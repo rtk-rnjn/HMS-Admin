@@ -142,13 +142,13 @@ struct DashboardView: View {
 
                         Spacer()
 
-                        Button("See All") {
-                            // Handle see all
+                        NavigationLink("See All") {
+                            AllActivitiesView(logs: logs)
                         }
                         .foregroundColor(.blue)
                     }
 
-                    ForEach(logs, id: \.self) { log in
+                    ForEach(Array(logs.prefix(5)), id: \.self) { log in
                         ActivityRow(log: log)
                     }
                 }
@@ -304,7 +304,6 @@ struct ActivityRow: View {
                 .overlay(
                     Image(systemName: "stethoscope")
                         .foregroundColor(Color("iconBlue"))
-
                 )
 
             VStack(alignment: .leading, spacing: 4) {
@@ -318,9 +317,6 @@ struct ActivityRow: View {
             }
 
             Spacer()
-
-            Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
         }
         .padding(.vertical, 8)
     }
