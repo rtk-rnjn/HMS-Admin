@@ -12,6 +12,8 @@ struct AdminProfileView: View {
 
    @Environment(\.horizontalSizeClass) var sizeClass
     @State private var showLogoutAlert = false
+    @State private var impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
+    @State private var notificationFeedback = UINotificationFeedbackGenerator()
 
     var body: some View {
         ScrollView {
@@ -54,7 +56,10 @@ struct AdminProfileView: View {
                                  // Logout Button
 
                                 Button(action: {
-                                    showLogoutAlert = true // Show confirmation popup
+                                    // Heavy impact when showing logout confirmation
+                                    impactFeedback.prepare()
+                                    impactFeedback.impactOccurred(intensity: 1.0)
+                                    showLogoutAlert = true
                                 }) {
                                     Text("Logout")
                                         .font(.headline)
@@ -62,18 +67,25 @@ struct AdminProfileView: View {
                                         .frame(maxWidth: .infinity)
                                         .padding()
                                         .background(Color.red)
-                                        .cornerRadius(10)
-                                        .padding(.horizontal)
+                                        .cornerRadius(12)
                                 }
+                                .padding(.horizontal)
                                 .alert(isPresented: $showLogoutAlert) {
                                     Alert(
                                         title: Text("Confirm Logout"),
                                         message: Text("Are you sure you want to log out?"),
                                         primaryButton: .destructive(Text("Logout")) {
+                                            // Error haptic when confirming logout
+                                            notificationFeedback.prepare()
+                                            notificationFeedback.notificationOccurred(.error)
                                             DataController.shared.logout()
                                             delegate?.performSegue(withIdentifier: "segueShowSignInViewController", sender: nil)
                                         },
-                                        secondaryButton: .cancel()
+                                        secondaryButton: .cancel {
+                                            // Light impact when canceling
+                                            impactFeedback.prepare()
+                                            impactFeedback.impactOccurred(intensity: 0.5)
+                                        }
                                     )
                                 }
                             }
