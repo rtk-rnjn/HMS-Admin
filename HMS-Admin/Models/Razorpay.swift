@@ -7,6 +7,26 @@
 
 import Foundation
 
+struct RazorpayPaymentlinkResponse: Codable, Sendable, Identifiable, Hashable {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case amountPaid = "amount_paid"
+        case notes
+        case payments
+        case _createdAt = "created_at"
+    }
+
+    var id: String
+    var amountPaid: Int
+    var notes: RazorpayNotes
+    var payments: [RazorpayPayment]
+    var _createdAt: TimeInterval
+
+    var createdAt: Date {
+        Date(timeIntervalSince1970: _createdAt)
+    }
+}
+
 struct RazorpayNotes: Codable, Sendable, Identifiable, Hashable {
     enum CodingKeys: String, CodingKey {
         case doctorId = "doctor_id"
@@ -38,24 +58,4 @@ struct RazorpayPayment: Codable, Sendable, Identifiable, Hashable {
     var createdAt: TimeInterval
     var method: String = "card"
     var status: String = "captured"
-}
-
-struct RazorpayPaymentlinkResponse: Codable, Sendable, Identifiable, Hashable {
-    enum CodingKeys: String, CodingKey {
-        case id
-        case amountPaid = "amount_paid"
-        case notes
-        case payments
-        case _createdAt = "created_at"
-    }
-
-    var id: String
-    var amountPaid: Int
-    var notes: RazorpayNotes
-    var payments: [RazorpayPayment]
-    var _createdAt: TimeInterval
-
-    var createdAt: Date {
-        Date(timeIntervalSince1970: _createdAt)
-    }
 }
