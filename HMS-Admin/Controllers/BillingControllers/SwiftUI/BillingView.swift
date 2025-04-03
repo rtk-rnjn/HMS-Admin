@@ -9,15 +9,9 @@ import SwiftUI
 
 struct BillingView: View {
 
-    // MARK: Lifecycle
-
-    init(invoices: [RazorpayPaymentlinkResponse] = []) {
-        _invoices = State(initialValue: invoices)
-    }
-
     // MARK: Internal
-
-    @State var invoices: [RazorpayPaymentlinkResponse]
+    weak var delegate: BillingHostingController?
+    var invoices: [RazorpayPaymentlinkResponse] = []
 
     var body: some View {
         ScrollView {

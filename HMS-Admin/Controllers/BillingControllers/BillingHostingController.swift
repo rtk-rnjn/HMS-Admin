@@ -12,7 +12,7 @@ class BillingHostingController: UIHostingController<BillingView> {
     // MARK: Lifecycle
 
     required init?(coder: NSCoder) {
-        let billingView = BillingView(invoices: BillingView.sampleInvoices)
+        let billingView = BillingView()
         super.init(coder: coder, rootView: billingView)
     }
 
@@ -21,12 +21,13 @@ class BillingHostingController: UIHostingController<BillingView> {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.rootView.delegate = self
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
         Task {
             guard let bills = await DataController.shared.fetchBills() else {
-                // If no bills from backend, use sample data
-                DispatchQueue.main.async {
-                    self.rootView.invoices = BillingView.sampleInvoices
-                }
                 return
             }
             DispatchQueue.main.async {
