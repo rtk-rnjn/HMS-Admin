@@ -827,7 +827,7 @@ private struct SuccessHeader: View {
                 .frame(width: 80, height: 80)
                 .overlay(
                     Image(systemName: "checkmark")
-                        .font(.system(size: 40, weight: .bold))
+                        .font(.largeTitle)
                         .foregroundColor(.white)
                         .scaleEffect(showCheckmark ? 1 : 0.5)
                         .opacity(showCheckmark ? 1 : 0)

@@ -33,14 +33,14 @@ struct DoctorProfileView: View {
 
                     // Name with "Dr." prefix
                     Text("Dr. \(doctor.fullName)")
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.title2)
 
                     // Redesigned smaller status badge
                     Button(action: {
                         impactFeedback.impactOccurred(intensity: 0.7)
                     }) {
                         Text(doctor.onLeave ? "Inactive" : "Active")
-                            .font(.system(size: 13, weight: .semibold))
+                            .font(.footnote)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)
                             .background(doctor.onLeave ? Color("uselectedBlue") : Color("successBlue"))
@@ -170,7 +170,7 @@ struct InfoSectionCard<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text(title)
-                .font(.system(size: 20, weight: .bold))
+                .font(.title3)
                 .padding(.leading, 8)
 
             VStack(spacing: 0) {
@@ -192,17 +192,17 @@ struct InfoRow: View {
     var body: some View {
         HStack(spacing: 16) {
             Image(systemName: icon)
-                .font(.system(size: 18))
+                .font(.headline)
                 .frame(width: 24)
                 .foregroundColor(Color("iconBlue"))
 
             VStack(alignment: .leading, spacing: 5) {
                 Text(label)
-                    .font(.system(size: 14, weight: .regular))
+                    .font(.subheadline)
                     .foregroundColor(Color(.systemGray))
 
                 Text(value)
-                    .font(.system(size: 17, weight: .regular))
+                    .font(.body)
                     .foregroundColor(.primary)
             }
 

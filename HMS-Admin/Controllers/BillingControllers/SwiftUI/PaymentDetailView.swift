@@ -72,7 +72,7 @@ struct PaymentStatusCard: View {
                 .frame(width: 64, height: 64)
                 .overlay(
                     Image(systemName: statusIcon)
-                        .font(.system(size: 28, weight: .medium))
+                        .font(.title)
                         .foregroundColor(statusColor)
                         .scaleEffect(showAmount ? 1 : 0)
                         .rotationEffect(.degrees(showAmount ? 0 : -180))
@@ -81,7 +81,7 @@ struct PaymentStatusCard: View {
             
             // Amount with fade animation
             Text(String(format: "₹%.2f", Double(invoice.amountPaid) / 100.0))
-                .font(.system(size: 34, weight: .bold))
+                .font(.largeTitle)
                 .opacity(showAmount ? 1 : 0)
                 .scaleEffect(showAmount ? 1 : 0.9)
             

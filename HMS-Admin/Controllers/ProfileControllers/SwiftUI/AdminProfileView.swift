@@ -28,16 +28,8 @@ struct AdminProfileView: View {
 
                     // Admin Name
                     Text("Admin")
-                        .font(.system(size: 22, weight: .bold))
+                        .font(.title2)
 
-                    // Admin Role Badge
-//                    Text("Administrator")
-//                        .font(.system(size: 13, weight: .semibold))
-//                        .padding(.horizontal, 12)
-//                        .padding(.vertical, 6)
-//                        .background(Color.blue)
-//                        .foregroundColor(.white)
-//                        .clipShape(Capsule())
                 }
                 .padding(.top, 16)
                 .padding(.bottom, 8)

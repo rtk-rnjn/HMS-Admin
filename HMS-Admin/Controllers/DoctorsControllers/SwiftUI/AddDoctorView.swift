@@ -96,7 +96,7 @@ struct AddDoctorView: View {
                         // Header Image
                         VStack(spacing: 16) {
                             Image(systemName: "person.fill.badge.plus")
-                                .font(.system(size: 60))
+                                .font(.largeTitle)
                                 .foregroundColor(Color("iconBlue"))
 
                                 .padding(.top, 20)

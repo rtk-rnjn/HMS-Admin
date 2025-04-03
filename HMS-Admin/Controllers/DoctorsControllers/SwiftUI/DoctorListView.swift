@@ -53,7 +53,7 @@ struct DoctorListView: View {
                         if totalDoctors.isEmpty {
                             VStack(spacing: 20) {
                                 Image(systemName: "person.2.slash")
-                                    .font(.system(size: 60))
+                                    .font(.largeTitle)
                                     .foregroundColor(Color("iconBlue"))
                                 Text("No Doctors Added")
                                     .font(.title2)
@@ -134,17 +134,19 @@ struct DoctorCard: View {
                 VStack(alignment: .leading, spacing: 4) {
                     // Name
                     Text(doctor.fullName)
-                        .font(.system(size: 17, weight: .semibold))
+                        .font(.body)
                         .foregroundColor(.primary)
 
                     // Department
                     Text(doctor.department)
-                        .font(.system(size: 14))
+                        .font(.subheadline)
+
                         .foregroundColor(.secondary)
 
                     // Specialization
                     Text(doctor.specialization)
-                        .font(.system(size: 14))
+                        .font(.subheadline)
+
                         .foregroundColor(.secondary)
                         .lineLimit(2)
                 }
