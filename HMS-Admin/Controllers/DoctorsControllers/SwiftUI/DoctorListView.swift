@@ -137,19 +137,20 @@ struct DoctorCard: View {
                         .font(.system(size: 17, weight: .semibold))
                         .foregroundColor(.primary)
 
-                    // Department and specialization
+                    // Department
                     Text(doctor.department)
-                        .font(.system(size: 14, weight: .regular))
+                        .font(.system(size: 14))
                         .foregroundColor(.secondary)
 
+                    // Specialization
                     Text(doctor.specialization)
-                        .font(.system(size: 14, weight: .regular))
+                        .font(.system(size: 14))
                         .foregroundColor(.secondary)
+                        .lineLimit(2)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                // Status indicator - small dot instead of badge for cleaner list
+                // Status indicator
                 Circle()
                     .fill(doctor.onLeave ? Color.orange : Color.green)
                     .frame(width: 10, height: 10)
