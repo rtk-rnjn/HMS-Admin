@@ -19,6 +19,8 @@ struct DashboardView: View {
 
     var activeDoctorCount: Int = 0
     var patientCount: Int = 0
+    var doctorTrend: String = "+0%"
+    var patientTrend: String = "+0%"
 
     let timeRanges = ["Today", "Week", "Month"]
 
@@ -34,26 +36,27 @@ struct DashboardView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 16) {
-                        QuickStatCard(
-                            title: "Active Doctors",
-                            value: "\(activeDoctorCount)",
-                            icon: "stethoscope",
-                            color: Color("iconBlue"),
-                            trend: "+5%"
-                        )
+                // Stats Cards - Fixed, not scrollable
+                HStack(spacing: 16) {
+                    QuickStatCard(
+                        title: "Active Doctors",
+                        value: "\(activeDoctorCount)",
+                        icon: "stethoscope",
+                        color: Color("iconBlue"),
+                        trend: doctorTrend
+                    )
+                    .frame(maxWidth: .infinity)
 
-                        QuickStatCard(
-                            title: "Today's Patients",
-                            value: "\(patientCount)",
-                            icon: "person.2.fill",
-                            color: Color("iconBlue"),
-                            trend: "+12%"
-                        )
-                    }
-                    .padding(.horizontal)
+                    QuickStatCard(
+                        title: "Today's Patients",
+                        value: "\(patientCount)",
+                        icon: "person.2.fill",
+                        color: Color("iconBlue"),
+                        trend: patientTrend
+                    )
+                    .frame(maxWidth: .infinity)
                 }
+                .padding(.horizontal)
 
                 LazyVGrid(columns: [
                     GridItem(.flexible()),
@@ -250,7 +253,6 @@ struct QuickStatCard: View {
                 .foregroundColor(.gray)
         }
         .padding()
-        .frame(width: 180)
         .background(Color(.systemBackground))
         .cornerRadius(12)
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.gray.opacity(0.2), lineWidth: 1))
