@@ -129,10 +129,10 @@ struct LeaveRequestCard: View {
                     }
                     .font(.subheadline)
                     .fontWeight(.medium)
-                    .foregroundColor(.red)
+                    .foregroundColor(.white)
                     .frame(maxWidth: .infinity)
                     .frame(height: 36)
-                    .background(Color.red.opacity(0.1))
+                    .background(Color("airleBlue"))
                     .cornerRadius(8)
                 }
                 .disabled(isProcessing)
