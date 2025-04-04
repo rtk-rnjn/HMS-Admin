@@ -149,38 +149,55 @@ struct DashboardView: View {
 
     private func handleLeaveApproval(_ request: LeaveRequest) {
         // Add request to processing set
-//        processingRequests.insert(request.id)
-//
-//        // Optimistically update local state
-//        if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
-//            let updatedRequest = request
-//            leaveRequests[index] = updatedRequest
-//        }
-//
-//        Task {
-//            // Make API call
-//            let success = await DataController.shared.approveLeaveRequest(request)
-//
-//            DispatchQueue.main.async {
-//                // Remove from processing set
-//                processingRequests.remove(request.id)
-//
-//                if !success {
-//                    // Revert local state if API call failed
-//                    if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
-//                        let revertedRequest = request
-//                        leaveRequests[index] = revertedRequest
-//                    }
-//                    // Show error message
-//                    // Note: You might want to add an @State property for showing alerts
-//                }
-//
-//                // Refresh the list to get the latest state
-//                fetchLeaveRequests()
-//            }
-//        }
+        processingRequests.insert(request.id)
+
+        // Optimistically update local state
+        if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
+            var updatedRequest = request
+            updatedRequest.approved = true
+            leaveRequests[index] = updatedRequest
+        }
+
         Task {
-            await DataController.shared.approveLeaveRequest(request)
+            // Make API call
+            let success = await DataController.shared.approveLeaveRequest(request)
+
+            if success {
+                // Create and send notification to the doctor
+                if let doctor = request.doctor {
+                    let title = "Leave Request Approved"
+                    let body = "Your leave request has been approved for the requested dates."
+                    
+                    // Create announcement for the doctor
+                    let announcement = Announcement(
+                        title: title,
+                        body: body,
+                        broadcastTo: ["Doctor"],
+                        category: .general
+                    )
+                    
+                    // Send the announcement
+                    _ = await DataController.shared.createAnnouncement(announcement)
+                    
+                    // Create local notification
+                    Utils.createNotification(title: title, body: body)
+                }
+            }
+
+            DispatchQueue.main.async {
+                // Remove from processing set
+                processingRequests.remove(request.id)
+
+                if !success {
+                    // Revert local state if API call failed
+                    if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
+                        leaveRequests[index] = request
+                    }
+                }
+
+                // Refresh the list to get the latest state
+                fetchLeaveRequests()
+            }
         }
     }
 

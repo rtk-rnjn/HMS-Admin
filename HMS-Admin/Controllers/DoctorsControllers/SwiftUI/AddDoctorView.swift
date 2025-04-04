@@ -1145,22 +1145,22 @@ struct AddDoctorView: View {
 
             // Create new doctor
             var newDoctor = Staff(
-                firstName: firstName,
+            firstName: firstName,
                 lastName: lastName,
-                gender: selectedGender,
-                emailAddress: email,
+            gender: selectedGender,
+            emailAddress: email,
                 dateOfBirth: dateOfBirth ?? Date(),
                 password: password,
-                contactNumber: contactNumber,
+            contactNumber: contactNumber,
                 specialization: specializations,
-                department: department,
+            department: department,
                 onLeave: false,
                 consultationFee: Int(fee),
-                licenseId: medicalLicenseNumber,
-                yearOfExperience: yearsOfExperience,
+            licenseId: medicalLicenseNumber,
+            yearOfExperience: yearsOfExperience,
                 role: .doctor,
                 hospitalId: DataController.shared.hospital?.id ?? ""
-            )
+        )
 
             // Add working hours separately
             newDoctor.workingHours = workingHours
@@ -1179,7 +1179,7 @@ struct AddDoctorView: View {
 
                 // Show success view
                 showingSuccessView = true
-                isLoading = false
+                    isLoading = false
             }
         }
     }
