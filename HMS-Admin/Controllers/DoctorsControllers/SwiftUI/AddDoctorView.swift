@@ -1150,6 +1150,7 @@ struct AddDoctorView: View {
             var newDoctor = Staff(
                 firstName: firstName,
                 lastName: lastName,
+                gender: selectedGender,
                 emailAddress: email,
                 dateOfBirth: dateOfBirth ?? Date(),
                 password: password,
