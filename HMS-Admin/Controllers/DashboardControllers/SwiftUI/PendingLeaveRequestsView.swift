@@ -115,29 +115,29 @@ struct LeaveRequestCard: View {
 
             // Action buttons
             HStack(spacing: 12) {
-                Button(action: {
-                    if !isProcessing {
-                        onReject(request)
-                    }
-                }) {
-                    HStack {
-                        if isProcessing {
-                            ProgressView()
-                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
-                                .scaleEffect(0.8)
-                        } else {
-                            Text("Reject")
-                        }
-                    }
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 36)
-                    .background(Color("errorBlue"))
-                    .cornerRadius(8)
-                }
-                .disabled(isProcessing)
+//                Button(action: {
+//                    if !isProcessing {
+//                        onReject(request)
+//                    }
+//                }) {
+//                    HStack {
+//                        if isProcessing {
+//                            ProgressView()
+//                                .progressViewStyle(CircularProgressViewStyle(tint: .white))
+//                                .scaleEffect(0.8)
+//                        } else {
+//                            Text("Reject")
+//                        }
+//                    }
+//                    .font(.subheadline)
+//                    .fontWeight(.medium)
+//                    .foregroundColor(.white)
+//                    .frame(maxWidth: .infinity)
+//                    .frame(height: 36)
+//                    .background(Color("errorBlue"))
+//                    .cornerRadius(8)
+//                }
+//                .disabled(isProcessing)
 
                 Button(action: {
                     if !isProcessing {
@@ -251,29 +251,29 @@ struct LeaveRequestListView: View {
 
                 // Action buttons
                 HStack(spacing: 12) {
-                    Button(action: {
-                        if !processingRequests.contains(request.id) {
-                            onReject(request)
-                        }
-                    }) {
-                        HStack {
-                            if processingRequests.contains(request.id) {
-                                ProgressView()
-                                    .progressViewStyle(CircularProgressViewStyle(tint: .red))
-                                    .scaleEffect(0.8)
-                            } else {
-                                Text("Reject")
-                            }
-                        }
-                        .font(.subheadline)
-                        .fontWeight(.medium)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        .background(Color("errorBlue"))
-                        .cornerRadius(8)
-                    }
-                    .disabled(processingRequests.contains(request.id))
+//                    Button(action: {
+//                        if !processingRequests.contains(request.id) {
+//                            onReject(request)
+//                        }
+//                    }) {
+//                        HStack {
+//                            if processingRequests.contains(request.id) {
+//                                ProgressView()
+//                                    .progressViewStyle(CircularProgressViewStyle(tint: .red))
+//                                    .scaleEffect(0.8)
+//                            } else {
+//                                Text("Reject")
+//                            }
+//                        }
+//                        .font(.subheadline)
+//                        .fontWeight(.medium)
+//                        .foregroundColor(.white)
+//                        .frame(maxWidth: .infinity)
+//                        .padding(.vertical, 8)
+//                        .background(Color("errorBlue"))
+//                        .cornerRadius(8)
+//                    }
+//                    .disabled(processingRequests.contains(request.id))
 
                     Button(action: {
                         if !processingRequests.contains(request.id) {

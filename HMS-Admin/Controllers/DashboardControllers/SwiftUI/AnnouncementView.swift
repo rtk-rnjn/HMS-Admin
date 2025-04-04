@@ -83,7 +83,7 @@ struct AnnouncementView: View {
         case .general: return Image(systemName: "megaphone.fill")
         case .emergency: return Image(systemName: "exclamationmark.triangle.fill")
         case .appointment: return Image(systemName: "calendar.badge.clock")
-        case .holiday: return Image(systemName: "gift.fill")
+       // case .holiday: return Image(systemName: "gift.fill")
         }
     }
 
@@ -92,7 +92,7 @@ struct AnnouncementView: View {
         case .general: return Color("secondaryBlue")
         case .emergency: return Color("errorBlue")
         case .appointment: return Color("primaryBlue")
-        case .holiday: return Color("successBlue")
+       // case .holiday: return Color("successBlue")
         }
     }
 }

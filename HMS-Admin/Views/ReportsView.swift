@@ -99,7 +99,7 @@ struct ReportsView: View {
         ReportSectionView(title: "Appointments Overview") {
             VStack(spacing: 20) {
                 appointmentsChartView
-                appointmentsMetricsView
+//                appointmentsMetricsView
             }
         }
     }
