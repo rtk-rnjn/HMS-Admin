@@ -18,12 +18,6 @@ class DashboardHostingController: UIHostingController<DashboardView> {
     }
 
     // MARK: Internal
-    
-    // Current and previous month data
-    private var currentMonthDoctorCount: Int = 0
-    private var previousMonthDoctorCount: Int = 0
-    private var currentMonthPatientCount: Int = 0
-    private var previousMonthPatientCount: Int = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +55,12 @@ class DashboardHostingController: UIHostingController<DashboardView> {
 
     // MARK: Private
 
+    // Current and previous month data
+    private var currentMonthDoctorCount: Int = 0
+    private var previousMonthDoctorCount: Int = 0
+    private var currentMonthPatientCount: Int = 0
+    private var previousMonthPatientCount: Int = 0
+
     private func updateUI() {
         Task {
             await fetchDoctorCounts()
@@ -83,20 +83,20 @@ class DashboardHostingController: UIHostingController<DashboardView> {
             }
         }
     }
-    
+
     // Calculate percentage change between current and previous values
     private func calculatePercentageChange(current: Int, previous: Int) -> String {
         guard previous > 0 else {
             return current > 0 ? "+100%" : "0%"
         }
-        
+
         let change = current - previous
         let percentage = (Double(change) / Double(previous)) * 100.0
-        
+
         let sign = percentage >= 0 ? "+" : ""
         return "\(sign)\(Int(percentage))%"
     }
-    
+
     // Fetch current and previous month doctor counts
     private func fetchDoctorCounts() async {
         // Current month
@@ -105,14 +105,14 @@ class DashboardHostingController: UIHostingController<DashboardView> {
             previousMonthDoctorCount = 0
             return
         }
-        
+
         currentMonthDoctorCount = currentMonthDoctors.count
-        
+
         // Use 80% of current value for previous month in this demo
         // In a real app, you would fetch historical data from your database
         previousMonthDoctorCount = Int(Double(currentMonthDoctorCount) * 0.8)
     }
-    
+
     // Fetch current and previous month patient counts
     private func fetchPatientCounts() async {
         // Get patient count for current month
@@ -121,20 +121,20 @@ class DashboardHostingController: UIHostingController<DashboardView> {
             previousMonthPatientCount = 0
             return
         }
-        
+
         var uniquePatients: [String: Int] = [:]
-        
+
         for doctor in doctors {
             let appointments: [Appointment]? = await DataController.shared.fetchAppointments(byDoctorWithId: doctor.id)
             guard let appointments else { continue }
-            
+
             for appointment in appointments {
                 uniquePatients[appointment.patientId] = 0
             }
         }
-        
+
         currentMonthPatientCount = uniquePatients.count
-        
+
         // Use 70% of current value for previous month in this demo
         // In a real app, you would fetch historical data from your database
         previousMonthPatientCount = Int(Double(currentMonthPatientCount) * 0.7)

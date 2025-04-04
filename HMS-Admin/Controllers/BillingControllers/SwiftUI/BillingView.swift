@@ -10,6 +10,7 @@ import SwiftUI
 struct BillingView: View {
 
     // MARK: Internal
+
     weak var delegate: BillingHostingController?
     var invoices: [RazorpayPaymentlinkResponse] = []
 
@@ -124,17 +125,17 @@ struct SummaryCardView: View {
                         .background(color.opacity(0.1))
                         .clipShape(Circle())
                 }
-                
+
                 Spacer()
             }
-            
+
             Spacer()
-            
+
             // Amount
             Text(String(format: "₹%.2f", amount))
                 .font(.title2)
                 .fontWeight(.bold)
-            
+
             // Title
             Text(title)
                 .font(.subheadline)

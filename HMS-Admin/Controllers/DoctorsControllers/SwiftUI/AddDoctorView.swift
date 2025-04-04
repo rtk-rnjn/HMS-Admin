@@ -9,7 +9,6 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
-
 struct AddDoctorView: View {
 
     // MARK: Lifecycle
@@ -794,6 +793,9 @@ struct AddDoctorView: View {
     @State private var showingTimePickerSheet = false
     @State private var isEditingStartTime = true
 
+    @State private var showingSuccessView = false
+    @State private var savedDoctor: Staff?
+
     // Add department to specializations mapping
     private let departmentSpecializations: [String: [String]] = [
         "Cardiology": [
@@ -1097,9 +1099,6 @@ struct AddDoctorView: View {
         isFormValid = validateForm()
     }
 
-    @State private var showingSuccessView = false
-    @State private var savedDoctor: Staff?
-
     private func saveDoctor() {
         // Parse specializations correctly - they're already comma-separated from the multi-selection
         let specializations = specialization.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -1174,10 +1173,10 @@ struct AddDoctorView: View {
 
                 // Store the saved doctor before resetting the form
                 self.savedDoctor = savedDoctor
-                
+
                 // Send welcome email
                 printEmail(to: email, name: "\(firstName) \(lastName)", password: password)
-                
+
                 // Show success view
                 showingSuccessView = true
                 isLoading = false
@@ -1244,7 +1243,7 @@ struct AddDoctorView: View {
         startTime = Calendar.current.date(from: DateComponents(hour: 9, minute: 0)) ?? Date()
         endTime = Calendar.current.date(from: DateComponents(hour: 17, minute: 0)) ?? Date()
         selectedDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-        
+
         // Reset validation states
         firstNameError = ""
         lastNameError = ""
@@ -1256,12 +1255,12 @@ struct AddDoctorView: View {
         consultationFeeError = ""
         departmentError = ""
         specializationError = ""
-        
+
         // Reset interaction states
         dateOfBirthHasInteracted = false
         departmentHasInteracted = false
         specializationHasInteracted = false
-        
+
         // Reset form validity
         checkFormValidity()
     }
@@ -1328,33 +1327,33 @@ struct DoctorSuccessView: View {
     @State private var showCheckmark = false
     @State private var showContent = false
     @State private var showButtons = false
-    
+
     let doctor: Staff
     var onGoToHome: (() -> Void)?
     var onAddAnotherDoctor: (() -> Void)?
-    
+
     // MARK: - Haptics
     private func successHaptic() {
         let generator = UINotificationFeedbackGenerator()
         generator.notificationOccurred(.success)
     }
-    
+
     private func buttonHaptic() {
         let generator = UIImpactFeedbackGenerator(style: .medium)
         generator.impactOccurred()
     }
-    
+
     var body: some View {
         VStack(spacing: 32) {
             Spacer()
-            
+
             // Success checkmark
             ZStack {
                 Circle()
                     .fill(Color.green)
                     .frame(width: 100, height: 100)
                     .shadow(color: .green.opacity(0.3), radius: 10, x: 0, y: 5)
-                
+
                 Image(systemName: "checkmark")
                     .font(.system(size: 50, weight: .bold))
                     .foregroundColor(.white)
@@ -1362,7 +1361,7 @@ struct DoctorSuccessView: View {
             .scaleEffect(showCheckmark ? 1 : 0.5)
             .opacity(showCheckmark ? 1 : 0)
             .animation(.spring(response: 0.4, dampingFraction: 0.6, blendDuration: 0.2), value: showCheckmark)
-            
+
             // Success text and Doctor card
             VStack(spacing: 24) {
                 VStack(spacing: 8) {
@@ -1371,22 +1370,22 @@ struct DoctorSuccessView: View {
                         .fontWeight(.bold)
                         .foregroundColor(.primary)
                         .multilineTextAlignment(.center)
-                    
+
                     Text("The doctor has been added to the hospital system")
                         .font(.headline)
                         .foregroundColor(.secondary)
                         .multilineTextAlignment(.center)
                         .fixedSize(horizontal: false, vertical: true)
                 }
-                
+
                 SuccessDoctorCard(doctor: doctor)
             }
             .opacity(showContent ? 1 : 0)
             .offset(y: showContent ? 0 : 20)
             .animation(.easeOut(duration: 0.4).delay(0.3), value: showContent)
-            
+
             Spacer()
-            
+
             // Buttons
             VStack(spacing: 16) {
                 Button {
@@ -1405,7 +1404,7 @@ struct DoctorSuccessView: View {
                     .cornerRadius(14)
                     .shadow(color: .blue.opacity(0.3), radius: 8, x: 0, y: 4)
                 }
-                
+
                 Button {
                     buttonHaptic()
                     onAddAnotherDoctor?()
@@ -1455,7 +1454,7 @@ struct DoctorSuccessView: View {
 
 struct SuccessDoctorCard: View {
     let doctor: Staff
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             // Doctor info header
@@ -1466,17 +1465,17 @@ struct SuccessDoctorCard: View {
                     .foregroundColor(.gray)
                     .background(Color.white)
                     .clipShape(Circle())
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text(doctor.fullName)
                         .font(.title3)
                         .fontWeight(.semibold)
-                    
+
                     Text(doctor.specialization)
                         .foregroundColor(.secondary)
                 }
             }
-            
+
             // Department
             HStack(spacing: 12) {
                 Image(systemName: "building.2.fill")
@@ -1484,7 +1483,7 @@ struct SuccessDoctorCard: View {
                 Text(doctor.department)
                     .foregroundColor(.secondary)
             }
-            
+
             // Email
             HStack(spacing: 12) {
                 Image(systemName: "envelope.fill")
@@ -1492,7 +1491,7 @@ struct SuccessDoctorCard: View {
                 Text(doctor.emailAddress)
                     .foregroundColor(.secondary)
             }
-            
+
             // Phone
             HStack(spacing: 12) {
                 Image(systemName: "phone.fill")

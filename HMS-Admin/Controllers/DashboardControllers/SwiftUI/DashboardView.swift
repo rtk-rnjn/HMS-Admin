@@ -224,6 +224,7 @@ struct QuickStatCard: View {
     let value: String
     let icon: String
     let color: Color
+
   //  let trend: String
 
     var body: some View {
@@ -234,7 +235,6 @@ struct QuickStatCard: View {
                     .foregroundColor(color)
 
                 Spacer()
-
 
             }
 

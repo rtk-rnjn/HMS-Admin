@@ -1,6 +1,5 @@
 import Foundation
 
-
 struct LeaveRequest: Codable, Identifiable, Equatable {
     enum CodingKeys: String, CodingKey {
         case id = "_id"

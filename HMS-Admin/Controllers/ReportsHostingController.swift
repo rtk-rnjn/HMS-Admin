@@ -10,10 +10,7 @@ import SwiftUI
 
 class ReportsHostingController: UIHostingController<ReportsView> {
 
-    var totalRevenue: Int = 0
-    var uniquePatients: Int = 0
-    var metrics: [MetricData] = []
-    var appointmentData: [WeeklyData] = []
+    // MARK: Lifecycle
 
     init() {
         let reportsView = ReportsView()
@@ -27,10 +24,17 @@ class ReportsHostingController: UIHostingController<ReportsView> {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: Internal
+
+    var totalRevenue: Int = 0
+    var uniquePatients: Int = 0
+    var metrics: [MetricData] = []
+    var appointmentData: [WeeklyData] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.rootView.delegate = self
+        rootView.delegate = self
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -51,6 +55,15 @@ class ReportsHostingController: UIHostingController<ReportsView> {
             }
         }
     }
+
+    func generateMetrics() -> [MetricData] {
+        return [
+            MetricData(title: "Appointments", value: "\(uniquePatients)", icon: "calendar", isPositive: true, color: Color("iconBlue")),
+            MetricData(title: "Revenue", value: "Rs. \(totalRevenue / 100)", icon: "dollarsign.circle", isPositive: true, color: Color("iconBlue"))
+        ]
+    }
+
+    // MARK: Private
 
     private func fetchPatientCounts() async -> Int {
         guard let doctors = await DataController.shared.fetchDoctors() else {
@@ -93,14 +106,8 @@ class ReportsHostingController: UIHostingController<ReportsView> {
             }
         }
 
-        self.appointmentData = [WeeklyData(week: "Week 1", count: weeklyCounts.count)]
+        appointmentData = [WeeklyData(week: "Week 1", count: weeklyCounts.count)]
         return weeklyCounts
     }
 
-    func generateMetrics() -> [MetricData] {
-        return [
-            MetricData(title: "Appointments", value: "\(uniquePatients)", icon: "calendar", isPositive: true, color: Color("iconBlue")),
-            MetricData(title: "Revenue", value: "Rs. \(totalRevenue / 100)", icon: "dollarsign.circle", isPositive: true, color: Color("iconBlue"))
-        ]
-    }
 }

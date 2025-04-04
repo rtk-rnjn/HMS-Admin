@@ -315,5 +315,4 @@ struct LeaveRequestListView: View {
         return formatter.string(from: date)
     }
 
-
 }

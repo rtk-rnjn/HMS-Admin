@@ -28,7 +28,7 @@ struct CreateAnnouncementView: View {
             Form {
                 Section(header: Text("Title")) {
                     TextField("Enter title", text: $title)
-                        .onChange(of: title) { oldState, newState in
+                        .onChange(of: title) { _, _ in
                             // Light haptic when typing title
                             impactFeedback.prepare()
                             impactFeedback.impactOccurred(intensity: 0.4)
@@ -38,7 +38,7 @@ struct CreateAnnouncementView: View {
                 Section(header: Text("Body")) {
                     TextEditor(text: $message)
                         .frame(minHeight: 100)
-                        .onChange(of: message) { oldState, newState in
+                        .onChange(of: message) { _, _ in
                             // Very light haptic when typing message
                             impactFeedback.prepare()
                             impactFeedback.impactOccurred(intensity: 0.3)
@@ -52,7 +52,7 @@ struct CreateAnnouncementView: View {
                         }
                     }
                     .pickerStyle(MenuPickerStyle())
-                    .onChange(of: category) { oldState, newState in
+                    .onChange(of: category) { _, _ in
                         // Selection haptic when changing category
                         selectionFeedback.prepare()
                         selectionFeedback.selectionChanged()
