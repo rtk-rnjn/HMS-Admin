@@ -9,7 +9,7 @@ import SwiftUI
 import Charts
 
 struct ReportsView: View {
-
+    weak var delegate: ReportsHostingController?
     // MARK: Internal
 
     var body: some View {
@@ -23,16 +23,8 @@ struct ReportsView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
 
-    // Time filter selection
-    @State private var selectedTimeRange = 0 // Only monthly view now
-
-    private let timeRanges = ["Month"]
-
     // Metrics data (sample)
-    private let metrics: [MetricData] = [
-        MetricData(title: "Appointments", value: "124", icon: "calendar", growth: "+12%", isPositive: true, color: Color("iconBlue")),
-        MetricData(title: "Revenue", value: "$12,450", icon: "dollarsign.circle", growth: "+8%", isPositive: true, color: Color("iconBlue"))
-    ]
+    var metrics: [MetricData] = []
 
     // Top doctors data (sample)
     private let topDoctors: [DoctorPerformance] = [
@@ -45,31 +37,7 @@ struct ReportsView: View {
 
     // MARK: - Sample Data
 
-    // Appointment data (sample) - Monthly breakdown by weeks
-    private let appointmentData = [
-        MonthlyData(month: "Week 1", count: 28),
-        MonthlyData(month: "Week 2", count: 32),
-        MonthlyData(month: "Week 3", count: 35),
-        MonthlyData(month: "Week 4", count: 29)
-    ]
-
-    // Staff performance data (sample)
-    private let staffPerformance = [
-        StaffPerformance(department: "Ortho", efficiency: 92, icon: "figure.walk"),
-        StaffPerformance(department: "Cardiology", efficiency: 85, icon: "heart"),
-        StaffPerformance(department: "Neurology", efficiency: 88, icon: "brain.head.profile"),
-        StaffPerformance(department: "Pediatrics", efficiency: 91, icon: "figure.child")
-    ]
-
-    // Revenue data (sample)
-    private let revenueData = [
-        RevenueData(month: "Jan", revenue: 32450),
-        RevenueData(month: "Feb", revenue: 35780),
-        RevenueData(month: "Mar", revenue: 41200),
-        RevenueData(month: "Apr", revenue: 38900),
-        RevenueData(month: "May", revenue: 42350),
-        RevenueData(month: "Jun", revenue: 45230)
-    ]
+    var appointmentData: [WeeklyData] = []
 
     private var dateRangeText: String {
         let now = Date()
@@ -150,9 +118,9 @@ struct ReportsView: View {
         Group {
             if #available(iOS 16.0, *) {
                 Chart {
-                    ForEach(appointmentData, id: \.month) { item in
+                    ForEach(appointmentData, id: \.week) { item in
                         LineMark(
-                            x: .value("Week", item.month),
+                            x: .value("Week", item.week),
                             y: .value("Count", item.count)
                         )
                         .foregroundStyle(Color.blue.gradient)
@@ -161,10 +129,6 @@ struct ReportsView: View {
                 }
                 .frame(height: 200)
                 .chartYScale(domain: 0...40)
-            } else {
-                // Fallback for iOS 15
-                SimpleLineChartView(data: appointmentData.map { Double($0.count) }, labels: appointmentData.map { $0.month })
-                    .frame(height: 200)
             }
         }
     }
@@ -200,103 +164,12 @@ struct ReportsView: View {
         }
     }
 
-    private var staffPerformanceSection: some View {
-        ReportSectionView(title: "Staff Performance") {
-            VStack(spacing: 15) {
-                staffPerformanceChartView
-                staffPerformanceMetricsView
-            }
-        }
-    }
-
-    private var staffPerformanceChartView: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                Chart {
-                    ForEach(staffPerformance, id: \.department) { item in
-                        BarMark(
-                            x: .value("Department", item.department),
-                            y: .value("Efficiency", item.efficiency)
-                        )
-                        .foregroundStyle(Color.blue.gradient)
-                        .cornerRadius(8)
-                    }
-                }
-                .frame(height: 220)
-                .chartYScale(domain: 0...100)
-            } else {
-                // Fallback for iOS 15
-                SimpleBarChartView(
-                    data: staffPerformance.map { Double($0.efficiency) },
-                    labels: staffPerformance.map { $0.department }
-                )
-                .frame(height: 220)
-            }
-        }
-    }
-
-    private var staffPerformanceMetricsView: some View {
-        LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
-            ForEach(staffPerformance) { staff in
-                StaffMetricView(title: staff.department, value: "\(staff.efficiency)%", icon: staff.icon)
-            }
-        }
-    }
-
-    private var revenueAnalyticsSection: some View {
-        ReportSectionView(title: "Revenue Analytics") {
-            VStack(spacing: 15) {
-                revenueMetricsView
-                revenueChartView
-            }
-        }
-    }
-
     private var revenueMetricsView: some View {
         LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
             RevenueMetricView(title: "Total Revenue", value: "$45,230", icon: "dollarsign.circle", color: .blue)
             RevenueMetricView(title: "Net Profit", value: "$17,380", icon: "chart.line.uptrend.xyaxis", color: Color(red: 0.2, green: 0.5, blue: 0.8))
         }
     }
-
-    private var revenueChartView: some View {
-        Group {
-            if #available(iOS 16.0, *) {
-                Chart {
-                    ForEach(revenueData, id: \.month) { item in
-                        LineMark(
-                            x: .value("Month", item.month),
-                            y: .value("Revenue", item.revenue)
-                        )
-                        .foregroundStyle(Color.blue.gradient)
-                        .symbol(Circle().strokeBorder(lineWidth: 2))
-
-                        AreaMark(
-                            x: .value("Month", item.month),
-                            y: .value("Revenue", item.revenue)
-                        )
-                        .foregroundStyle(
-                            .linearGradient(
-                                colors: [Color.blue.opacity(0.3), Color.blue.opacity(0.01)],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                    }
-                }
-                .frame(height: 200)
-                .chartYScale(domain: 0...50000)
-            } else {
-                // Fallback for iOS 15
-                SimpleLineChartView(
-                    data: revenueData.map { $0.revenue / 1000 }, // Scale down for display
-                    labels: revenueData.map { $0.month }
-                )
-                .frame(height: 200)
-            }
-        }
-    }
-
 }
 
 // MARK: - Supporting Views
@@ -351,7 +224,7 @@ struct MetricCardView: View {
 
                 Spacer()
 
-                Text(metric.growth)
+                Text("")
                     .font(.caption)
                     .fontWeight(.semibold)
                     .foregroundColor(metric.isPositive ? .green : .red)
@@ -650,14 +523,13 @@ struct MetricData: Identifiable {
     let title: String
     let value: String
     let icon: String
-    let growth: String
     let isPositive: Bool
     let color: Color
 }
 
 // Monthly Data Model
-struct MonthlyData {
-    let month: String
+struct WeeklyData {
+    let week: String
     let count: Int
 }
 
