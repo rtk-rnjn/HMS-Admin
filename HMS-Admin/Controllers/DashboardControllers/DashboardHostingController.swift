@@ -65,11 +65,7 @@ class DashboardHostingController: UIHostingController<DashboardView> {
         Task {
             await fetchDoctorCounts()
             DispatchQueue.main.async {
-                self.rootView.activeDoctorCount = self.currentMonthDoctorCount
-                self.rootView.doctorTrend = self.calculatePercentageChange(
-                    current: self.currentMonthDoctorCount,
-                    previous: self.previousMonthDoctorCount
-                )
+            self.rootView.activeDoctorCount = self.currentMonthDoctorCount
             }
         }
 
@@ -77,10 +73,6 @@ class DashboardHostingController: UIHostingController<DashboardView> {
             await fetchPatientCounts()
             DispatchQueue.main.async {
                 self.rootView.patientCount = self.currentMonthPatientCount
-                self.rootView.patientTrend = self.calculatePercentageChange(
-                    current: self.currentMonthPatientCount,
-                    previous: self.previousMonthPatientCount
-                )
             }
         }
 

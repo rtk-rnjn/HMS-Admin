@@ -198,11 +198,11 @@ struct MetricCardView: View {
                 Text("")
                     .font(.caption)
                     .fontWeight(.semibold)
-                    .foregroundColor(metric.isPositive ? .green : .red)
+                    .foregroundColor(metric.isPositive ? .successBlue : .errorBlue)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 4)
                     .background(
-                        (metric.isPositive ? Color.green : Color.red)
+                        (metric.isPositive ? Color.successBlue : Color.errorBlue)
                             .opacity(0.1)
                     )
                     .cornerRadius(12)

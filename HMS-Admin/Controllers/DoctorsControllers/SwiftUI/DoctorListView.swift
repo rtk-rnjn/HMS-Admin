@@ -154,7 +154,7 @@ struct DoctorCard: View {
 
                 // Status indicator
                 Circle()
-                    .fill(doctor.onLeave ? Color.orange : Color.green)
+                    .fill(doctor.onLeave ? Color.black : Color.blue)
                     .frame(width: 10, height: 10)
             }
             .padding()

@@ -823,7 +823,7 @@ private struct SuccessHeader: View {
     var body: some View {
         VStack(spacing: 24) {
             Circle()
-                .fill(Color.green)
+                .fill(Color.successBlue)
                 .frame(width: 80, height: 80)
                 .overlay(
                     Image(systemName: "checkmark")
@@ -832,7 +832,6 @@ private struct SuccessHeader: View {
                         .scaleEffect(showCheckmark ? 1 : 0.5)
                         .opacity(showCheckmark ? 1 : 0)
                 )
-                .shadow(color: .green.opacity(0.3), radius: 10, x: 0, y: 4)
                 .scaleEffect(showCheckmark ? 1 : 0.5)
 
             Text("Hospital Added Successfully!")

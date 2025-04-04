@@ -1351,9 +1351,9 @@ struct DoctorSuccessView: View {
             // Success checkmark
             ZStack {
                 Circle()
-                    .fill(Color.green)
+                    .fill(Color.successBlue)
                     .frame(width: 100, height: 100)
-                    .shadow(color: .green.opacity(0.3), radius: 10, x: 0, y: 5)
+                  
                 
                 Image(systemName: "checkmark")
                     .font(.system(size: 50, weight: .bold))

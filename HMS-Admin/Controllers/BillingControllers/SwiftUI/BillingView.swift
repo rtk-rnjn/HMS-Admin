@@ -181,7 +181,7 @@ struct InvoiceCard: View {
 
                 Text(invoice.payments.first?.status == "captured" ? "Completed" : "Refunded")
                     .font(.subheadline)
-                    .foregroundColor(invoice.payments.first?.status == "captured" ? .green : .red)
+                    .foregroundColor(invoice.payments.first?.status == "captured" ? .successBlue : .errorBlue)
             }
         }
         .padding()
