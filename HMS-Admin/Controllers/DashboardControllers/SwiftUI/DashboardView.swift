@@ -19,8 +19,8 @@ struct DashboardView: View {
 
     var activeDoctorCount: Int = 0
     var patientCount: Int = 0
-    var doctorTrend: String = "+0%"
-    var patientTrend: String = "+0%"
+   // var doctorTrend: String = "+0%"
+   // var patientTrend: String = "+0%"
 
     let timeRanges = ["Today", "Week", "Month"]
 
@@ -42,8 +42,8 @@ struct DashboardView: View {
                         title: "Active Doctors",
                         value: "\(activeDoctorCount)",
                         icon: "stethoscope",
-                        color: Color("iconBlue"),
-                        trend: doctorTrend
+                        color: Color("iconBlue")
+              //          trend: doctorTrend
                     )
                     .frame(maxWidth: .infinity)
 
@@ -51,8 +51,8 @@ struct DashboardView: View {
                         title: "Today's Patients",
                         value: "\(patientCount)",
                         icon: "person.2.fill",
-                        color: Color("iconBlue"),
-                        trend: patientTrend
+                        color: Color("iconBlue")
+                 //       trend: patientTrend
                     )
                     .frame(maxWidth: .infinity)
                 }
@@ -224,7 +224,7 @@ struct QuickStatCard: View {
     let value: String
     let icon: String
     let color: Color
-    let trend: String
+  //  let trend: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -235,16 +235,7 @@ struct QuickStatCard: View {
 
                 Spacer()
 
-                Text(trend)
-                    .font(.caption)
-                    .foregroundColor(trend.hasPrefix("+") ? .green : .red)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(
-                        (trend.hasPrefix("+") ? Color.green : Color.red)
-                            .opacity(0.1)
-                    )
-                    .cornerRadius(8)
+
             }
 
             Text(value)

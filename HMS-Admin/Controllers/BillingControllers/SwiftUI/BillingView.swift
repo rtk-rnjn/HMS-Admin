@@ -80,7 +80,7 @@ struct BillingView: View {
                 title: "Total Revenue",
                 amount: totalRevenue,
                 icon: "circle.fill",
-                color: Color(UIColor(red: 0.85, green: 0.9, blue: 1.0, alpha: 1.0))
+                color: Color("successBlue")
             )
 
             // Total Refunds Card
@@ -88,7 +88,7 @@ struct BillingView: View {
                 title: "Total Refunds",
                 amount: totalRefunds,
                 icon: "arrow.counterclockwise.circle.fill",
-                color: .red
+                color: Color("errorBlue")
             )
         }
         .padding(.horizontal)
@@ -181,7 +181,7 @@ struct InvoiceCard: View {
 
                 Text(invoice.payments.first?.status == "captured" ? "Completed" : "Refunded")
                     .font(.subheadline)
-                    .foregroundColor(invoice.payments.first?.status == "captured" ? .green : .red)
+                    .foregroundColor(invoice.payments.first?.status == "captured" ? .blue : .black)
             }
         }
         .padding()

@@ -46,7 +46,7 @@ struct ValidatedTextField: View {
             if hasInteracted && !error.isEmpty {
                 Text(error)
                     .font(.footnote)
-                    .foregroundColor(.red)
+                    .foregroundColor(Color("errorBlue"))
                     .padding(.horizontal, 4)
             }
         }

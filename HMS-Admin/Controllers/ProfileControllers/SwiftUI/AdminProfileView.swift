@@ -58,7 +58,7 @@ struct AdminProfileView: View {
                                         .foregroundColor(.white)
                                         .frame(maxWidth: .infinity)
                                         .padding()
-                                        .background(Color.red)
+                                        .background(Color("errorBlue"))
                                         .cornerRadius(12)
                                 }
                                 .padding(.horizontal)

@@ -206,7 +206,7 @@ struct AddDoctorView: View {
                                         .cornerRadius(10)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 10)
-                                                .stroke(dateOfBirthHasInteracted && !dateOfBirthError.isEmpty ? Color.red : Color.gray.opacity(0.2), lineWidth: 1)
+                                                .stroke(dateOfBirthHasInteracted && !dateOfBirthError.isEmpty ? Color("errorBlue") : Color.gray.opacity(0.2), lineWidth: 1)
                                         )
 
                                     }
@@ -218,7 +218,7 @@ struct AddDoctorView: View {
                                     if dateOfBirthHasInteracted && !dateOfBirthError.isEmpty {
                                         Text(dateOfBirthError)
                                             .font(.footnote)
-                                            .foregroundColor(.red)
+                                            .foregroundColor(Color("errorBlue"))
                                             .padding(.horizontal, 4)
                                     }
                                 }
@@ -308,7 +308,7 @@ struct AddDoctorView: View {
                                         .cornerRadius(10)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 10)
-                                                .stroke(yearsOfExperienceError.isEmpty ? Color.gray.opacity(0.2) : Color.red, lineWidth: 1)
+                                                .stroke(yearsOfExperienceError.isEmpty ? Color.gray.opacity(0.2) : Color("errorBlue"), lineWidth: 1)
                                         )
                                     }
                                     .disabled(dateOfBirth == nil)
@@ -317,7 +317,7 @@ struct AddDoctorView: View {
                                     if !yearsOfExperienceError.isEmpty {
                                         Text(yearsOfExperienceError)
                                             .font(.footnote)
-                                            .foregroundColor(.red)
+                                            .foregroundColor(Color("errorBlue"))
                                             .padding(.horizontal, 4)
                                     }
                                 }
@@ -387,14 +387,14 @@ struct AddDoctorView: View {
                                         .cornerRadius(10)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 10)
-                                                .stroke(departmentHasInteracted && !departmentError.isEmpty ? Color.red : Color.gray.opacity(0.2), lineWidth: 1)
+                                                .stroke(departmentHasInteracted && !departmentError.isEmpty ? Color("errorBlue") : Color.gray.opacity(0.2), lineWidth: 1)
                                         )
                                     }
 
                                     if departmentHasInteracted && !departmentError.isEmpty {
                                         Text(departmentError)
                                             .font(.footnote)
-                                            .foregroundColor(.red)
+                                            .foregroundColor(Color("errorBlue"))
                                             .padding(.horizontal, 4)
                                     }
                                 }
@@ -434,7 +434,7 @@ struct AddDoctorView: View {
                                         .cornerRadius(10)
                                         .overlay(
                                             RoundedRectangle(cornerRadius: 10)
-                                                .stroke(specializationHasInteracted && !specializationError.isEmpty ? Color.red : Color.gray.opacity(0.2), lineWidth: 1)
+                                                .stroke(specializationHasInteracted && !specializationError.isEmpty ? Color("errorBlue") : Color.gray.opacity(0.2), lineWidth: 1)
                                         )
                                     }
                                     .disabled(department.isEmpty)
@@ -443,7 +443,7 @@ struct AddDoctorView: View {
                                     if specializationHasInteracted && !specializationError.isEmpty {
                                         Text(specializationError)
                                             .font(.footnote)
-                                            .foregroundColor(.red)
+                                            .foregroundColor(Color("errorBlue"))
                                             .padding(.horizontal, 4)
                                     }
                                 }
