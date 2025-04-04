@@ -9,8 +9,6 @@ import SwiftUI
 import MapKit
 import CoreLocation
 
-// Import DoctorSuccessView
-@_spi(HMS) import HMS_Admin
 
 struct AddDoctorView: View {
 
