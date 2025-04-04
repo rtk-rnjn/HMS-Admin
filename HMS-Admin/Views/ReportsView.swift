@@ -26,15 +26,6 @@ struct ReportsView: View {
     // Metrics data (sample)
     var metrics: [MetricData] = []
 
-    // Top doctors data (sample)
-    private let topDoctors: [DoctorPerformance] = [
-        DoctorPerformance(name: "Dr. Smith", specialty: "Cardiology", rating: 4.9, patients: 124, image: "person.crop.circle.fill"),
-        DoctorPerformance(name: "Dr. Johnson", specialty: "Neurology", rating: 4.8, patients: 98, image: "person.crop.circle.fill"),
-        DoctorPerformance(name: "Dr. Williams", specialty: "Pediatrics", rating: 4.7, patients: 112, image: "person.crop.circle.fill"),
-        DoctorPerformance(name: "Dr. Jones", specialty: "Orthopedics", rating: 4.6, patients: 86, image: "person.crop.circle.fill"),
-        DoctorPerformance(name: "Dr. Brown", specialty: "Oncology", rating: 4.5, patients: 74, image: "person.crop.circle.fill")
-    ]
-
     // MARK: - Sample Data
 
     var appointmentData: [WeeklyData] = []
@@ -71,7 +62,6 @@ struct ReportsView: View {
                 timeSelectionView
                 metricsGridView
                 appointmentsOverviewSection
-                doctorPerformanceSection
             }
             .padding(.vertical)
         }
@@ -142,25 +132,6 @@ struct ReportsView: View {
             AppointmentMetricView(title: "Scheduled", value: "124", color: .blue)
             AppointmentMetricView(title: "Completed", value: "98", color: Color(red: 0.2, green: 0.5, blue: 0.8))
             AppointmentMetricView(title: "Cancelled", value: "18", color: Color(red: 0.4, green: 0.6, blue: 0.9))
-        }
-    }
-
-    private var doctorPerformanceSection: some View {
-        ReportSectionView(title: "Doctor Performance") {
-            VStack(alignment: .leading, spacing: 15) {
-                Text("Top Performing Doctors")
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 15) {
-                        ForEach(topDoctors) { doctor in
-                            DoctorCardView(doctor: doctor)
-                        }
-                    }
-                    .padding(.vertical, 5)
-                }
-            }
         }
     }
 

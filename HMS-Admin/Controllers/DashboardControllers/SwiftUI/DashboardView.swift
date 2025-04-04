@@ -153,7 +153,7 @@ struct DashboardView: View {
 
         // Optimistically update local state
         if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
-            var updatedRequest = request
+            let updatedRequest = request
             leaveRequests[index] = updatedRequest
         }
 
@@ -168,7 +168,7 @@ struct DashboardView: View {
                 if !success {
                     // Revert local state if API call failed
                     if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
-                        var revertedRequest = request
+                        let revertedRequest = request
                         leaveRequests[index] = revertedRequest
                     }
                     // Show error message
@@ -187,7 +187,7 @@ struct DashboardView: View {
 
         // Optimistically update local state
         if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
-            var updatedRequest = request
+            let updatedRequest = request
             leaveRequests[index] = updatedRequest
         }
 
@@ -202,7 +202,7 @@ struct DashboardView: View {
                 if !success {
                     // Revert local state if API call failed
                     if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
-                        var revertedRequest = request
+                        let revertedRequest = request
                         leaveRequests[index] = revertedRequest
                     }
                     // Show error message
