@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rzw-UJ-JLp">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="rzw-UJ-JLp">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23506"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -13,7 +14,7 @@
                     <tabBarItem key="tabBarItem" title="Dashboard" image="house.fill" catalog="system" id="09R-8H-hVa"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="cTh-bw-Mcg">
-                        <rect key="frame" x="0.0" y="118" width="393" height="96"/>
+                        <rect key="frame" x="0.0" y="59" width="393" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -41,6 +42,7 @@
                 <hostingController id="e3x-4U-tkH" customClass="DashboardHostingController" customModule="HMS_Admin" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" title="Dashboard" id="XSi-DK-n5V">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="bell.fill" catalog="system" style="done" id="cbb-M1-rnU">
+                            <color key="tintColor" name="iconBlue"/>
                             <connections>
                                 <segue destination="CkN-36-fGa" kind="show" id="lhx-Rr-YPV"/>
                             </connections>
@@ -77,5 +79,8 @@
     <resources>
         <image name="bell.fill" catalog="system" width="123" height="128"/>
         <image name="house.fill" catalog="system" width="128" height="104"/>
+        <namedColor name="iconBlue">
+            <color red="0.0" green="0.27099999785423279" blue="0.60000002384185791" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>
