@@ -149,35 +149,38 @@ struct DashboardView: View {
 
     private func handleLeaveApproval(_ request: LeaveRequest) {
         // Add request to processing set
-        processingRequests.insert(request.id)
-
-        // Optimistically update local state
-        if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
-            let updatedRequest = request
-            leaveRequests[index] = updatedRequest
-        }
-
+//        processingRequests.insert(request.id)
+//
+//        // Optimistically update local state
+//        if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
+//            let updatedRequest = request
+//            leaveRequests[index] = updatedRequest
+//        }
+//
+//        Task {
+//            // Make API call
+//            let success = await DataController.shared.approveLeaveRequest(request)
+//
+//            DispatchQueue.main.async {
+//                // Remove from processing set
+//                processingRequests.remove(request.id)
+//
+//                if !success {
+//                    // Revert local state if API call failed
+//                    if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
+//                        let revertedRequest = request
+//                        leaveRequests[index] = revertedRequest
+//                    }
+//                    // Show error message
+//                    // Note: You might want to add an @State property for showing alerts
+//                }
+//
+//                // Refresh the list to get the latest state
+//                fetchLeaveRequests()
+//            }
+//        }
         Task {
-            // Make API call
-            let success = await DataController.shared.approveLeaveRequest(request)
-
-            DispatchQueue.main.async {
-                // Remove from processing set
-                processingRequests.remove(request.id)
-
-                if !success {
-                    // Revert local state if API call failed
-                    if let index = leaveRequests.firstIndex(where: { $0.id == request.id }) {
-                        let revertedRequest = request
-                        leaveRequests[index] = revertedRequest
-                    }
-                    // Show error message
-                    // Note: You might want to add an @State property for showing alerts
-                }
-
-                // Refresh the list to get the latest state
-                fetchLeaveRequests()
-            }
+            await DataController.shared.approveLeaveRequest(request)
         }
     }
 
