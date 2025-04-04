@@ -20,7 +20,19 @@ class InitialTabBarController: UITabBarController {
             await requestAccessForNotification()
         }
 
-//        WebSocketManager.shared.connectWebSocket()
+        Task {
+            let loggedIn = await DataController.shared.autoLogin()
+            if !loggedIn {
+                DispatchQueue.main.async {
+                    let okAction = AlertActionHandler(title: "OK", style: .default) { _ in
+                        DataController.shared.logout()
+                        self.performSegue(withIdentifier: "segueShowSignInViewController", sender: nil)
+                    }
+                    let alert = Utils.getAlert(title: "Error", message: "Authentication Failed. Please log in again", actions: [okAction])
+                    self.present(alert, animated: true)
+                }
+            }
+        }
     }
 
     func requestAccessForNotification() async {

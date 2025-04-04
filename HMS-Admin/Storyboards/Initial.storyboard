@@ -21,6 +21,7 @@
                         <segue destination="qRd-i1-0Dn" kind="relationship" relationship="viewControllers" id="b2f-B9-W7c"/>
                         <segue destination="JJK-Ch-mOO" kind="relationship" relationship="viewControllers" id="7hu-Oj-fo5"/>
                         <segue destination="DVA-t8-bEB" kind="relationship" relationship="viewControllers" id="noW-oh-w8F"/>
+                        <segue destination="1Hw-EM-jfz" kind="presentation" identifier="segueShowSignInViewController" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="bYb-a8-jpm"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K6W-qf-SwX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -66,6 +67,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3IZ-7t-0TA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="931" y="144"/>
+        </scene>
+        <!--Main-->
+        <scene sceneID="oGx-D5-mKP">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Main" id="1Hw-EM-jfz" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BXh-l0-Wki" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="137" y="385"/>
         </scene>
     </scenes>
 </document>

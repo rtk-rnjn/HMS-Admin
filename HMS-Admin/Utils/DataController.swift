@@ -209,7 +209,7 @@ extension DataController {
 
     func fetchLogs() async -> [Log]? {
         if admin == nil {
-            guard await autoLogin() else { fatalError() }
+            guard await autoLogin() else { return nil }
         }
 
         guard let admin else {
@@ -246,7 +246,7 @@ extension DataController {
 extension DataController {
     func fetchLeaveRequests() async -> [LeaveRequest]? {
         if admin == nil {
-            guard await autoLogin() else { fatalError("Auth failed") }
+            guard await autoLogin() else { return nil }
         }
 
         guard let admin else {
