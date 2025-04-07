@@ -282,24 +282,8 @@ struct DoctorCardView: View {
             Divider()
                 .padding(.top, 8)
 
-            // Ratings & Patients section
+            // Patients section
             HStack(alignment: .center) {
-                // Star rating
-                HStack(spacing: 4) {
-                    ForEach(1...5, id: \.self) { index in
-                        Image(systemName: index <= Int(doctor.rating) ? "star.fill" : "star")
-                            .font(.callout)
-                            .foregroundColor(index <= Int(doctor.rating) ? .yellow : Color(UIColor.systemGray4))
-                    }
-                }
-
-                Text(String(format: "%.1f", doctor.rating))
-                    .font(.headline)
-                    .foregroundColor(.black)
-                    .padding(.leading, 8)
-
-                Spacer()
-
                 // Patient count
                 HStack(spacing: 6) {
                     Image(systemName: "person.fill")
@@ -509,7 +493,6 @@ struct DoctorPerformance: Identifiable {
     let id: UUID = .init()
     let name: String
     let specialty: String
-    let rating: Double
     let patients: Int
     let image: String
 }
